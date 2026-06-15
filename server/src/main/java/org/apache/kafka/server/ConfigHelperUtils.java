@@ -26,12 +26,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ConfigHelperUtils {
 
     /**
      * Creates a DescribeConfigsResult from a Map of configs.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static <V> DescribeConfigsResponseData.DescribeConfigsResult createResponseConfig(
             DescribeConfigsRequestData.DescribeConfigsResource resource,
             Map<String, V> config,
@@ -49,6 +52,7 @@ public class ConfigHelperUtils {
      * Creates a DescribeConfigsResult from an AbstractConfig.
      * This method merges the config's originals (excluding nulls and keys present in nonInternalValues, which take priority).
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static DescribeConfigsResponseData.DescribeConfigsResult createResponseConfig(
             DescribeConfigsRequestData.DescribeConfigsResource resource,
             AbstractConfig config,
@@ -69,6 +73,7 @@ public class ConfigHelperUtils {
     /**
      * Internal helper that builds a DescribeConfigsResult from a stream of config entries.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static DescribeConfigsResponseData.DescribeConfigsResult toDescribeConfigsResult(
             Stream<Entry<String, Object>> configStream,
             DescribeConfigsRequestData.DescribeConfigsResource resource,

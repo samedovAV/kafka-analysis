@@ -17,6 +17,8 @@
 package org.apache.kafka.server.partition;
 
 import org.apache.kafka.common.TopicPartition;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Listener receives notification from an Online Partition.
@@ -37,6 +39,7 @@ public interface PartitionListener {
      * @param partition The topic partition for which the high watermark was updated.
      * @param offset    The new high watermark offset.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default void onHighWatermarkUpdated(TopicPartition partition, long offset) {}
 
     /**
@@ -44,6 +47,7 @@ public interface PartitionListener {
      *
      * @param partition The topic partition that failed.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default void onFailed(TopicPartition partition) {}
 
     /**
@@ -52,6 +56,7 @@ public interface PartitionListener {
      *
      * @param partition The topic partition that was deleted from this broker.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default void onDeleted(TopicPartition partition) {}
 
     /**
@@ -59,5 +64,6 @@ public interface PartitionListener {
      *
      * @param partition The topic partition that transitioned to a follower role.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default void onBecomingFollower(TopicPartition partition) {}
 }

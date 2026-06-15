@@ -20,6 +20,8 @@ import org.apache.kafka.common.TopicIdPartition;
 import org.apache.kafka.server.partition.PartitionListener;
 import org.apache.kafka.server.storage.log.FetchIsolation;
 import org.apache.kafka.storage.internals.log.LogOffsetMetadata;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Abstraction for partition metadata operations.
@@ -29,16 +31,19 @@ public interface PartitionMetadataProvider {
     /**
      * Resolve the offset for the earliest timestamp.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     long offsetForEarliestTimestamp(TopicIdPartition topicIdPartition, int leaderEpoch);
 
     /**
      * Resolve the offset for the latest timestamp.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     long offsetForLatestTimestamp(TopicIdPartition topicIdPartition, int leaderEpoch);
 
     /**
      * Resolve the offset for a specific timestamp.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     long offsetForTimestamp(TopicIdPartition topicIdPartition, long timestamp, int leaderEpoch);
 
     /**
@@ -46,11 +51,13 @@ public interface PartitionMetadataProvider {
      *
      * @return The end offset metadata based on the given fetch isolation.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     LogOffsetMetadata endOffsetMetadata(TopicIdPartition topicIdPartition, FetchIsolation isolation);
 
     /**
      * Get the leader epoch for a partition.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int leaderEpoch(TopicIdPartition topicIdPartition);
 
     /**
@@ -58,10 +65,12 @@ public interface PartitionMetadataProvider {
      *
      * @return true if the listener was successfully added.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean addPartitionListener(TopicIdPartition topicIdPartition, PartitionListener listener);
 
     /**
      * Remove a previously registered partition listener.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void removePartitionListener(TopicIdPartition topicIdPartition, PartitionListener listener);
 }

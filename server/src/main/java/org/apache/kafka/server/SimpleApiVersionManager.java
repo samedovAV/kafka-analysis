@@ -25,6 +25,8 @@ import org.apache.kafka.common.requests.ApiVersionsResponse;
 import org.apache.kafka.server.common.FinalizedFeatures;
 
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A simple ApiVersionManager used in controllers. It does not support forwarding and does not have metadata cache.
@@ -56,16 +58,19 @@ public class SimpleApiVersionManager implements ApiVersionManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean enableUnstableLastVersion() {
         return enableUnstableLastVersion;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ApiMessageType.ListenerType listenerType() {
         return listenerType;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ApiVersionsResponse apiVersionResponse(int throttleTimeMs, boolean alterFeatureLevel0) {
         FinalizedFeatures currentFeatures = features();
         return new ApiVersionsResponse.Builder()
@@ -79,6 +84,7 @@ public class SimpleApiVersionManager implements ApiVersionManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public FinalizedFeatures features() {
         return featuresProvider.get();
     }

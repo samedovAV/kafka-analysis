@@ -17,9 +17,14 @@
 package org.apache.kafka.server.logger;
 
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface LoggingControllerMBean {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     List<String> getLoggers();
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     String getLogLevel(String logger);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean setLogLevel(String logger, String level);
 }

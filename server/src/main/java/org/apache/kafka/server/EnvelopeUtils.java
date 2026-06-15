@@ -34,11 +34,14 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.function.Consumer;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class EnvelopeUtils {
     private EnvelopeUtils() {
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void handleEnvelopeRequest(
         Request request,
         RequestChannelMetrics requestChannelMetrics,
@@ -76,6 +79,7 @@ public final class EnvelopeUtils {
         handler.accept(forwardedRequest);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static InetAddress parseForwardedClientAddress(byte[] address) {
         try {
             return InetAddress.getByAddress(address);
@@ -84,6 +88,7 @@ public final class EnvelopeUtils {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Request parseForwardedRequest(
         Request envelope,
         RequestContext forwardedContext,
@@ -111,6 +116,7 @@ public final class EnvelopeUtils {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static RequestHeader parseForwardedRequestHeader(ByteBuffer buffer) {
         try {
             return RequestHeader.parse(buffer);
@@ -122,6 +128,7 @@ public final class EnvelopeUtils {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static KafkaPrincipal parseForwardedPrincipal(
         RequestContext envelopeContext,
         byte[] principalBytes

@@ -36,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class BrokerFeaturesTest {
     private static final Features<SupportedVersionRange> SUPPORTED_FEATURES = Features.supportedFeatures(Map.of(
@@ -46,11 +48,13 @@ public class BrokerFeaturesTest {
     private static final BrokerFeatures BROKER_FEATURES = BrokerFeatures.createDefault(true, SUPPORTED_FEATURES);
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEmpty() {
         assertTrue(BrokerFeatures.createEmpty().supportedFeatures().empty());
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncompatibilitiesDueToAbsentFeature() {
         Map<String, Short> compatibleFeatures = Map.of("test_feature_1", (short) 4);
         Map<String, Short> inCompatibleFeatures = Map.of("test_feature_2", (short) 4);
@@ -63,6 +67,7 @@ public class BrokerFeaturesTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncompatibilitiesDueToIncompatibleFeature() {
         Map<String, Short> compatibleFeatures = Map.of("test_feature_1", (short) 3);
         Map<String, Short> inCompatibleFeatures = Map.of("test_feature_2", (short) 4);
@@ -74,6 +79,7 @@ public class BrokerFeaturesTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCompatibleFeatures() {
         Map<String, Short> compatibleFeatures = Map.of(
                 "test_feature_1", (short) 3,
@@ -85,6 +91,7 @@ public class BrokerFeaturesTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDefaultFinalizedFeatures() {
         Map<String, SupportedVersionRange> newFeatures = Map.of(
                 "test_feature_1", new SupportedVersionRange((short) 1, (short) 4),
@@ -112,6 +119,7 @@ public class BrokerFeaturesTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void ensureDefaultSupportedFeaturesRangeMaxNotZero(boolean unstableVersionsEnabled) {
         BrokerFeatures brokerFeatures = BrokerFeatures.createDefault(unstableVersionsEnabled);
         brokerFeatures.supportedFeatures().features()

@@ -23,6 +23,8 @@ import java.util.OptionalLong;
 import java.util.function.UnaryOperator;
 
 import static org.apache.kafka.common.requests.AssignReplicasToDirsRequest.MAX_ASSIGNMENTS_PER_REQUEST;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * This class calculates when the MaybeSendAssignmentsEvent should run for AssignmentsManager.
@@ -69,6 +71,7 @@ public class AssignmentsManagerDeadlineFunction implements UnaryOperator<Optiona
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public OptionalLong apply(OptionalLong previousSendTimeNs) {
         long delayNs;
         if (previousGlobalFailures > 0) {

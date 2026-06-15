@@ -24,11 +24,14 @@ import java.util.OptionalLong;
 
 import static org.apache.kafka.common.requests.AssignReplicasToDirsRequest.MAX_ASSIGNMENTS_PER_REQUEST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AssignmentsManagerDeadlineFunctionTest {
     private static final ExponentialBackoff BACKOFF = new ExponentialBackoff(1000, 2, 8000, 0.0);
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void applyAfterDispatchInterval() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval()),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 0, false, 12).
@@ -36,6 +39,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void applyAfterDispatchIntervalWithExistingEarlierDeadline() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval() / 2),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 0, false, 12).
@@ -43,6 +47,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void applyBackoffInterval() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval() * 2),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 1, false, 12).
@@ -50,6 +55,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void applyBackoffIntervalWithExistingEarlierDeadline() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval() / 2),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 1, false, 12).
@@ -57,6 +63,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void scheduleImmediatelyWhenOverloaded() {
         assertEquals(OptionalLong.of(0),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 0, false,
@@ -65,6 +72,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void doNotScheduleImmediatelyWhenOverloadedIfThereAreInFlightRequests() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval()),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 0, true,
@@ -73,6 +81,7 @@ public class AssignmentsManagerDeadlineFunctionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void doNotScheduleImmediatelyWhenOverloadedIfThereArePreviousGlobalFailures() {
         assertEquals(OptionalLong.of(BACKOFF.initialInterval() * 2),
             new AssignmentsManagerDeadlineFunction(BACKOFF, 0, 1, false,

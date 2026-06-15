@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * SharePartitionMetrics is used to track the broker-side metrics for the SharePartition.
@@ -96,6 +98,7 @@ public class SharePartitionMetrics implements AutoCloseable {
      *
      * @param messageCountSupplier The supplier for the in-flight message count.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void registerInFlightMessageCount(Supplier<Integer> messageCountSupplier) {
         metricsGroup.newGauge(
             IN_FLIGHT_MESSAGE_COUNT,
@@ -109,6 +112,7 @@ public class SharePartitionMetrics implements AutoCloseable {
      *
      * @param batchCountSupplier The supplier for the in-flight batch count.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void registerInFlightBatchCount(Supplier<Integer> batchCountSupplier) {
         metricsGroup.newGauge(
             IN_FLIGHT_BATCH_COUNT,
@@ -117,43 +121,52 @@ public class SharePartitionMetrics implements AutoCloseable {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordAcquisitionLockTimeoutPerSec(long count) {
         acquisitionLockTimeoutPerSec.mark(count);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordInFlightBatchMessageCount(long count) {
         inFlightBatchMessageCount.update(count);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordFetchLockTimeMs(long timeMs) {
         fetchLockTimeMs.update(timeMs);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordFetchLockRatio(int value) {
         fetchLockRatio.update(value);
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Meter acquisitionLockTimeoutPerSec() {
         return acquisitionLockTimeoutPerSec;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram inFlightBatchMessageCount() {
         return inFlightBatchMessageCount;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram fetchLockTimeMs() {
         return fetchLockTimeMs;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram fetchLockRatio() {
         return fetchLockRatio;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void close() throws Exception {
         List.of(ACQUISITION_LOCK_TIMEOUT_PER_SEC,
             IN_FLIGHT_MESSAGE_COUNT,

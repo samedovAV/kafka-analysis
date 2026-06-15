@@ -19,6 +19,8 @@ package org.apache.kafka.network;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Class for connection quota configuration. Connection quotas can be configured at the
@@ -32,6 +34,7 @@ public class ConnectionQuotaEntity {
     public static final String IP_METRIC_TAG = "ip";
     public static final String IP_THROTTLE_PREFIX = "ip-";
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ConnectionQuotaEntity listenerQuotaEntity(String listenerName) {
         return new ConnectionQuotaEntity(CONNECTION_RATE_SENSOR_NAME + "-" + listenerName,
                 CONNECTION_RATE_METRIC_NAME,
@@ -39,6 +42,7 @@ public class ConnectionQuotaEntity {
                 Map.of("listener", listenerName));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ConnectionQuotaEntity brokerQuotaEntity() {
         return new ConnectionQuotaEntity(CONNECTION_RATE_SENSOR_NAME,
                 "broker-" + ConnectionQuotaEntity.CONNECTION_RATE_METRIC_NAME,
@@ -46,6 +50,7 @@ public class ConnectionQuotaEntity {
                 Map.of());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ConnectionQuotaEntity ipQuotaEntity(InetAddress ip) {
         return new ConnectionQuotaEntity(CONNECTION_RATE_SENSOR_NAME + "-" + ip.getHostAddress(),
                 CONNECTION_RATE_METRIC_NAME,
@@ -68,6 +73,7 @@ public class ConnectionQuotaEntity {
     /**
      * The name of the sensor for this quota entity
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String sensorName() {
         return sensorName;
     }
@@ -75,6 +81,7 @@ public class ConnectionQuotaEntity {
     /**
      * The name of the metric for this quota entity
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String metricName() {
         return metricName;
     }
@@ -82,6 +89,7 @@ public class ConnectionQuotaEntity {
     /**
      * The duration in second to keep the sensor even if no new values are recorded
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long sensorExpiration() {
         return sensorExpiration;
     }
@@ -89,6 +97,7 @@ public class ConnectionQuotaEntity {
     /**
      * Tags associated with this quota entity
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Map<String, String> metricTags() {
         return metricTags;
     }

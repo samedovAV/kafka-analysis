@@ -17,6 +17,8 @@
 package org.apache.kafka.server.partition;
 
 import org.apache.kafka.metadata.LeaderAndIsr;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Represents a partition state currently undergoing a change, such as an ISR expansion or shrinking.
@@ -25,9 +27,11 @@ public interface PendingPartitionChange extends PartitionState {
     /**
      * Returns the last committed partition state before this pending change.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     CommittedPartitionState lastCommittedState();
     /**
      * Returns the LeaderAndIsr object sent to the controller for this pending change.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     LeaderAndIsr sentLeaderAndIsr();
 }

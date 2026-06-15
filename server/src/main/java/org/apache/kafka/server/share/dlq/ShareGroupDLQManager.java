@@ -18,6 +18,8 @@
 package org.apache.kafka.server.share.dlq;
 
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The main interface to identify implementations of dead letter queues for share groups.
@@ -40,10 +42,12 @@ public interface ShareGroupDLQManager {
      *              being dead letter queued.
      * @return A completable future of Void type, mainly to signal exceptions.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     CompletableFuture<Void> enqueue(ShareGroupDLQRecordParameter param);
 
     /**
      * Perform cleanup and interrupt any threads.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void stop();
 }

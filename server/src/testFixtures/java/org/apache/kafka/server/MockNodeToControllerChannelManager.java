@@ -31,6 +31,8 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class MockNodeToControllerChannelManager implements NodeToControllerChannelManager {
 
@@ -55,12 +57,15 @@ public class MockNodeToControllerChannelManager implements NodeToControllerChann
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void start() { }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void shutdown() { }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void sendRequest(
         AbstractRequest.Builder<? extends AbstractRequest> request,
         ControllerRequestCompletionHandler callback
@@ -73,15 +78,18 @@ public class MockNodeToControllerChannelManager implements NodeToControllerChann
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Optional<NodeApiVersions> controllerApiVersions() {
         return Optional.of(controllerApiVersions);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long getTimeoutMs() {
         return retryTimeoutMs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void handleResponse(NodeToControllerQueueItem request, ClientResponse response) {
         if (response.authenticationException() != null || response.versionMismatch() != null) {
             request.callback().onComplete(response);
@@ -92,6 +100,7 @@ public class MockNodeToControllerChannelManager implements NodeToControllerChann
         }
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void poll() {
         Iterator<NodeToControllerQueueItem> unsentIterator = unsentQueue.iterator();
         boolean canSend = true;
@@ -124,6 +133,7 @@ public class MockNodeToControllerChannelManager implements NodeToControllerChann
         client.poll(0L, time.milliseconds());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ConcurrentLinkedDeque<NodeToControllerQueueItem> unsentQueue() {
         return unsentQueue;
     }

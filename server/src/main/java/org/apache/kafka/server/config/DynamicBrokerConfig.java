@@ -45,6 +45,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DynamicBrokerConfig {
 
@@ -94,6 +96,7 @@ public class DynamicBrokerConfig {
 
     private static final Pattern LISTENER_CONFIG_REGEX = Pattern.compile("listener\\.name\\.[^.]*\\.(.*)");
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static List<String> brokerConfigSynonyms(String name, boolean matchListenerOverride) {
         List<String> logRollConfigs = List.of(ServerLogConfigs.LOG_ROLL_TIME_MILLIS_CONFIG, ServerLogConfigs.LOG_ROLL_TIME_HOURS_CONFIG);
         List<String> logRollJitterConfigs = List.of(ServerLogConfigs.LOG_ROLL_TIME_JITTER_MILLIS_CONFIG, ServerLogConfigs.LOG_ROLL_TIME_JITTER_HOURS_CONFIG);
@@ -121,12 +124,14 @@ public class DynamicBrokerConfig {
         return List.of(name);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void checkInvalidProps(Set<String> invalidPropNames, String errorMessage) {
         if (!invalidPropNames.isEmpty()) {
             throw new ConfigException(errorMessage + ": " + invalidPropNames);
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void validateConfigs(Properties props, boolean perBrokerConfig) {
         checkInvalidProps(nonDynamicConfigs(props), "Cannot update these configs dynamically");
         checkInvalidProps(securityConfigsWithoutListenerPrefix(props),
@@ -138,10 +143,12 @@ public class DynamicBrokerConfig {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Set<String> securityConfigsWithoutListenerPrefix(Properties props) {
         return DYNAMIC_SECURITY_CONFIGS.stream().filter(props::containsKey).collect(Collectors.toSet());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void validateConfigTypes(Properties props) {
         Properties baseProps = new Properties();
         props.forEach((name, value) -> {
@@ -156,6 +163,7 @@ public class DynamicBrokerConfig {
         DynamicConfig.Broker.validate(baseProps);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static Set<String> perBrokerConfigs(Properties props) {
         Set<String> configNames = props.stringPropertyNames();
         Set<String> perBrokerConfigs = new HashSet<>();
@@ -175,12 +183,14 @@ public class DynamicBrokerConfig {
         return perBrokerConfigs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Set<String> nonDynamicConfigs(Properties props) {
         Set<String> nonDynamicConfigs = new HashSet<>(props.stringPropertyNames());
         nonDynamicConfigs.retainAll(DynamicConfig.Broker.nonDynamicProps());
         return nonDynamicConfigs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Properties resolveVariableConfigs(Properties propsOriginal) {
         Properties props = new Properties();
         AbstractConfig config = new AbstractConfig(new ConfigDef(), propsOriginal, Utils.castToStringObjectMap(propsOriginal), false);
@@ -192,6 +202,7 @@ public class DynamicBrokerConfig {
         return props;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Map<String, String> dynamicConfigUpdateModes() {
         return ALL_DYNAMIC_CONFIGS.stream().collect(Collectors.toMap(
                 Function.identity(),

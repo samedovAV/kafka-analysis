@@ -38,6 +38,8 @@ import java.util.Optional;
 
 import static org.apache.kafka.common.requests.FetchMetadata.FINAL_EPOCH;
 import static org.apache.kafka.common.requests.FetchMetadata.INVALID_SESSION_ID;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class FetchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(FetchManager.class);
@@ -55,6 +57,7 @@ public class FetchManager {
         this.cache = cache;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public FetchContext newContext(short reqVersion,
                                    FetchMetadata reqMetadata,
                                    boolean isFollower,
@@ -131,6 +134,7 @@ public class FetchManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private String partitionsToLogString(Collection<TopicIdPartition> partitions) {
         return FetchSession.partitionsToLogString(partitions, LOGGER.isTraceEnabled());
     }

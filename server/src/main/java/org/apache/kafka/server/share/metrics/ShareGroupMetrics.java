@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * ShareGroupMetrics is used to track the broker-side metrics for the ShareGroup.
@@ -101,10 +103,12 @@ public class ShareGroupMetrics implements AutoCloseable {
         this.dlqProduceFailedPerGroup = new ConcurrentHashMap<>();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void recordAcknowledgement(byte ackType) {
         recordAcknowledgement(ackType, 1);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordAcknowledgement(byte ackType, long count) {
         // unknown ack types (such as gaps for control records) are intentionally ignored
         if (recordAcknowledgementMeterMap.containsKey(ackType)) {
@@ -112,16 +116,19 @@ public class ShareGroupMetrics implements AutoCloseable {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void partitionLoadTime(long start) {
         partitionLoadTimeMs.update(time.hiResClockMs() - start);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordTopicPartitionsFetchRatio(String groupId, long value) {
         topicPartitionsFetchRatio.computeIfAbsent(groupId,
             k -> metricsGroup.newHistogram(TOPIC_PARTITIONS_FETCH_RATIO, true, Map.of(GROUP_ID_TAG, groupId)));
         topicPartitionsFetchRatio.get(groupId).update(value);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordTopicPartitionsAcquireTimeMs(String groupId, long timeMs) {
         topicPartitionsAcquireTimeMs.computeIfAbsent(groupId,
             k -> metricsGroup.newHistogram(TOPIC_PARTITIONS_ACQUIRE_TIME_MS, true, Map.of(GROUP_ID_TAG, groupId)));
@@ -129,25 +136,30 @@ public class ShareGroupMetrics implements AutoCloseable {
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Meter recordAcknowledgementMeter(byte ackType) {
         return recordAcknowledgementMeterMap.get(ackType);
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram partitionLoadTimeMs() {
         return partitionLoadTimeMs;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram topicPartitionsFetchRatio(String groupId) {
         return topicPartitionsFetchRatio.get(groupId);
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Histogram topicPartitionsAcquireTimeMs(String groupId) {
         return topicPartitionsAcquireTimeMs.get(groupId);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordDLQRecordWrite(String shareGroupId, int count) {
         dlqRecordCountPerGroup.computeIfAbsent(shareGroupId, k -> metricsGroup.newMeter(
             DEAD_LETTER_QUEUE_RECORD_COUNT,
@@ -157,6 +169,7 @@ public class ShareGroupMetrics implements AutoCloseable {
         )).mark(count);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordDLQProduce(String shareGroupId) {
         dlqProduceTotalPerGroup.computeIfAbsent(shareGroupId, k -> metricsGroup.newMeter(
             DEAD_LETTER_QUEUE_TOTAL_PRODUCE_REQ_PER_SEC,
@@ -166,6 +179,7 @@ public class ShareGroupMetrics implements AutoCloseable {
         )).mark();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void recordDLQProduceFailed(String shareGroupId) {
         dlqProduceFailedPerGroup.computeIfAbsent(shareGroupId, k -> metricsGroup.newMeter(
             DEAD_LETTER_QUEUE_FAILED_PRODUCE_REQ_PER_SEC,
@@ -176,6 +190,7 @@ public class ShareGroupMetrics implements AutoCloseable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void close() throws Exception {
         Arrays.stream(AcknowledgeType.values()).forEach(
             m -> metricsGroup.removeMetric(RECORD_ACKNOWLEDGEMENTS_PER_SEC, Map.of(ACK_TYPE_TAG, m.toString())));
@@ -187,6 +202,7 @@ public class ShareGroupMetrics implements AutoCloseable {
         dlqProduceFailedPerGroup.forEach((k, v) -> metricsGroup.removeMetric(DEAD_LETTER_QUEUE_FAILED_PRODUCE_REQ_PER_SEC, Map.of(GROUP_ID_TAG, k)));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static String capitalize(String string) {
         if (string == null || string.isEmpty()) {
             return string;

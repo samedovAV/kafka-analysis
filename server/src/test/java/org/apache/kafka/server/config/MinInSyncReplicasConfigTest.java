@@ -23,12 +23,15 @@ import org.apache.kafka.common.test.api.ClusterConfigProperty;
 import org.apache.kafka.common.test.api.ClusterTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class MinInSyncReplicasConfigTest {
 
     @ClusterTest(serverProperties = {
         @ClusterConfigProperty(key = TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, value = "5")
     })
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDefaultKafkaConfig(ClusterInstance cluster) {
         assertEquals(5, cluster.brokers().get(0).logManager().initialDefaultConfig().minInSyncReplicas);
     }

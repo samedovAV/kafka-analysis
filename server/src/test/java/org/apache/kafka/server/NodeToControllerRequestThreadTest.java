@@ -56,13 +56,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class NodeToControllerRequestThreadTest {
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static ControllerInformation controllerInfo(Optional<Node> node) {
         return new ControllerInformation(node, new ListenerName(""), SecurityProtocol.PLAINTEXT, "");
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static ControllerInformation emptyControllerInfo() {
         return controllerInfo(Optional.empty());
     }
@@ -75,12 +79,14 @@ class NodeToControllerRequestThreadTest {
      * <p>This avoids mocking {@code Supplier<ControllerInformation>} which would
      * require {@code @SuppressWarnings("unchecked")} due to generic type erasure.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Supplier<ControllerInformation> sequentialProvider(
             ControllerInformation first, ControllerInformation second) {
         AtomicReference<ControllerInformation> ref = new AtomicReference<>(first);
         return () -> ref.getAndSet(second);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static NodeToControllerRequestThread createAndStartRequestThread(
             MockClient mockClient,
             Supplier<ControllerInformation> controllerNodeProvider,
@@ -93,6 +99,7 @@ class NodeToControllerRequestThreadTest {
         return thread;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private static NodeToControllerRequestThread createAndStartRequestThread(
             MockClient mockClient,
             Supplier<ControllerInformation> controllerNodeProvider,
@@ -101,6 +108,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testRetryTimeoutWhileControllerNotAvailable() {
         MockTime time = new MockTime();
         Metadata metadata = mock(Metadata.class);
@@ -131,6 +139,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testRequestsSent() {
         // just a simple test that tests whether the request from 1 -> 2 is sent and the response callback is called
         MockTime time = new MockTime();
@@ -169,6 +178,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testControllerChanged() {
         // in this test the controller changes from node 1 -> node 2
         MockTime time = new MockTime();
@@ -215,6 +225,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testNotController() {
         MockTime time = new MockTime();
         int oldControllerId = 1;
@@ -271,6 +282,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testEnvelopeResponseWithNotControllerError() {
         MockTime time = new MockTime();
         int oldControllerId = 1;
@@ -340,6 +352,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testRetryTimeout() {
         MockTime time = new MockTime();
         int controllerId = 1;
@@ -385,6 +398,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testUnsupportedVersionHandling() {
         MockTime time = new MockTime();
         int controllerId = 2;
@@ -399,11 +413,13 @@ class NodeToControllerRequestThreadTest {
         AtomicReference<ClientResponse> callbackResponse = new AtomicReference<>();
         ControllerRequestCompletionHandler completionHandler = new ControllerRequestCompletionHandler() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onTimeout() {
                 fail("Unexpected timeout exception");
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onComplete(ClientResponse response) {
                 callbackResponse.set(response);
             }
@@ -426,6 +442,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testAuthenticationExceptionHandling() {
         MockTime time = new MockTime();
         int controllerId = 2;
@@ -440,11 +457,13 @@ class NodeToControllerRequestThreadTest {
         AtomicReference<ClientResponse> callbackResponse = new AtomicReference<>();
         ControllerRequestCompletionHandler completionHandler = new ControllerRequestCompletionHandler() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onTimeout() {
                 fail("Unexpected timeout exception");
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onComplete(ClientResponse response) {
                 callbackResponse.set(response);
             }
@@ -468,6 +487,7 @@ class NodeToControllerRequestThreadTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testThreadNotStarted() {
         // Make sure we throw if we enqueue anything while the thread is not running
         MockTime time = new MockTime();
@@ -493,10 +513,12 @@ class NodeToControllerRequestThreadTest {
         assertEquals(0, testRequestThread.queueSize());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void pollUntil(NodeToControllerRequestThread requestThread, java.util.function.BooleanSupplier condition) {
         pollUntil(requestThread, condition, 10);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void pollUntil(NodeToControllerRequestThread requestThread, java.util.function.BooleanSupplier condition, int maxRetries) {
         int tries = 0;
         do {
@@ -523,6 +545,7 @@ class NodeToControllerRequestThreadTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onComplete(ClientResponse response) {
             if (expectedResponse != null) {
                 assertEquals(expectedResponse, response.responseBody());
@@ -531,6 +554,7 @@ class NodeToControllerRequestThreadTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onTimeout() {
             timedOut.set(true);
         }

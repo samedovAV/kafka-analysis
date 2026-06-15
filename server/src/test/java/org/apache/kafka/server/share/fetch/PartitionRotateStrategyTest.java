@@ -30,10 +30,13 @@ import java.util.List;
 import static org.apache.kafka.server.share.fetch.ShareFetchTestUtils.validateRotatedListEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class PartitionRotateStrategyTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRoundRobinStrategy() {
         PartitionRotateStrategy strategy = PartitionRotateStrategy.type(StrategyType.ROUND_ROBIN);
         List<TopicIdPartition> partitions = createPartitions(3);
@@ -59,6 +62,7 @@ public class PartitionRotateStrategyTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRoundRobinStrategyWithSpecialSessionEpochs() {
         PartitionRotateStrategy strategy = PartitionRotateStrategy.type(StrategyType.ROUND_ROBIN);
 
@@ -77,6 +81,7 @@ public class PartitionRotateStrategyTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRoundRobinStrategyWithEmptyPartitions() {
         PartitionRotateStrategy strategy = PartitionRotateStrategy.type(StrategyType.ROUND_ROBIN);
         // Empty partitions.
@@ -90,6 +95,7 @@ public class PartitionRotateStrategyTest {
      * @param size The number of topic-partitions to create.
      * @return The list of topic partitions.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private List<TopicIdPartition> createPartitions(int size) {
         List<TopicIdPartition> partitions = new ArrayList<>();
         for (int i = 0; i < size; i++) {

@@ -28,6 +28,8 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class Log4jCoreController implements LoggingControllerDelegate {
     private final LoggerContext logContext;
@@ -37,6 +39,7 @@ class Log4jCoreController implements LoggingControllerDelegate {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public Map<String, String> loggers() {
         String rootLoggerLevel = logContext.getRootLogger().getLevel().toString();
 
@@ -59,6 +62,7 @@ class Log4jCoreController implements LoggingControllerDelegate {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean logLevel(String loggerName, String logLevel) {
         if (Utils.isBlank(loggerName) || Utils.isBlank(logLevel))
             return false;
@@ -77,6 +81,7 @@ class Log4jCoreController implements LoggingControllerDelegate {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean unsetLogLevel(String loggerName) {
         Level nullLevel = null;
         if (loggerName.equals(LoggingController.ROOT_LOGGER)) {

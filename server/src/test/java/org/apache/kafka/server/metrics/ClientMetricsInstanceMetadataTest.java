@@ -28,10 +28,13 @@ import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientMetricsInstanceMetadataTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsMatchValid() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid, ClientMetricsTestUtils.requestContext());
@@ -59,6 +62,7 @@ public class ClientMetricsInstanceMetadataTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsMatchMultiplePatternValid() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid,
@@ -77,6 +81,7 @@ public class ClientMetricsInstanceMetadataTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsMatchMismatchFail() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid,
@@ -119,6 +124,7 @@ public class ClientMetricsInstanceMetadataTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsMatchWithInvalidKeyFail() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid,
@@ -131,6 +137,7 @@ public class ClientMetricsInstanceMetadataTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsMatchWithNullValueFail() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid,

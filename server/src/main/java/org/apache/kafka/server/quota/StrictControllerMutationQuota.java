@@ -23,6 +23,8 @@ import org.apache.kafka.common.protocol.Errors;
 import org.apache.kafka.common.utils.Time;
 
 import java.util.Objects;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The StrictControllerMutationQuota defines a strict quota for a given user/clientId pair. The
@@ -46,11 +48,13 @@ public class StrictControllerMutationQuota extends AbstractControllerMutationQuo
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isExceeded() {
         return lastThrottleTimeMs > 0;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void record(double permits) {
         var timeMs = time.milliseconds();
         try {

@@ -20,6 +20,8 @@ import org.apache.kafka.common.metrics.QuotaViolationException;
 import org.apache.kafka.common.utils.Time;
 
 import java.util.Objects;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The AbstractControllerMutationQuota is the base class of StrictControllerMutationQuota and
@@ -37,12 +39,14 @@ public abstract class AbstractControllerMutationQuota implements ControllerMutat
         this.time = Objects.requireNonNull(time, "time cannot be null");
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     protected void updateThrottleTime(QuotaViolationException e, long timeMs) {
         lastThrottleTimeMs = ControllerMutationQuotaManager.throttleTimeMs(e);
         lastRecordedTimeMs = timeMs;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int throttleTime() {
         // If no throttle time has been recorded, return 0
         if (lastThrottleTimeMs == 0L) {

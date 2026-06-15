@@ -39,8 +39,11 @@ import static org.apache.kafka.server.log.remote.storage.RemoteLogManagerConfig.
 import static org.apache.kafka.server.log.remote.storage.RemoteLogManagerConfig.REMOTE_LOG_STORAGE_SYSTEM_ENABLE_PROP;
 import static org.apache.kafka.server.log.remote.storage.RemoteLogManagerConfig.REMOTE_STORAGE_MANAGER_CLASS_NAME_PROP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class MonitorablePluginsIntegrationTest {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static int controllerId(Type type) {
         return type == Type.KRAFT ? 3000 : 0;
     }
@@ -58,12 +61,14 @@ public class MonitorablePluginsIntegrationTest {
                     value = "org.apache.kafka.server.MonitorablePluginsIntegrationTest$MonitorableNoOpRemoteStorageManager")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMonitorableServerPlugins(ClusterInstance clusterInstance) {
         assertAuthorizerMetrics(clusterInstance);
         assertReplicaSelectorMetrics(clusterInstance);
         assertRemoteLogManagerMetrics(clusterInstance);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertAuthorizerMetrics(ClusterInstance clusterInstance) {
         assertMetrics(
                 clusterInstance.brokers().get(0).metrics(),
@@ -76,6 +81,7 @@ public class MonitorablePluginsIntegrationTest {
                 expectedTags(AUTHORIZER_CLASS_NAME_CONFIG, "StandardAuthorizer", Map.of("role", "controller")));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertRemoteLogManagerMetrics(ClusterInstance clusterInstance) {
         assertMetrics(
                 clusterInstance.brokers().get(0).metrics(),
@@ -87,6 +93,7 @@ public class MonitorablePluginsIntegrationTest {
                 expectedTags(REMOTE_STORAGE_MANAGER_CLASS_NAME_PROP, MonitorableNoOpRemoteStorageManager.class.getSimpleName()));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertReplicaSelectorMetrics(ClusterInstance clusterInstance) {
         assertMetrics(
                 clusterInstance.brokers().get(0).metrics(),
@@ -94,6 +101,7 @@ public class MonitorablePluginsIntegrationTest {
                 expectedTags(REPLICA_SELECTOR_CLASS_CONFIG, MonitorableReplicaSelector.class.getSimpleName()));
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void assertMetrics(Metrics metrics, int expected, Map<String, String> expectedTags) {
         int found = 0;
         for (MetricName metricName : metrics.metrics().keySet()) {
@@ -112,6 +120,7 @@ public class MonitorablePluginsIntegrationTest {
         private static final int METRICS_COUNT = 1;
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void withPluginMetrics(PluginMetrics metrics) {
             MetricName name = metrics.metricName("name", "description", new LinkedHashMap<>());
             metrics.addMetric(name, (Measurable) (config, now) -> 123);
@@ -123,6 +132,7 @@ public class MonitorablePluginsIntegrationTest {
         private static final int METRICS_COUNT = 1;
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void withPluginMetrics(PluginMetrics metrics) {
             MetricName name = metrics.metricName("name", "description", new LinkedHashMap<>());
             metrics.addMetric(name, (Measurable) (config, now) -> 123);
@@ -134,16 +144,19 @@ public class MonitorablePluginsIntegrationTest {
         private static final int METRICS_COUNT = 1;
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void withPluginMetrics(PluginMetrics metrics) {
             MetricName name = metrics.metricName("name", "description", new LinkedHashMap<>());
             metrics.addMetric(name, (Measurable) (config, now) -> 123);
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private static Map<String, String> expectedTags(String config, String clazz) {
         return expectedTags(config, clazz, Map.of());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Map<String, String> expectedTags(String config, String clazz, Map<String, String> extraTags) {
         Map<String, String> tags = new LinkedHashMap<>();
         tags.put("config", config);

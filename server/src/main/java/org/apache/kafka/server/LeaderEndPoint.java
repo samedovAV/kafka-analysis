@@ -27,6 +27,8 @@ import org.apache.kafka.server.network.BrokerEndPoint;
 
 import java.util.Map;
 import java.util.Optional;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Interface that defines APIs for accessing a broker that is a leader.
@@ -36,22 +38,26 @@ public interface LeaderEndPoint {
     /**
      * A boolean specifying if truncation when fetching from the leader is supported
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isTruncationOnFetchSupported();
 
     /**
      * Initiate closing access to fetches from leader.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void initiateClose();
 
     /**
      * Closes access to fetches from leader.
      * `initiateClose` must be called prior to invoking `close`.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void close();
 
     /**
      * The specific broker (host:port) we want to connect to.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     BrokerEndPoint brokerEndPoint();
 
     /**
@@ -62,6 +68,7 @@ public interface LeaderEndPoint {
      *
      * @return A map of topic partition -> fetch data
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Map<TopicPartition, FetchResponseData.PartitionData> fetch(FetchRequest.Builder fetchRequest);
 
     /**
@@ -72,6 +79,7 @@ public interface LeaderEndPoint {
      *
      * @return An OffsetAndEpoch object representing the earliest offset and epoch in the leader's topic partition.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     OffsetAndEpoch fetchEarliestOffset(TopicPartition topicPartition, int currentLeaderEpoch);
 
     /**
@@ -82,6 +90,7 @@ public interface LeaderEndPoint {
      *
      * @return An OffsetAndEpoch object representing the latest offset and epoch in the leader's topic partition.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     OffsetAndEpoch fetchLatestOffset(TopicPartition topicPartition, int currentLeaderEpoch);
 
     /**
@@ -91,6 +100,7 @@ public interface LeaderEndPoint {
      *
      * @return A map of topic partition -> end offset for a requested leader epoch
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Map<TopicPartition, EpochEndOffset> fetchEpochEndOffsets(Map<TopicPartition, OffsetForLeaderPartition> partitions);
 
     /**
@@ -101,6 +111,7 @@ public interface LeaderEndPoint {
      *
      * @return An OffsetAndEpoch object representing the earliest local offset and epoch in the leader's topic partition.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     OffsetAndEpoch fetchEarliestLocalOffset(TopicPartition topicPartition, int currentLeaderEpoch);
 
 
@@ -112,6 +123,7 @@ public interface LeaderEndPoint {
      * @return An OffsetAndEpoch object representing the earliest pending upload offset and its associated epoch
      * in the leader's topic partition.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     OffsetAndEpoch fetchEarliestPendingUploadOffset(TopicPartition topicPartition, int currentLeaderEpoch);
 
     /**
@@ -121,5 +133,6 @@ public interface LeaderEndPoint {
      *
      * @return A ResultWithPartitions, used to create the fetchRequest for fetch.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     ResultWithPartitions<Optional<ReplicaFetch>> buildFetch(Map<TopicPartition, PartitionFetchState> partitions);
 }

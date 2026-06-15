@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ReplicationQuotaManager implements ReplicaQuota {
     public static final List<Integer> ALL_REPLICAS = List.of(-1);
@@ -61,6 +63,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
     /**
      * Update the quota
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void updateQuota(Quota quota) {
         lock.writeLock().lock();
         try {
@@ -78,6 +81,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
      * Check if the quota is currently exceeded
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isQuotaExceeded() {
         try {
             sensor().checkQuotas();
@@ -93,6 +97,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
      * Is the passed partition throttled by this ReplicationQuotaManager
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isThrottled(TopicPartition topicPartition) {
         List<Integer> partitions = throttledPartitions.get(topicPartition.topic());
         return partitions != null && (partitions.equals(ALL_REPLICAS) || partitions.contains(topicPartition.partition()));
@@ -103,6 +108,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
      * the value being added to the rate even if the quota is exceeded
      */
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void record(long value) {
         sensor().record((double) value, time.milliseconds(), false);
     }
@@ -111,6 +117,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
      * Update the set of throttled partitions for this QuotaManager. The partitions passed, for
      * any single topic, will replace any previous
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void markThrottled(String topic, List<Integer> partitions) {
         throttledPartitions.put(topic, partitions);
     }
@@ -118,14 +125,17 @@ public class ReplicationQuotaManager implements ReplicaQuota {
     /**
      * Mark all replicas for this topic as throttled
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void markThrottled(String topic) {
         markThrottled(topic, ALL_REPLICAS);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void removeThrottle(String topic) {
         throttledPartitions.remove(topic);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long upperBound() {
         lock.readLock().lock();
         try {
@@ -135,6 +145,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private MetricConfig getQuotaMetricConfig(Quota quota) {
         return new MetricConfig()
             .timeWindow(config.quotaWindowSizeSeconds, TimeUnit.SECONDS)
@@ -142,6 +153,7 @@ public class ReplicationQuotaManager implements ReplicaQuota {
             .quota(quota);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Sensor sensor() {
         return sensorAccess.getOrCreate(
             replicationType.toString(),

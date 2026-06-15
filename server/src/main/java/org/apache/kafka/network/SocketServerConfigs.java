@@ -39,6 +39,8 @@ import static org.apache.kafka.common.config.ConfigDef.Type.INT;
 import static org.apache.kafka.common.config.ConfigDef.Type.LIST;
 import static org.apache.kafka.common.config.ConfigDef.Type.LONG;
 import static org.apache.kafka.common.config.ConfigDef.Type.STRING;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class SocketServerConfigs {
     public static final String LISTENER_SECURITY_PROTOCOL_MAP_CONFIG = "listener.security.protocol.map";
@@ -180,6 +182,7 @@ public class SocketServerConfigs {
                 Function.identity()
             ));
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static List<Endpoint> listenerListToEndPoints(
         List<String> input,
         Map<ListenerName, SecurityProtocol> nameToSecurityProto
@@ -193,6 +196,7 @@ public class SocketServerConfigs {
         });
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static List<Endpoint> listenerListToEndPoints(
         List<String> input,
         Function<ListenerName, SecurityProtocol> nameToSecurityProto

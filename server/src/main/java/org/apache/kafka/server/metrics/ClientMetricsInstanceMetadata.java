@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Information from the client's metadata is gathered from the client's request.
@@ -48,6 +50,7 @@ public class ClientMetricsInstanceMetadata {
         attributesMap.put(ClientMetricsConfigs.CLIENT_SOURCE_PORT, requestContext.clientPort.map(String::valueOf).orElse(null));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isMatch(Map<String, Pattern> patterns) {
         if (!patterns.isEmpty()) {
             return matchPatterns(patterns);
@@ -56,6 +59,7 @@ public class ClientMetricsInstanceMetadata {
         return true;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private boolean matchPatterns(Map<String, Pattern> matchingPatterns) {
         return matchingPatterns.entrySet().stream()
             .allMatch(entry -> {

@@ -25,9 +25,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface ServerSocketFactory {
     ServerSocketFactory INSTANCE = new KafkaServerSocketFactory();
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     ServerSocketChannel openServerSocket(
         String listenerName,
         InetSocketAddress socketAddress,
@@ -38,6 +41,7 @@ public interface ServerSocketFactory {
     class KafkaServerSocketFactory implements ServerSocketFactory {
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public ServerSocketChannel openServerSocket(
                 String listenerName,
                 InetSocketAddress socketAddress,

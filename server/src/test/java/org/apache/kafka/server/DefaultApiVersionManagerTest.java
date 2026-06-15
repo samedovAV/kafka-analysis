@@ -39,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DefaultApiVersionManagerTest {
 
@@ -46,6 +48,7 @@ public class DefaultApiVersionManagerTest {
 
     private final KRaftMetadataCache metadataCache = createMetadataCache();
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static KRaftMetadataCache createMetadataCache() {
         var cache = new KRaftMetadataCache(1, () -> KRaftVersion.LATEST_PRODUCTION);
         var delta = new MetadataDelta.Builder()
@@ -61,6 +64,7 @@ public class DefaultApiVersionManagerTest {
 
     @ParameterizedTest
     @EnumSource(ListenerType.class)
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void testApiScope(ListenerType apiScope) {
         Supplier<Optional<NodeApiVersions>> nodeApiVersionsSupplier = Optional::empty;
         var versionManager = new DefaultApiVersionManager(
@@ -80,6 +84,7 @@ public class DefaultApiVersionManagerTest {
 
     @ParameterizedTest
     @EnumSource(ListenerType.class)
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testDisabledApis(ListenerType apiScope) {
         Supplier<Optional<NodeApiVersions>> nodeApiVersionsSupplier = Optional::empty;
         var versionManager = new DefaultApiVersionManager(
@@ -110,6 +115,7 @@ public class DefaultApiVersionManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testControllerApiIntersection() {
         short controllerMinVersion = 3;
         short controllerMaxVersion = 5;
@@ -138,6 +144,7 @@ public class DefaultApiVersionManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEnvelopeDisabledForKRaftBroker() {
         Supplier<Optional<NodeApiVersions>> nodeApiVersionsSupplier = Optional::empty;
 

@@ -32,6 +32,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ReplicationQuotaManagerTest {
 
@@ -39,11 +41,13 @@ public class ReplicationQuotaManagerTest {
     private final Metrics metrics = new Metrics(new MetricConfig(), List.of(), time);
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void tearDown() {
         metrics.close();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void shouldThrottleOnlyDefinedReplicas() {
         ReplicationQuotaManager quota = new ReplicationQuotaManager(new ReplicationQuotaManagerConfig(), metrics, QuotaType.FETCH, time);
         quota.markThrottled("topic1", List.of(1, 2, 3));
@@ -55,6 +59,7 @@ public class ReplicationQuotaManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void shouldExceedQuotaThenReturnBackBelowBoundAsTimePasses() {
         ReplicationQuotaManager quota = new ReplicationQuotaManager(new ReplicationQuotaManagerConfig(10, 1), metrics, QuotaType.LEADER_REPLICATION, time);
 
@@ -109,12 +114,14 @@ public class ReplicationQuotaManagerTest {
         assertEquals(251 / 4.5, rate(metrics), 0);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private double rate(Metrics metrics) {
         MetricName metricName = metrics.metricName("byte-rate", QuotaType.LEADER_REPLICATION.toString(), "Tracking byte-rate for " + QuotaType.LEADER_REPLICATION);
         return (double) metrics.metrics().get(metricName).metricValue();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void shouldSupportWildcardThrottledReplicas() {
         ReplicationQuotaManager quota = new ReplicationQuotaManager(new ReplicationQuotaManagerConfig(), metrics, QuotaType.LEADER_REPLICATION, time);
 

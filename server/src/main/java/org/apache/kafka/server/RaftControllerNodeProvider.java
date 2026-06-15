@@ -28,6 +28,8 @@ import org.apache.kafka.server.config.AbstractKafkaConfig;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Finds the controller node by checking the metadata log manager.
@@ -40,6 +42,7 @@ public class RaftControllerNodeProvider implements Supplier<ControllerInformatio
     private final SecurityProtocol securityProtocol;
     private final String saslMechanism;
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static RaftControllerNodeProvider create(RaftManager<ApiMessageAndVersion> raftManager, AbstractKafkaConfig config) {
         final ListenerName controllerListenerName = new ListenerName(config.controllerListenerNames().get(0));
         final SecurityProtocol controllerSecurityProtocol = Optional.ofNullable(config.effectiveListenerSecurityProtocolMap().get(controllerListenerName))
@@ -57,6 +60,7 @@ public class RaftControllerNodeProvider implements Supplier<ControllerInformatio
 
     @SuppressWarnings("resource")
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ControllerInformation get() {
         OptionalInt leaderIdOpt = raftManager.client().leaderAndEpoch().leaderId();
 

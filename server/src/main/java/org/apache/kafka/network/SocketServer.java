@@ -20,6 +20,8 @@ import org.apache.kafka.common.utils.Utils;
 
 import java.nio.channels.SocketChannel;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class SocketServer {
 
@@ -35,6 +37,7 @@ public class SocketServer {
             SocketServerConfigs.MAX_CONNECTIONS_CONFIG,
             SocketServerConfigs.MAX_CONNECTION_CREATION_RATE_CONFIG);
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void closeSocket(SocketChannel channel) {
         Utils.closeQuietly(channel.socket(), "channel socket");
         Utils.closeQuietly(channel, "channel");

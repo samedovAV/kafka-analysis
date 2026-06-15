@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class RequestChannelMetrics {
 
@@ -48,6 +50,7 @@ public class RequestChannelMetrics {
         this(ApiKeys.apisForListener(scope));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public RequestMetrics apply(String metricName) {
         RequestMetrics requestMetrics = metricsMap.get(metricName);
         if (requestMetrics == null) {
@@ -56,6 +59,7 @@ public class RequestChannelMetrics {
         return requestMetrics;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void close() {
         for (RequestMetrics requestMetrics : metricsMap.values()) {
             requestMetrics.removeMetrics();

@@ -24,6 +24,8 @@ import org.apache.kafka.controller.QuorumFeatures;
 import org.apache.kafka.metadata.VersionRange;
 
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class NodeMetrics implements AutoCloseable {
     private static final String METRIC_GROUP_NAME = "node-metrics";
@@ -43,6 +45,7 @@ public final class NodeMetrics implements AutoCloseable {
         });
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void addSupportedLevelMetric(String metricName, String featureName, short value) {
         metrics.addMetric(
             getFeatureNameTagMetricName(
@@ -55,6 +58,7 @@ public final class NodeMetrics implements AutoCloseable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void close() {
         for (var featureName : supportedFeatureRanges.keySet()) {
             metrics.removeMetric(
@@ -74,6 +78,7 @@ public final class NodeMetrics implements AutoCloseable {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private MetricName getFeatureNameTagMetricName(String name, String group, String featureName) {
         return metrics.metricName(
             name,

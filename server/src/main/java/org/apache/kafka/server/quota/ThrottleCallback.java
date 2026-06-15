@@ -15,8 +15,13 @@
  * limitations under the License.
  */
 package org.apache.kafka.server.quota;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 public interface ThrottleCallback {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void startThrottling();
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void endThrottling();
 }

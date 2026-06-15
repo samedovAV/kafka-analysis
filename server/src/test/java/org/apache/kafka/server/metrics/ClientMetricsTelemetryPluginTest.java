@@ -31,6 +31,8 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientMetricsTelemetryPluginTest {
 
@@ -39,6 +41,7 @@ public class ClientMetricsTelemetryPluginTest {
     private TestClientTelemetryExporter telemetryExporter;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() {
         telemetryReceiver = new TestClientMetricsReceiver();
         telemetryExporter = new TestClientTelemetryExporter();
@@ -46,6 +49,7 @@ public class ClientMetricsTelemetryPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExportMetricsWithDeprecatedReceiver() throws UnknownHostException {
         assertTrue(clientTelemetryExporterPlugin.isEmpty());
 
@@ -65,6 +69,7 @@ public class ClientMetricsTelemetryPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExportMetricsWithNewExporter() throws UnknownHostException {
         assertTrue(clientTelemetryExporterPlugin.isEmpty());
         clientTelemetryExporterPlugin.add(telemetryExporter);
@@ -87,6 +92,7 @@ public class ClientMetricsTelemetryPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExportMetricsWithBothReceiverAndExporter() throws UnknownHostException {
         // Test with separate receiver and exporter objects - both should be called
         clientTelemetryExporterPlugin.add(telemetryReceiver);
@@ -108,6 +114,7 @@ public class ClientMetricsTelemetryPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExportMetricsWithDualImplementation() throws UnknownHostException {
         // Test with a class that implements both interfaces
         // This mimics production behavior in DynamicBrokerConfig where pattern matching

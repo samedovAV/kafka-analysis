@@ -49,6 +49,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DefaultAlterPartitionManager implements AlterPartitionManager {
     private static final Logger log = LoggerFactory.getLogger(DefaultAlterPartitionManager.class);
@@ -70,6 +72,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
         this.brokerEpochSupplier = brokerEpochSupplier;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static DefaultAlterPartitionManager create(AbstractKafkaConfig config,
                                                       Scheduler scheduler,
                                                       Supplier<ControllerInformation> controllerNodeProvider,
@@ -91,16 +94,19 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void start() {
         controllerChannelManager.start();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void shutdown() throws InterruptedException {
         controllerChannelManager.shutdown();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public CompletableFuture<LeaderAndIsr> submit(TopicIdPartition topicIdPartition,
                                                   LeaderAndIsr leaderAndIsr) {
         CompletableFuture<LeaderAndIsr> future = new CompletableFuture<>();
@@ -115,6 +121,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
         return future;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void maybePropagateIsrChanges() {
         // Send all pending items if there is not already a request in-flight.
         if (!unsentIsrUpdates.isEmpty() && inflightRequest.compareAndSet(false, true)) {
@@ -124,12 +131,14 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void clearInFlightRequest() {
         if (!inflightRequest.compareAndSet(true, false)) {
             log.warn("Attempting to clear AlterPartition in-flight flag when no apparent request is in-flight");
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void sendRequest(List<AlterPartitionItem> inflightAlterPartitionItems) {
         long brokerEpoch = brokerEpochSupplier.get();
         AlterPartitionRequest.Builder request = buildRequest(inflightAlterPartitionItems, brokerEpoch);
@@ -141,6 +150,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
         controllerChannelManager.sendRequest(request,
                 new ControllerRequestCompletionHandler() {
                     @Override
+                    @Prove(complexity = Complexity.O_1, n = "", count = {})
                     public void onComplete(ClientResponse response) {
                         log.debug("Received AlterPartition response {}", response);
                         Errors error;
@@ -176,6 +186,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
                     }
 
                     @Override
+                    @Prove(complexity = Complexity.O_1, n = "", count = {})
                     public void onTimeout() {
                         throw new IllegalStateException("Encountered unexpected timeout when sending AlterPartition to the controller");
                     }
@@ -191,6 +202,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
      *
      * @return an AlterPartitionRequest.Builder with the provided parameters.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private AlterPartitionRequest.Builder buildRequest(
             List<AlterPartitionItem> inflightAlterPartitionItems,
             long brokerEpoch) {
@@ -222,6 +234,7 @@ public class DefaultAlterPartitionManager implements AlterPartitionManager {
         return new AlterPartitionRequest.Builder(message);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Errors handleAlterPartitionResponse(AlterPartitionResponse alterPartitionResponse,
                                                 long sentBrokerEpoch,
                                                 List<AlterPartitionItem> inflightAlterPartitionItems) {

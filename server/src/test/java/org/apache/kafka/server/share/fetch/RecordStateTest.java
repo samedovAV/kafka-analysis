@@ -20,10 +20,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class RecordStateTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRecordStateValidateTransition() {
         // Null check.
         assertThrows(NullPointerException.class, () -> RecordState.AVAILABLE.validateTransition(null));
@@ -53,6 +56,7 @@ public class RecordStateTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRecordStateForId() {
         assertEquals(RecordState.AVAILABLE, RecordState.forId((byte) 0));
         assertEquals(RecordState.ACQUIRED, RecordState.forId((byte) 1));

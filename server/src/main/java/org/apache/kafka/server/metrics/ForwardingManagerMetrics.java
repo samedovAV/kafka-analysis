@@ -25,6 +25,8 @@ import org.apache.kafka.common.metrics.stats.Percentiles;
 import org.apache.kafka.common.metrics.stats.Percentiles.BucketSizing;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class ForwardingManagerMetrics implements AutoCloseable {
 
@@ -64,28 +66,34 @@ public final class ForwardingManagerMetrics implements AutoCloseable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void close() {
         queueTimeMsHist.close();
         remoteTimeMsHist.close();
         metrics.removeMetric(queueLengthName);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public LatencyHistogram queueTimeMsHist() {
         return queueTimeMsHist;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public LatencyHistogram remoteTimeMsHist() {
         return remoteTimeMsHist;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName queueLengthName() {
         return queueLengthName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void incrementQueueLength() {
         queueLength.getAndIncrement();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void decrementQueueLength() {
         queueLength.getAndDecrement();
     }
@@ -115,22 +123,26 @@ public final class ForwardingManagerMetrics implements AutoCloseable {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void close() {
             metrics.removeSensor(name);
             metrics.removeMetric(latencyP99Name);
             metrics.removeMetric(latencyP999Name);
         }
 
+        @Prove(complexity = Complexity.O_N, n = "", count = {})
         public void record(long latencyMs) {
             sensor.record(latencyMs);
         }
 
         // visible for test
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public MetricName latencyP99Name() {
             return latencyP99Name;
         }
 
         // visible for test
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public MetricName latencyP999Name() {
             return latencyP999Name;
         }

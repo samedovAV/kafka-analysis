@@ -29,10 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class ClientSensorsTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConstructorWithValidParameters() {
         Map<String, String> metricTags = Map.of("client-id", "test-client", "user", "test-user");
         Sensor quotaSensor = mock(Sensor.class);
@@ -46,6 +49,7 @@ class ClientSensorsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void testConstructorPreservesInputOrder() {
         LinkedHashMap<String, String> orderedTags = new LinkedHashMap<>();
         orderedTags.put("first", "value1");
@@ -71,6 +75,7 @@ class ClientSensorsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConstructorWithEmptyMap() {
         Map<String, String> emptyTags = Map.of();
         Sensor quotaSensor = mock(Sensor.class);
@@ -84,18 +89,21 @@ class ClientSensorsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConstructorThrowsExceptionWhenQuotaSensorIsNull() {
         assertThrows(NullPointerException.class,
             () -> new ClientSensors(Map.of("client-id", "test-client"), null, mock(Sensor.class)));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConstructorThrowsExceptionWhenThrottleTimeSensorIsNull() {
         assertThrows(NullPointerException.class,
             () -> new ClientSensors(Map.of("client-id", "test-client"), mock(Sensor.class), null));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConstructorThrowsExceptionWhenBothSensorsAreNull() {
         assertThrows(NullPointerException.class,
             () -> new ClientSensors(Map.of("client-id", "test-client"), null, null));

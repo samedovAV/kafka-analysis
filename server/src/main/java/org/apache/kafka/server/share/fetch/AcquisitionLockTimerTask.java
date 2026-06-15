@@ -19,6 +19,8 @@ package org.apache.kafka.server.share.fetch;
 import org.apache.kafka.common.utils.Time;
 import org.apache.kafka.server.share.metrics.SharePartitionMetrics;
 import org.apache.kafka.server.util.timer.TimerTask;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * AcquisitionLockTimerTask is a timer task that is executed when the acquisition lock timeout is reached.
@@ -53,10 +55,12 @@ public class AcquisitionLockTimerTask extends TimerTask {
         this.hasExpired = false;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long expirationMs() {
         return expirationMs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean hasExpired() {
         return hasExpired;
     }
@@ -65,6 +69,7 @@ public class AcquisitionLockTimerTask extends TimerTask {
      * The task is executed when the acquisition lock timeout is reached. The task releases the acquired records.
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void run() {
         // Mark the request as expired prior executing the timeout. There might be concurrent execution
         // of timeout task and failed acknowledgement which checks if the timeout task has expired.

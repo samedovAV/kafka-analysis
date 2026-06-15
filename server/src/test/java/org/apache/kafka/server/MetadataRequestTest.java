@@ -59,6 +59,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @ClusterTestDefaults(
     brokers = 3,
@@ -79,10 +81,12 @@ public class MetadataRequestTest {
         this.clusterInstance = clusterInstance;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private List<KafkaBroker> brokers() {
         return clusterInstance.brokers().values().stream().toList();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private SocketServer anySocketServer() throws IllegalStateException {
         Map<Integer, KafkaBroker> aliveBrokers = clusterInstance.aliveBrokers();
         if (aliveBrokers.isEmpty()) {
@@ -91,6 +95,7 @@ public class MetadataRequestTest {
         return aliveBrokers.values().stream().map(KafkaBroker::socketServer).iterator().next();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private MetadataRequestData requestData(List<String> topics, boolean allowAutoTopicCreation) {
         MetadataRequestData data = new MetadataRequestData();
         if (topics == null) {
@@ -103,16 +108,19 @@ public class MetadataRequestTest {
         return data;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private MetadataResponse sendMetadataRequest(MetadataRequest request) throws IOException {
         return sendMetadataRequest(request, anySocketServer());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private MetadataResponse sendMetadataRequest(MetadataRequest request, SocketServer destination) throws IOException {
         ListenerName listener = clusterInstance.clientListener();
         int port = destination.boundPort(listener);
         return IntegrationTestUtils.connectAndReceive(request, port);
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     protected void checkAutoCreatedTopic(String autoCreatedTopic, MetadataResponse response) throws InterruptedException {
         assertEquals(Errors.UNKNOWN_TOPIC_OR_PARTITION, response.errors().get(autoCreatedTopic));
         int numPartitions = brokers().get(0).config().numPartitions();
@@ -135,6 +143,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClusterIdWithRequestVersion1() throws IOException {
         MetadataResponse v1MetadataResponse = sendMetadataRequest(MetadataRequest.Builder.allTopics().build((short) 1));
         String v1ClusterId = v1MetadataResponse.clusterId();
@@ -142,12 +151,14 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClusterIdIsValid() throws IOException {
         MetadataResponse metadataResponse = sendMetadataRequest(MetadataRequest.Builder.allTopics().build((short) 4));
         TestUtils.isValidClusterId(metadataResponse.clusterId());
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRack() throws IOException {
         MetadataResponse metadataResponse = sendMetadataRequest(MetadataRequest.Builder.allTopics().build((short) 4));
         // Validate rack matches what's set in generateConfigs() above
@@ -157,6 +168,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsInternal() throws InterruptedException, IOException {
         String internalTopic = Topic.GROUP_METADATA_TOPIC_NAME;
         String notInternalTopic = "notInternal";
@@ -178,6 +190,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testNoTopicsRequest() throws InterruptedException, IOException {
         // create some topics
         clusterInstance.createTopic("t1", 3, (short) 2);
@@ -189,6 +202,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAutoTopicCreation() throws InterruptedException, IOException {
         String topic1 = "t1";
         String topic2 = "t2";
@@ -216,6 +230,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest(brokers = 3, serverProperties = {@ClusterConfigProperty(key = ReplicationConfigs.DEFAULT_REPLICATION_FACTOR_CONFIG, value = "3")})
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAutoCreateTopicWithInvalidReplicationFactor() throws IOException {
         // Shutdown all but one broker so that the number of brokers is less than the default replication factor
         for (int i = 1; i < brokers().size(); i++) {
@@ -234,6 +249,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAllTopicsRequest() throws InterruptedException, IOException {
         // create some topics
         clusterInstance.createTopic("t1", 3, (short) 2);
@@ -251,6 +267,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTopicIdsInResponse() throws ExecutionException, InterruptedException, IOException {
         Map<Integer, List<Integer>> replicaAssignment = Map.of(0, List.of(1, 2, 0), 1, List.of(2, 0, 1));
         String topic1 = "topic1";
@@ -280,6 +297,7 @@ public class MetadataRequestTest {
      * Preferred replica should be the first item in the replicas list
      */
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPreferredReplica() throws ExecutionException, InterruptedException, IOException {
         Map<Integer, List<Integer>> replicaAssignment = Map.of(0, List.of(1, 2, 0), 1, List.of(2, 0, 1));
         clusterInstance.createTopicWithAssignment("t1", replicaAssignment);
@@ -304,6 +322,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPartitionInfoPreferredReplica() throws ExecutionException, InterruptedException, IOException {
         Map<Integer, List<Integer>> replicaAssignment = Map.of(0, List.of(1, 2, 0));
         String topic = "testPartitionInfoPreferredReplicaTopic";
@@ -320,6 +339,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testReplicaDownResponse() throws InterruptedException, IOException {
         String replicaDownTopic = "replicaDown";
         short replicaCount = 3;
@@ -365,6 +385,7 @@ public class MetadataRequestTest {
         assertEquals(replicaCount, v1PartitionMetadata.replicaIds.size(), "Response should have %d replicas".formatted(replicaCount));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void checkIsr(List<KafkaBroker> brokers, String topic) {
         List<KafkaBroker> activeBrokers = brokers.stream().filter(broker -> broker.brokerState() != BrokerState.NOT_RUNNING).toList();
         Set<Integer> expectedIsr = activeBrokers.stream().map(broker -> broker.config().brokerId()).collect(Collectors.toSet());
@@ -385,6 +406,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsrAfterBrokerShutDownAndJoinsBack() throws InterruptedException {
         String topic = "isr-after-broker-shutdown";
         short replicaCount = 3;
@@ -396,6 +418,7 @@ public class MetadataRequestTest {
         checkIsr(brokers(), topic);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void checkMetadata(List<KafkaBroker> brokers, int expectedBrokersCount) throws InterruptedException, IOException {
         TestUtils.waitForCondition(() -> {
             MetadataResponse response = sendMetadataRequest(MetadataRequest.Builder.allTopics().build());
@@ -420,6 +443,7 @@ public class MetadataRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAliveBrokersWithNoTopics() throws IOException, InterruptedException {
         brokers().get(0).shutdown();
         brokers().get(0).awaitShutdown();

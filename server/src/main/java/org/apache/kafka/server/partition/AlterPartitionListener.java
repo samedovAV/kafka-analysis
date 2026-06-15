@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 package org.apache.kafka.server.partition;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 /**
  * A listener that is invoked when the ISR of a partition is altered. Implementations of this
@@ -24,15 +27,18 @@ public interface AlterPartitionListener {
     /**
      * Callback invoked when the ISR is expanded.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void markIsrExpand();
 
     /**
      * Callback invoked when the ISR is shrunk.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void markIsrShrink();
 
     /**
      * Callback invoked when an AlterPartition request fails.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void markFailed();
 }

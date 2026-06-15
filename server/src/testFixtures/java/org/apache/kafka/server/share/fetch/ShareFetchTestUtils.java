@@ -33,6 +33,8 @@ import java.util.Map.Entry;
 
 import static org.apache.kafka.test.TestUtils.tempFile;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Helper functions for writing share fetch unit tests.
@@ -46,6 +48,7 @@ public class ShareFetchTestUtils {
      * @param result The rotated list.
      * @param rotationAt The position to rotate the elements at.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static void validateRotatedListEquals(
         List<TopicIdPartition> original,
         List<TopicIdPartition> result,
@@ -73,6 +76,7 @@ public class ShareFetchTestUtils {
      * @return The file records.
      * @throws IOException If the file records cannot be created.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static FileRecords createFileRecords(Map<Long, Integer> recordsPerOffset) throws IOException {
         FileRecords fileRecords = FileRecords.open(tempFile());
         for (Entry<Long, Integer> entry : recordsPerOffset.entrySet()) {
@@ -90,6 +94,7 @@ public class ShareFetchTestUtils {
      * @param numOfRecords The number of records to create.
      * @return The memory records builder.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static MemoryRecordsBuilder memoryRecordsBuilder(long startOffset, int numOfRecords) {
         return memoryRecordsBuilder(ByteBuffer.allocate(1024), startOffset, numOfRecords);
     }
@@ -102,6 +107,7 @@ public class ShareFetchTestUtils {
      * @param numOfRecords The number of records to create.
      * @return The memory records builder.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static MemoryRecordsBuilder memoryRecordsBuilder(ByteBuffer buffer, long startOffset, int numOfRecords) {
         MemoryRecordsBuilder builder = MemoryRecords.builder(buffer, Compression.NONE,
             TimestampType.CREATE_TIME, startOffset, 2);
@@ -117,6 +123,7 @@ public class ShareFetchTestUtils {
      * @param acquiredRecords The acquired records to create the share acquired records from.
      * @return The share acquired records.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ShareAcquiredRecords createShareAcquiredRecords(AcquiredRecords acquiredRecords) {
         return new ShareAcquiredRecords(
             List.of(acquiredRecords), (int) (acquiredRecords.lastOffset() - acquiredRecords.firstOffset() + 1)

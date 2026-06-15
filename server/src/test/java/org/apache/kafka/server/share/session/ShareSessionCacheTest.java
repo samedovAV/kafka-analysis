@@ -36,15 +36,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ShareSessionCacheTest {
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() {
         clearYammerMetrics();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testShareSessionCache() throws InterruptedException {
         ShareSessionCache cache = new ShareSessionCache(3);
         assertEquals(0, cache.size());
@@ -59,6 +63,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResizeCachedSessions() throws InterruptedException {
         ShareSessionCache cache = new ShareSessionCache(2);
         assertEquals(0, cache.size());
@@ -113,6 +118,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRemoveConnection() throws InterruptedException {
         ShareSessionCache cache = new ShareSessionCache(3);
         assertEquals(0, cache.size());
@@ -143,6 +149,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRemoveAllSessions() {
         ShareSessionCache cache = new ShareSessionCache(3);
         assertEquals(0, cache.size());
@@ -158,6 +165,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testShareGroupListenerEvents() {
         ShareGroupListener mockListener = Mockito.mock(ShareGroupListener.class);
         ShareSessionCache cache = new ShareSessionCache(3);
@@ -211,6 +219,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testShareGroupListenerEventsMultipleGroups() {
         ShareGroupListener mockListener = Mockito.mock(ShareGroupListener.class);
         ShareSessionCache cache = new ShareSessionCache(3);
@@ -243,6 +252,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testShareGroupListenerEventsOnStaleSession() {
         ShareGroupListener mockListener = Mockito.mock(ShareGroupListener.class);
         ShareSessionCache cache = new ShareSessionCache(3);
@@ -276,6 +286,7 @@ public class ShareSessionCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testNoShareGroupListenerRegistered() {
         ShareSessionCache cache = new ShareSessionCache(3);
 
@@ -291,6 +302,7 @@ public class ShareSessionCacheTest {
         assertNull(cache.numMembers(groupId));
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private ImplicitLinkedHashCollection<CachedSharePartition> mockedSharePartitionMap(int size) {
         ImplicitLinkedHashCollection<CachedSharePartition> cacheMap = new
                 ImplicitLinkedHashCollection<>(size);
@@ -299,6 +311,7 @@ public class ShareSessionCacheTest {
         return cacheMap;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void assertShareCacheContains(ShareSessionCache cache,
                                          List<ShareSessionKey> sessionKeys) {
         int i = 0;
@@ -309,6 +322,7 @@ public class ShareSessionCacheTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertMetricsValues(
         int shareSessionsCount,
         int sharePartitionsCount,

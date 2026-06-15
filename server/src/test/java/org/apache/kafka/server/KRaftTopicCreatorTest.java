@@ -70,6 +70,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class KRaftTopicCreatorTest {
 
@@ -79,6 +81,7 @@ public class KRaftTopicCreatorTest {
     private KRaftTopicCreator kraftTopicCreator;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() {
         brokerToController = mock(NodeToControllerChannelManager.class);
 
@@ -94,6 +97,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateTopicWithMetadataContextPassPrincipal() throws Exception {
         String topicName = "topic";
         KafkaPrincipal userPrincipal = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user");
@@ -101,6 +105,7 @@ public class KRaftTopicCreatorTest {
 
         KafkaPrincipalSerde principalSerde = new KafkaPrincipalSerde() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public byte[] serialize(KafkaPrincipal principal) {
                 assertEquals(principal, userPrincipal);
                 serializeIsCalled.set(true);
@@ -108,6 +113,7 @@ public class KRaftTopicCreatorTest {
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public KafkaPrincipal deserialize(byte[] bytes) {
                 return SecurityUtils.parseKafkaPrincipal(Utils.utf8(bytes));
             }
@@ -133,6 +139,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateTopicWithMetadataContextWhenPrincipalSerdeNotDefined() {
         String topicName = "topic";
         RequestContext requestContext = initializeRequestContext(KafkaPrincipal.ANONYMOUS, Optional.empty());
@@ -143,6 +150,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateTopicWithoutRequestContext() {
         String topicName = "topic";
         CreateTopicsRequest.Builder createTopicsRequest = createCreateTopicsRequestBuilder(topicName);
@@ -162,6 +170,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEnvelopeResponseSuccessfulParsing() throws Exception {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -216,6 +225,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEnvelopeResponseWithEnvelopeError() {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -245,6 +255,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEnvelopeResponseParsingException() {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -275,6 +286,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEnvelopeResponseWithTopicErrors() throws Exception {
         String topicName1 = "test-topic-1";
         String topicName2 = "test-topic-2";
@@ -363,6 +375,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTimeoutException() {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -385,6 +398,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthenticationException() {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -415,6 +429,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testVersionMismatchException() {
         String topicName = "test-topic";
         RequestContext requestContext = initializeRequestContextWithUserPrincipal();
@@ -445,6 +460,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDirectCreateTopicsResponse() throws Exception {
         String topicName = "test-topic";
         CreateTopicsRequest.Builder createTopicsRequest = createCreateTopicsRequestBuilder(topicName);
@@ -481,6 +497,7 @@ public class KRaftTopicCreatorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUnexpectedResponseType() {
         String topicName = "test-topic";
         CreateTopicsRequest.Builder createTopicsRequest = createCreateTopicsRequestBuilder(topicName);
@@ -510,15 +527,18 @@ public class KRaftTopicCreatorTest {
         assertTrue(responseFuture.isCompletedExceptionally());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private RequestContext initializeRequestContextWithUserPrincipal() {
         KafkaPrincipal userPrincipal = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user");
         KafkaPrincipalSerde principalSerde = new KafkaPrincipalSerde() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public byte[] serialize(KafkaPrincipal principal) {
                 return Utils.utf8(principal.toString());
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public KafkaPrincipal deserialize(byte[] bytes) {
                 return SecurityUtils.parseKafkaPrincipal(Utils.utf8(bytes));
             }
@@ -526,6 +546,7 @@ public class KRaftTopicCreatorTest {
         return initializeRequestContext(userPrincipal, Optional.of(principalSerde));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private RequestContext initializeRequestContext(
         KafkaPrincipal kafkaPrincipal,
         Optional<KafkaPrincipalSerde> principalSerde
@@ -554,6 +575,7 @@ public class KRaftTopicCreatorTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private CreateTopicsRequest.Builder createCreateTopicsRequestBuilder(String topicName) {
         CreateTopicsRequestData.CreatableTopicCollection topicsCollection =
             new CreateTopicsRequestData.CreatableTopicCollection();

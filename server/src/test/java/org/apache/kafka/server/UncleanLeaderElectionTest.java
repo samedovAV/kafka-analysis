@@ -74,6 +74,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @ClusterTestDefaults(
         brokers = 2,
@@ -102,6 +104,7 @@ public class UncleanLeaderElectionTest {
     }
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() {
         admin = cluster.admin();
         // temporarily set ReplicationControlManager logger to a higher level so that tests run quietly
@@ -109,12 +112,14 @@ public class UncleanLeaderElectionTest {
     }
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void teardown() {
         Utils.closeQuietly(admin, "admin client");
         // restore log level
         Configurator.setLevel(ReplicationControlManager.class.getName(), Level.ERROR);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void disableEligibleLeaderReplicas() throws Exception {
         admin.updateFeatures(
                     Map.of(EligibleLeaderReplicasVersion.FEATURE_NAME, new FeatureUpdate((short) 0, FeatureUpdate.UpgradeType.SAFE_DOWNGRADE))
@@ -126,6 +131,7 @@ public class UncleanLeaderElectionTest {
              @ClusterConfigProperty(key = TopicConfig.UNCLEAN_LEADER_ELECTION_ENABLE_CONFIG, value = "true")
          }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionEnabledClassic() throws Exception {
         testUncleanLeaderElectionEnabled(GroupProtocol.CLASSIC);
     }
@@ -135,10 +141,12 @@ public class UncleanLeaderElectionTest {
             @ClusterConfigProperty(key = TopicConfig.UNCLEAN_LEADER_ELECTION_ENABLE_CONFIG, value = "true")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionEnabledConsumer() throws Exception {
         testUncleanLeaderElectionEnabled(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testUncleanLeaderElectionEnabled(GroupProtocol groupProtocol) throws Exception {
         disableEligibleLeaderReplicas();
 
@@ -150,15 +158,18 @@ public class UncleanLeaderElectionTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionDisabledClassic() throws Exception {
         testUncleanLeaderElectionDisabled(GroupProtocol.CLASSIC);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionDisabledConsumer() throws Exception {
         testUncleanLeaderElectionDisabled(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testUncleanLeaderElectionDisabled(GroupProtocol groupProtocol) throws Exception {
         // unclean leader election is disabled by default
         disableEligibleLeaderReplicas();
@@ -171,15 +182,18 @@ public class UncleanLeaderElectionTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionEnabledByTopicOverrideClassic() throws Exception {
         testUncleanLeaderElectionEnabledByTopicOverride(GroupProtocol.CLASSIC);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionEnabledByTopicOverrideConsumer() throws Exception {
         testUncleanLeaderElectionEnabledByTopicOverride(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testUncleanLeaderElectionEnabledByTopicOverride(GroupProtocol groupProtocol) throws Exception {
         disableEligibleLeaderReplicas();
 
@@ -196,6 +210,7 @@ public class UncleanLeaderElectionTest {
             @ClusterConfigProperty(key = TopicConfig.UNCLEAN_LEADER_ELECTION_ENABLE_CONFIG, value = "true")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionDisabledByTopicOverrideClassic() throws Exception {
         testUncleanLeaderElectionDisabledByTopicOverride(GroupProtocol.CLASSIC);
     }
@@ -205,10 +220,12 @@ public class UncleanLeaderElectionTest {
             @ClusterConfigProperty(key = TopicConfig.UNCLEAN_LEADER_ELECTION_ENABLE_CONFIG, value = "true")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionDisabledByTopicOverrideConsumer() throws Exception {
         testUncleanLeaderElectionDisabledByTopicOverride(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testUncleanLeaderElectionDisabledByTopicOverride(GroupProtocol groupProtocol) throws Exception {
         disableEligibleLeaderReplicas();
 
@@ -221,6 +238,7 @@ public class UncleanLeaderElectionTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUncleanLeaderElectionInvalidTopicOverride() throws Exception {
         disableEligibleLeaderReplicas();
 
@@ -231,6 +249,7 @@ public class UncleanLeaderElectionTest {
         assertInstanceOf(InvalidConfigurationException.class, e.getCause());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifyUncleanLeaderElectionEnabled(GroupProtocol groupProtocol) throws Exception {
         // wait until leader is elected
         int leaderId = awaitLeaderChange(cluster, TOPIC_PARTITION, Optional.empty());
@@ -273,6 +292,7 @@ public class UncleanLeaderElectionTest {
         assertEquals(List.of("first", "third"), consumeAllMessages(2, groupProtocol));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifyUncleanLeaderElectionDisabled(GroupProtocol groupProtocol) throws Exception {
         // wait until leader is elected
         int leaderId = awaitLeaderChange(cluster, TOPIC_PARTITION, Optional.empty());
@@ -338,6 +358,7 @@ public class UncleanLeaderElectionTest {
         assertEquals(List.of("first", "second", "third"), consumeAllMessages(3, groupProtocol));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private long getLeaderElectionCount() {
         Meter meter = (Meter) KafkaYammerMetrics.defaultRegistry().allMetrics().entrySet().stream()
                 .filter(entry -> entry.getKey().getName().endsWith("UncleanLeaderElectionsPerSec"))
@@ -347,6 +368,7 @@ public class UncleanLeaderElectionTest {
         return meter.count();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private List<String> consumeAllMessages(int numMessages, GroupProtocol groupProtocol) throws Exception {
         Map<String, Object> consumerConfig = Map.of(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName(),
@@ -364,15 +386,18 @@ public class UncleanLeaderElectionTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTopicUncleanLeaderElectionEnableWithAlterTopicConfigsClassic() throws Exception {
         testTopicUncleanLeaderElectionEnableWithAlterTopicConfigs(GroupProtocol.CLASSIC);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTopicUncleanLeaderElectionEnableWithAlterTopicConfigsConsumer() throws Exception {
         testTopicUncleanLeaderElectionEnableWithAlterTopicConfigs(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testTopicUncleanLeaderElectionEnableWithAlterTopicConfigs(GroupProtocol groupProtocol) throws Exception {
         disableEligibleLeaderReplicas();
 
@@ -445,6 +470,7 @@ public class UncleanLeaderElectionTest {
         assertEquals(List.of("first", "third"), consumeAllMessages(2, groupProtocol));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private AlterConfigsResult alterTopicConfigs(Map<String, String> configs) {
         ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, TOPIC);
         Collection<AlterConfigOp> configEntries = configs.entrySet().stream()
@@ -454,6 +480,7 @@ public class UncleanLeaderElectionTest {
         return admin.incrementalAlterConfigs(Map.of(configResource, configEntries));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void waitForNoLeaderAndIsrHasOldLeaderId(MetadataCache metadataCache, int leaderId) throws InterruptedException {
         waitForCondition(
                 () -> metadataCache.getLeaderAndIsr(TOPIC, PARTITION_ID)

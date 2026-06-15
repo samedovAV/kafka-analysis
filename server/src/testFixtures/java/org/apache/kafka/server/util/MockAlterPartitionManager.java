@@ -30,6 +30,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class MockAlterPartitionManager implements AlterPartitionManager {
     // Visible for testing
@@ -37,16 +39,19 @@ public class MockAlterPartitionManager implements AlterPartitionManager {
     private final AtomicBoolean inFlight = new AtomicBoolean(false);
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void start() {
 
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void shutdown() throws InterruptedException {
 
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public CompletableFuture<LeaderAndIsr> submit(TopicIdPartition topicIdPartition, LeaderAndIsr leaderAndIsr) {
         var future = new CompletableFuture<LeaderAndIsr>();
         if (inFlight.compareAndSet(false, true)) {
@@ -60,6 +65,7 @@ public class MockAlterPartitionManager implements AlterPartitionManager {
         return future;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void completeIsrUpdate(int newPartitionEpoch) {
         if (inFlight.compareAndSet(true, false)) {
             var item = isrUpdates.poll();
@@ -69,6 +75,7 @@ public class MockAlterPartitionManager implements AlterPartitionManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void failIsrUpdate(Errors error) {
         if (inFlight.compareAndSet(true, false)) {
             var item = isrUpdates.poll();

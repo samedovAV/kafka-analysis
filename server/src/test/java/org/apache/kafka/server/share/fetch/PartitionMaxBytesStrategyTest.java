@@ -31,16 +31,20 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class PartitionMaxBytesStrategyTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testConstructor() {
         assertThrows(IllegalArgumentException.class, () -> PartitionMaxBytesStrategy.type(null));
         assertDoesNotThrow(() -> PartitionMaxBytesStrategy.type(StrategyType.UNIFORM));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCheckValidArguments() {
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("topic1", 0));
         TopicIdPartition topicIdPartition2 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("topic1", 1));
@@ -68,6 +72,7 @@ public class PartitionMaxBytesStrategyTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUniformStrategy() {
         PartitionMaxBytesStrategy partitionMaxBytesStrategy = PartitionMaxBytesStrategy.type(StrategyType.UNIFORM);
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("topic1", 0));

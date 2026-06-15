@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientMetricsTestUtils {
 
@@ -51,6 +53,7 @@ public class ClientMetricsTestUtils {
     );
     public static final int CLIENT_PORT = 56078;
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Properties defaultTestProperties() {
         Properties props = new Properties();
         props.put(ClientMetricsConfigs.METRICS_CONFIG, METRICS_TEST_DEFAULT);
@@ -59,6 +62,7 @@ public class ClientMetricsTestUtils {
         return props;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static RequestContext requestContext() throws UnknownHostException {
         return new RequestContext(
             new RequestHeader(ApiKeys.GET_TELEMETRY_SUBSCRIPTIONS, (short) 0, "producer-1", 0),
@@ -72,6 +76,7 @@ public class ClientMetricsTestUtils {
             false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static RequestContext requestContextWithNullClientInfo() throws UnknownHostException {
         return new RequestContext(
             new RequestHeader(ApiKeys.GET_TELEMETRY_SUBSCRIPTIONS, (short) 0, "producer-1", 0),
@@ -85,6 +90,7 @@ public class ClientMetricsTestUtils {
             false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static RequestContext requestContextWithConnectionId(String connectionId) throws UnknownHostException {
         return new RequestContext(
             new RequestHeader(ApiKeys.GET_TELEMETRY_SUBSCRIPTIONS, (short) 0, "producer-1", 0),
@@ -103,6 +109,7 @@ public class ClientMetricsTestUtils {
         public int exportMetricsInvokedCount = 0;
         public List<ByteBuffer> metricsData = new ArrayList<>();
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void exportMetrics(AuthorizableRequestContext context, ClientTelemetryPayload payload) {
             exportMetricsInvokedCount += 1;
             metricsData.add(payload.data());
@@ -115,6 +122,7 @@ public class ClientMetricsTestUtils {
         public List<Integer> pushIntervals = new ArrayList<>();
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void exportMetrics(ClientTelemetryContext context, ClientTelemetryPayload payload) {
             exportMetricsInvokedCount += 1;
             metricsData.add(payload.data());
@@ -137,19 +145,23 @@ public class ClientMetricsTestUtils {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public ClientTelemetryReceiver clientReceiver() {
             return receiver;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public ClientTelemetryExporter clientTelemetryExporter() {
             return exporter;
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public TestClientMetricsReceiver getReceiver() {
             return receiver;
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public TestClientTelemetryExporter getExporter() {
             return exporter;
         }

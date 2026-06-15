@@ -55,6 +55,8 @@ import java.util.Random;
 import static org.apache.kafka.server.TestUtils.awaitLeaderChange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @ClusterTestDefaults(
     types = {Type.KRAFT},
@@ -74,6 +76,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetOffsetsForUnknownTopic() throws IOException {
         TopicPartition topicPartition = new TopicPartition("foo", 0);
         ListOffsetsRequest request = ListOffsetsRequest.Builder
@@ -85,6 +88,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testGetOffsetsAfterDeleteRecords() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -113,6 +117,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFetchOffsetByTimestampForMaxTimestampAfterTruncate() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -138,6 +143,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFetchOffsetByTimestampForMaxTimestampWithUnorderedTimestamps() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -159,6 +165,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testGetOffsetsBeforeLatestTime() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -197,6 +204,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEmptyLogsGetOffsets() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -211,6 +219,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchOffsetByTimestampForMaxTimestampWithEmptyLog() throws Exception {
         String topic = "kafka-";
         TopicPartition topicPartition = new TopicPartition(topic, 0);
@@ -223,6 +232,7 @@ public class LogOffsetTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testGetOffsetsBeforeEarliestTime() throws Exception {
         Random random = new Random();
         String topic = "kafka-";
@@ -249,18 +259,22 @@ public class LogOffsetTest {
         assertEquals(0L, offsetFromResponse);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private KafkaBroker broker() {
         return clusterInstance.aliveBrokers().values().iterator().next();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ListOffsetsResponse sendListOffsetsRequest(ListOffsetsRequest request) throws IOException {
         return IntegrationTestUtils.connectAndReceive(request, clusterInstance.brokerBoundPorts().get(0));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private FetchResponse sendFetchRequest(FetchRequest request) throws IOException {
         return IntegrationTestUtils.connectAndReceive(request, clusterInstance.brokerBoundPorts().get(0));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private List<ListOffsetsTopic> buildTargetTimes(TopicPartition tp, long timestamp) {
         return List.of(new ListOffsetsTopic()
             .setName(tp.topic())
@@ -269,6 +283,7 @@ public class LogOffsetTest {
                 .setTimestamp(timestamp))));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ListOffsetsPartitionResponse findPartition(List<ListOffsetsTopicResponse> topics, TopicPartition tp) {
         return topics.stream()
             .filter(t -> t.name().equals(tp.topic())).findFirst().get()
@@ -276,6 +291,7 @@ public class LogOffsetTest {
             .filter(p -> p.partitionIndex() == tp.partition()).findFirst().get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private UnifiedLog createTopicAndGetLog(String topic, TopicPartition topicPartition) throws Exception {
         clusterInstance.createTopic(topic, 1, (short) 1);
 
@@ -284,16 +300,19 @@ public class LogOffsetTest {
         return broker().logManager().getLog(topicPartition).get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Uuid getTopicId(String topic) throws Exception {
         try (Admin admin = clusterInstance.admin()) {
             return admin.describeTopics(List.of(topic)).allTopicNames().get().get(topic).topicId();
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static MemoryRecords singletonRecords(byte[] value) {
         return MemoryRecords.withRecords(Compression.NONE, new SimpleRecord(value));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static MemoryRecords singletonRecords(byte[] value, long timestamp) {
         return MemoryRecords.withRecords(Compression.NONE, new SimpleRecord(timestamp, null, value));
     }

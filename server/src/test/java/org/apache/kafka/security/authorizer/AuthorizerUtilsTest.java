@@ -48,11 +48,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AuthorizerUtilsTest {
 
     @ParameterizedTest
     @EnumSource(ProcessRole.class)
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testCreateAuthorizer(ProcessRole role) throws ClassNotFoundException {
         Map<String, Object> configs = Map.of();
         Metrics metrics = new Metrics();
@@ -95,6 +98,7 @@ public class AuthorizerUtilsTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void withPluginMetrics(PluginMetrics metrics) {
             assertTrue(configured);
             metricName = metrics.metricName("authorize calls", "Number of times authorize was called", EXTRA_TAGS);
@@ -102,36 +106,43 @@ public class AuthorizerUtilsTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Map<Endpoint, ? extends CompletionStage<Void>> start(AuthorizerServerInfo serverInfo) {
             return Map.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<AuthorizationResult> authorize(AuthorizableRequestContext requestContext, List<Action> actions) {
             counter.incrementAndGet();
             return List.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclCreateResult>> createAcls(AuthorizableRequestContext requestContext, List<AclBinding> aclBindings) {
             return List.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclDeleteResult>> deleteAcls(AuthorizableRequestContext requestContext, List<AclBindingFilter> aclBindingFilters) {
             return List.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Iterable<AclBinding> acls(AclBindingFilter filter) {
             return null;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void close() {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void configure(Map<String, ?> configs) {
             configured = true;
         }

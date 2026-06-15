@@ -25,6 +25,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DelayedFuturePurgatory {
     private final DelayedOperationPurgatory<DelayedFuture<?>> purgatory;
@@ -43,6 +45,7 @@ public class DelayedFuturePurgatory {
         this.purgatoryKey = () -> "delayed-future-key";
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public <T> DelayedFuture<T> tryCompleteElseWatch(
         long timeoutMs,
         List<CompletableFuture<T>> futures,
@@ -57,12 +60,14 @@ public class DelayedFuturePurgatory {
         return delayedFuture;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void shutdown() throws Exception {
         executor.shutdownNow();
         executor.awaitTermination(60, TimeUnit.SECONDS);
         purgatory.shutdown();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public boolean isShutdown() {
         return executor.isShutdown();
     }

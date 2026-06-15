@@ -22,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * An MBean that allows the user to dynamically alter log4j levels at runtime.
@@ -60,6 +62,7 @@ public class LoggingController implements LoggingControllerMBean {
      * Returns a map of the log4j loggers and their assigned log level.
      * If a logger does not have a log level assigned, we return the log level of the first ancestor with a level configured.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static Map<String, String> loggers() {
         return DELEGATE.loggers();
     }
@@ -70,19 +73,23 @@ public class LoggingController implements LoggingControllerMBean {
      *
      * @see Level#toLevel(String, Level)
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static boolean logLevel(String loggerName, String logLevel) {
         return DELEGATE.logLevel(loggerName, logLevel);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static boolean unsetLogLevel(String loggerName) {
         return DELEGATE.unsetLogLevel(loggerName);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public static boolean loggerExists(String loggerName) {
         return DELEGATE.loggerExists(loggerName);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public List<String> getLoggers() {
         return LoggingController.loggers()
                 .entrySet()
@@ -92,11 +99,13 @@ public class LoggingController implements LoggingControllerMBean {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String getLogLevel(String loggerName) {
         return LoggingController.loggers().getOrDefault(loggerName, "No such logger.");
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean setLogLevel(String loggerName, String level) {
         return LoggingController.logLevel(loggerName, level);
     }

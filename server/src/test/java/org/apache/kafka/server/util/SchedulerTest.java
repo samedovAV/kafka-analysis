@@ -52,6 +52,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class SchedulerTest {
 
@@ -61,6 +63,7 @@ public class SchedulerTest {
     private final AtomicInteger counter2 = new AtomicInteger(0);
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void setup() {
         counter1.set(0);
         counter2.set(0);
@@ -68,11 +71,13 @@ public class SchedulerTest {
     }
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void teardown() throws InterruptedException {
         scheduler.shutdown();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testMockSchedulerNonPeriodicTask() {
         mockTime.scheduler.scheduleOnce("test1", counter1::getAndIncrement, 1);
         mockTime.scheduler.scheduleOnce("test2", counter2::getAndIncrement, 100);
@@ -87,6 +92,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testMockSchedulerPeriodicTask() {
         mockTime.scheduler.schedule("test1", counter1::getAndIncrement, 1, 1);
         mockTime.scheduler.schedule("test2", counter2::getAndIncrement, 100, 100);
@@ -101,6 +107,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testReentrantTaskInMockScheduler() {
         mockTime.scheduler.scheduleOnce("test1", () -> mockTime.scheduler.scheduleOnce("test2", counter2::getAndIncrement, 0), 1);
         mockTime.sleep(1);
@@ -108,6 +115,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testNonPeriodicTask() throws InterruptedException {
         scheduler.scheduleOnce("test", counter1::getAndIncrement);
         TestUtils.waitForCondition(() -> counter1.get() == 1, "Scheduled task was not executed");
@@ -116,6 +124,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testNonPeriodicTaskWhenPeriodIsZero() throws InterruptedException {
         scheduler.schedule("test", counter1::getAndIncrement, 0, 0);
         TestUtils.waitForCondition(() -> counter1.get() == 1, "Scheduled task was not executed");
@@ -124,12 +133,14 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testPeriodicTask() throws InterruptedException {
         scheduler.schedule("test", counter1::getAndIncrement, 0, 5);
         TestUtils.waitForCondition(() -> counter1.get() >= 20, "Should count to 20");
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testRestart() throws InterruptedException {
         // schedule a task to increment a counter
         mockTime.scheduler.scheduleOnce("test1", counter1::getAndIncrement, 1);
@@ -147,6 +158,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testUnscheduleProducerTask() throws IOException {
         File tmpDir = TestUtils.tempDirectory();
         File logDir = TestUtils.randomPartitionLogDir(tmpDir);
@@ -203,6 +215,7 @@ public class SchedulerTest {
      */
     @Timeout(15)
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testMockSchedulerLocking() throws InterruptedException {
         CountDownLatch initLatch = new CountDownLatch(1);
         CountDownLatch completionLatch = new CountDownLatch(2);
@@ -229,6 +242,7 @@ public class SchedulerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testPendingTaskSize() throws InterruptedException {
         CountDownLatch latch1 = new CountDownLatch(1);
         CountDownLatch latch2 = new CountDownLatch(2);
@@ -245,14 +259,17 @@ public class SchedulerTest {
 
     @FunctionalInterface
     private interface InterruptedConsumer<T> {
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         void accept(T t) throws InterruptedException;
     }
 
     @FunctionalInterface
     private interface InterruptedRunnable {
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         void run() throws InterruptedException;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Runnable interruptedRunnableWrapper(InterruptedRunnable runnable) {
         return () -> {
             try {

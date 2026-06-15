@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A delayed delete records operation that can be created by the replica manager and watched
@@ -80,6 +82,7 @@ public class DelayedDeleteRecords extends DelayedOperation {
      *
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean tryComplete() {
         //  check for each partition if it still has pending acks
         deleteRecordsStatus.forEach((topicPartition, status) -> {
@@ -94,6 +97,7 @@ public class DelayedDeleteRecords extends DelayedOperation {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void onExpiration() {
         AGGREGATE_EXPIRATION_METER.mark(deleteRecordsStatus.values().stream().filter(DeleteRecordsPartitionStatus::acksPending).count());
     }
@@ -102,6 +106,7 @@ public class DelayedDeleteRecords extends DelayedOperation {
      * Upon completion, return the current response status along with the error code per partition
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void onComplete() {
         responseCallback.accept(deleteRecordsStatus.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().responseStatus())));

@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The default share group DLQ manager responsible for processing
@@ -41,6 +43,7 @@ public class DefaultShareGroupDLQManager implements ShareGroupDLQManager {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultShareGroupDLQManager.class);
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ShareGroupDLQManager instance(
         KafkaClient client,
         ShareGroupDLQMetadataCacheHelper cacheHelper,
@@ -65,11 +68,13 @@ public class DefaultShareGroupDLQManager implements ShareGroupDLQManager {
         this.stateManager = new ShareGroupDLQStateManager(client, cacheHelper, time, timer, shareGroupMetrics, logReader);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void start() {
         this.stateManager.start();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public CompletableFuture<Void> enqueue(ShareGroupDLQRecordParameter param) {
         try {
             validate(param);
@@ -81,6 +86,7 @@ public class DefaultShareGroupDLQManager implements ShareGroupDLQManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void stop() {
         try {
             stateManager.stop();
@@ -89,6 +95,7 @@ public class DefaultShareGroupDLQManager implements ShareGroupDLQManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void validate(ShareGroupDLQRecordParameter param) {
         String prefix = "DLQ records parameters";
         if (param == null) {

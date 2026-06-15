@@ -16,6 +16,9 @@
  */
 
 package org.apache.kafka.server;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 public enum ProcessRole {
     BrokerRole("broker"),
@@ -28,6 +31,7 @@ public enum ProcessRole {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         return roleName;
     }

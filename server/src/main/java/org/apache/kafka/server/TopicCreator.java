@@ -22,6 +22,8 @@ import org.apache.kafka.common.requests.CreateTopicsResponse;
 import org.apache.kafka.common.requests.RequestContext;
 
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Abstraction for creating topics via the controller.
@@ -38,6 +40,7 @@ public interface TopicCreator {
      * @param createTopicsRequest The topics to be created.
      * @return A future of the create topics response. This future will be completed on the network thread.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     CompletableFuture<CreateTopicsResponse> createTopicWithPrincipal(
         RequestContext requestContext,
         CreateTopicsRequest.Builder createTopicsRequest
@@ -50,6 +53,7 @@ public interface TopicCreator {
      * @param createTopicsRequest The topics to be created.
      * @return A future of the create topics response. This future will be completed on the network thread.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     CompletableFuture<CreateTopicsResponse> createTopicWithoutPrincipal(
         CreateTopicsRequest.Builder createTopicsRequest
     );

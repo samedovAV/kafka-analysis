@@ -24,10 +24,13 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ShareSessionTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPartitionsToLogString() {
         Uuid uuid1 = Uuid.randomUuid();
         Uuid uuid2 = Uuid.randomUuid();
@@ -43,6 +46,7 @@ public class ShareSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPartitionsToLogStringEmpty() {
         String response = ShareSession.partitionsToLogString(List.of(), false);
         assertEquals("0 partition(s)", response);

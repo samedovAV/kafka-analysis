@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The context for a share session fetch request.
@@ -79,26 +81,31 @@ public class ShareSessionContext extends ShareFetchContext {
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public List<TopicIdPartition> shareFetchData() {
         return shareFetchData;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isSubsequent() {
         return isSubsequent;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareSession session() {
         return session;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     boolean isTraceEnabled() {
         return log.isTraceEnabled();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareFetchResponse throttleResponse(int throttleTimeMs) {
         if (!isSubsequent) {
             return ShareFetchResponse.of(Errors.NONE, throttleTimeMs, new LinkedHashMap<>(), List.of(), 0);
@@ -133,6 +140,7 @@ public class ShareSessionContext extends ShareFetchContext {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_N2, n = "", count = {})
         public boolean hasNext() {
             while ((nextElement == null) && iterator.hasNext()) {
                 Map.Entry<TopicIdPartition, ShareFetchResponseData.PartitionData> element = iterator.next();
@@ -160,6 +168,7 @@ public class ShareSessionContext extends ShareFetchContext {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Map.Entry<TopicIdPartition, ShareFetchResponseData.PartitionData> next() {
             if (!hasNext()) throw new NoSuchElementException();
             Map.Entry<TopicIdPartition, ShareFetchResponseData.PartitionData> element = nextElement;
@@ -168,12 +177,14 @@ public class ShareSessionContext extends ShareFetchContext {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void remove() {
             throw new UnsupportedOperationException();
         }
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int responseSize(LinkedHashMap<TopicIdPartition, PartitionData> updates, short version) {
         if (!isSubsequent)
             return ShareFetchResponse.sizeOf(version, updates.entrySet().iterator());
@@ -188,6 +199,7 @@ public class ShareSessionContext extends ShareFetchContext {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public ShareFetchResponse updateAndGenerateResponseData(String groupId, String memberId,
                                                      LinkedHashMap<TopicIdPartition, ShareFetchResponseData.PartitionData> updates) {
         if (!isSubsequent) {
@@ -216,6 +228,7 @@ public class ShareSessionContext extends ShareFetchContext {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ErroneousAndValidPartitionData getErroneousAndValidTopicIdPartitions() {
         if (!isSubsequent) {
             return new ErroneousAndValidPartitionData(shareFetchData);

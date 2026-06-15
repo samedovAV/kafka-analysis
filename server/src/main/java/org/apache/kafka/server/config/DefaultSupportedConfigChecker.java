@@ -26,6 +26,8 @@ import org.apache.kafka.storage.internals.log.LogConfig;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Default implementation of SupportedConfigChecker that checks if a configuration name
@@ -52,6 +54,7 @@ public final class DefaultSupportedConfigChecker implements SupportedConfigCheck
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public boolean test(String key) {
             return keys.contains(key);
         }
@@ -69,6 +72,7 @@ public final class DefaultSupportedConfigChecker implements SupportedConfigCheck
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isSupported(ConfigResource.Type resourceType, String configName) {
         Predicate<String> predicate = validConfigsByType.get(resourceType);
         return predicate != null && predicate.test(configName);

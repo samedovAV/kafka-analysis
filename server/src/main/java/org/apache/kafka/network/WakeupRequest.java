@@ -15,11 +15,15 @@
  * limitations under the License.
  */
 package org.apache.kafka.network;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 public enum WakeupRequest implements BaseRequest {
     INSTANCE;
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         return "WakeupRequest";
     }

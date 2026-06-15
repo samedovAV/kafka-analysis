@@ -21,6 +21,8 @@ import org.apache.kafka.common.message.ShareFetchResponseData.AcquiredRecords;
 
 import java.util.List;
 import java.util.Objects;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The ShareAcquiredRecords class is used to send the acquired records and associated metadata.
@@ -52,14 +54,17 @@ public class ShareAcquiredRecords {
         this.count = 0;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public List<AcquiredRecords> acquiredRecords() {
         return acquiredRecords;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int count() {
         return count;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ShareAcquiredRecords empty() {
         return EMPTY_SHARE_ACQUIRED_RECORDS;
     }

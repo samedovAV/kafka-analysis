@@ -32,10 +32,13 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class NodeMetricsTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMetricsExported(boolean enableUnstableVersions) {
         Metrics metrics = new Metrics();
         String expectedGroup = "node-metrics";

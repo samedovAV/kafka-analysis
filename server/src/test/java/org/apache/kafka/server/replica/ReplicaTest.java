@@ -34,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ReplicaTest {
 
@@ -45,6 +47,7 @@ public class ReplicaTest {
     private Replica replica;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() {
         time = new MockTime();
         MetadataCache metadataCache = mock(MetadataCache.class);
@@ -52,6 +55,7 @@ public class ReplicaTest {
         replica = new Replica(BROKER_ID, PARTITION, metadataCache);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertReplicaState(
         long logStartOffset,
         long logEndOffset,
@@ -75,6 +79,7 @@ public class ReplicaTest {
             "Broker Epoch Mismatch");
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void assertReplicaState(
         long logStartOffset,
         long logEndOffset,
@@ -86,6 +91,7 @@ public class ReplicaTest {
             lastFetchTimeMs, Optional.of(1L));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private long updateFetchState(
         long followerFetchOffset,
         long followerStartOffset,
@@ -102,6 +108,7 @@ public class ReplicaTest {
         return currentTimeMs;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private long resetReplicaState(
         long leaderEndOffset,
         boolean isNewLeader,
@@ -117,6 +124,7 @@ public class ReplicaTest {
         return currentTimeMs;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private boolean isCaughtUp(long leaderEndOffset) {
         return replica.stateSnapshot().isCaughtUp(
             leaderEndOffset,
@@ -126,6 +134,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testInitialState() {
         assertReplicaState(
             UnifiedLog.UNKNOWN_OFFSET,
@@ -138,6 +147,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateFetchState() {
         long fetchTimeMs1 = updateFetchState(
             5L,
@@ -183,6 +193,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResetReplicaStateWhenLeaderIsReelectedAndReplicaIsInSync() {
         updateFetchState(
             10L,
@@ -206,6 +217,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResetReplicaStateWhenLeaderIsReelectedAndReplicaIsNotInSync() {
         updateFetchState(
             10L,
@@ -229,6 +241,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResetReplicaStateWhenNewLeaderIsElectedAndReplicaIsInSync() {
         updateFetchState(
             10L,
@@ -253,6 +266,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResetReplicaStateWhenNewLeaderIsElectedAndReplicaIsNotInSync() {
         updateFetchState(
             10L,
@@ -277,6 +291,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsCaughtUpWhenReplicaIsCaughtUpToLogEnd() {
         assertFalse(isCaughtUp(10L));
 
@@ -294,6 +309,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIsCaughtUpWhenReplicaIsNotCaughtUpToLogEnd() {
         assertFalse(isCaughtUp(10L));
 
@@ -319,6 +335,7 @@ public class ReplicaTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFenceStaleUpdates() {
         MetadataCache metadataCache = mock(MetadataCache.class);
         when(metadataCache.getAliveBrokerEpoch(BROKER_ID)).thenReturn(Optional.of(2L));

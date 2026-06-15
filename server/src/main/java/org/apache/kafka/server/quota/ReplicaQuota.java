@@ -17,9 +17,14 @@
 package org.apache.kafka.server.quota;
 
 import org.apache.kafka.common.TopicPartition;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface ReplicaQuota {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void record(long value);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isThrottled(TopicPartition topicPartition);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isQuotaExceeded();
 }

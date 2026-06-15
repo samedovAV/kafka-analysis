@@ -51,6 +51,8 @@ import static org.apache.kafka.test.TestUtils.isValidClusterId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /** The test cases here verify the following conditions.
  * 1. The ProducerInterceptor receives the cluster id after the onSend() method is called and before onAcknowledgement() method is called.
@@ -83,6 +85,7 @@ public class EndToEndClusterIdTest {
     }
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() throws InterruptedException {
         this.clusterInstance.createTopic(TOPIC, 2, (short) 1);
         clusterBrokerId = String.valueOf(clusterInstance.brokerIds().iterator().next());
@@ -96,6 +99,7 @@ public class EndToEndClusterIdTest {
         public String controllerId;
 
         @Override
+        @Prove(complexity = Complexity.O_N, n = "", count = {})
         public void configure(Map<String, ?> configs) {
             super.configure(configs);
 
@@ -108,6 +112,7 @@ public class EndToEndClusterIdTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onUpdate(ClusterResource clusterMetadata) {
             if (clientId != null) CLUSTER_RESOURCE_MAP.put(clientId, clusterMetadata);
             if (brokerId != null) CLUSTER_RESOURCE_MAP.put(brokerId, clusterMetadata);
@@ -116,15 +121,18 @@ public class EndToEndClusterIdTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEndToEndWithClassicProtocol() throws Exception {
         testEndToEnd(GroupProtocol.CLASSIC);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEndToEndWithConsumerProtocol() throws Exception {
         testEndToEnd(GroupProtocol.CONSUMER);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEndToEnd(GroupProtocol groupProtocol) throws Exception {
         MockConsumerInterceptor.resetCounters();
         MockProducerInterceptor.resetCounters();
@@ -211,11 +219,13 @@ public class EndToEndClusterIdTest {
         MockProducerInterceptor.resetCounters();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void sendRecord(Producer<String, String> producer) throws Exception {
         ProducerRecord<String, String> record = new ProducerRecord<>(TP.topic(), TP.partition(), "0", "0");
         producer.send(record).get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void consumeRecord(Consumer<String, String> consumer) throws InterruptedException {
         List<ConsumerRecord<String, String>> records = new ArrayList<>();
         TestUtils.waitForCondition(() -> {

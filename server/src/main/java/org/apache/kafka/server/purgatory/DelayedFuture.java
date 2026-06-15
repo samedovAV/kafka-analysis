@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A delayed operation using CompletionFutures that can be created by KafkaApis and watched
@@ -48,6 +50,7 @@ public class DelayedFuture<T> extends DelayedOperation {
      * or failed with exceptions.
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean tryComplete() {
         log.trace("Trying to complete operation for {} futures", futures.size());
 
@@ -66,6 +69,7 @@ public class DelayedFuture<T> extends DelayedOperation {
      * futures have completed or the operation has timed out.
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void onComplete() {
         List<CompletableFuture<T>> pendingFutures = futures.stream().filter(future -> !future.isDone()).toList();
         log.trace("Completing operation for {} futures, expired {}", futures.size(), pendingFutures.size());
@@ -77,6 +81,7 @@ public class DelayedFuture<T> extends DelayedOperation {
      * This is invoked after onComplete(), so no actions required.
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void onExpiration() {
         // This is invoked after onComplete(), so no actions required.
     }

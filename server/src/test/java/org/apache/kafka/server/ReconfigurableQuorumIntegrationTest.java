@@ -46,9 +46,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @Tag("integration")
 public class ReconfigurableQuorumIntegrationTest {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void checkKRaftVersions(Admin admin, short finalized) throws Exception {
         FeatureMetadata featureMetadata = admin.describeFeatures().featureMetadata().get();
         if (finalized > 0) {
@@ -68,6 +71,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateAndDestroyNonReconfigurableCluster() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder().
@@ -85,6 +89,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateAndDestroyReconfigurableCluster() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder().
@@ -101,6 +106,7 @@ public class ReconfigurableQuorumIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Map<Integer, Uuid> findVoterDirs(Admin admin) throws Exception {
         QuorumInfo quorumInfo = admin.describeMetadataQuorum().quorumInfo().get();
         Map<Integer, Uuid> result = new TreeMap<>();
@@ -109,6 +115,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testRemoveController() throws Exception {
         final var nodes = new TestKitNodes.Builder().
             setNumBrokerNodes(1).
@@ -144,6 +151,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testRemoveAndAddSameController() throws Exception {
         final var nodes = new TestKitNodes.Builder().
             setNumBrokerNodes(1).
@@ -190,6 +198,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testControllersAutoJoinStandaloneVoter() throws Exception {
         final var nodes = new TestKitNodes.Builder().
             setNumBrokerNodes(1).
@@ -215,6 +224,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testNewVoterAutoRemovesAndAdds() throws Exception {
         final var nodes = new TestKitNodes.Builder().
             setNumBrokerNodes(1).
@@ -253,6 +263,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testRemoveAndAddVoterWithValidClusterId() throws Exception {
         final var nodes = new TestKitNodes.Builder()
             .setClusterId("test-cluster")
@@ -303,6 +314,7 @@ public class ReconfigurableQuorumIntegrationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testRemoveAndAddVoterWithInconsistentClusterId() throws Exception {
         final var nodes = new TestKitNodes.Builder()
             .setClusterId("test-cluster")
@@ -341,6 +353,7 @@ public class ReconfigurableQuorumIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private static int port(Admin admin, int nodeId) throws Exception {
         return admin.describeMetadataQuorum().quorumInfo().get().nodes().get(nodeId).endpoints().stream()
             .findFirst().orElseThrow().port();

@@ -22,10 +22,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class CachedSharePartitionTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCachedSharePartitionEqualsAndHashCode() {
         Uuid topicId = Uuid.randomUuid();
         String topicName = "topic";

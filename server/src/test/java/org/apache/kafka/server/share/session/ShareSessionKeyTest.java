@@ -22,21 +22,26 @@ import org.apache.kafka.common.Uuid;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ShareSessionKeyTest {
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testConstructorThrowsExceptionWhenGroupIdIsNull() {
         assertThrows(NullPointerException.class,
             () -> new ShareSessionKey(null, Uuid.randomUuid().toString()));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testConstructorThrowsExceptionWhenMemberIdIsNull() {
         assertThrows(NullPointerException.class,
             () -> new ShareSessionKey("random", null));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testConstructorThrowsExceptionWhenBothGroupIdAndMemberIdIsNull() {
         assertThrows(NullPointerException.class,
             () -> new ShareSessionKey(null, null));

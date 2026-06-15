@@ -21,10 +21,13 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DynamicBrokerConfigTest {
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testBrokerConfigSynonyms() {
         List<String> logRollTimeConfigs = List.of(ServerLogConfigs.LOG_ROLL_TIME_MILLIS_CONFIG, ServerLogConfigs.LOG_ROLL_TIME_HOURS_CONFIG);
         for (String config : logRollTimeConfigs) {

@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ShareSession {
 
@@ -68,36 +70,44 @@ public class ShareSession {
         this.connectionId = connectionId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareSessionKey key() {
         return key;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized int cachedSize() {
         return cachedSize;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized ImplicitLinkedHashCollection<CachedSharePartition> partitionMap() {
         return partitionMap;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized int epoch() {
         return epoch;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized int size() {
         return partitionMap.size();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized boolean isEmpty() {
         return partitionMap.isEmpty();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String connectionId() {
         return connectionId;
     }
 
     // Update the cached partition data based on the request.
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized Map<ModifiedTopicIdPartitionType, List<TopicIdPartition>> update(
         List<TopicIdPartition> shareFetchData,
         List<TopicIdPartition> toForget
@@ -131,12 +141,14 @@ public class ShareSession {
      * @return The difference between the current cached size and the previously stored cached size. This is required to
      *         update the total number of share partitions stored in the share session cache.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized int updateCachedSize() {
         var previousSize = cachedSize;
         cachedSize = partitionMap.size();
         return previousSize != -1 ? cachedSize - previousSize : cachedSize;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static String partitionsToLogString(Collection<TopicIdPartition> partitions, boolean traceEnabled) {
         if (traceEnabled) {
             return partitions.toString();
@@ -144,6 +156,7 @@ public class ShareSession {
         return partitions.size() + " partition(s)";
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         return "ShareSession(" +
                 "key=" + key +

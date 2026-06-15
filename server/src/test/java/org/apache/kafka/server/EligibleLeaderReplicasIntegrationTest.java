@@ -62,6 +62,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @ClusterTestDefaults(
     brokers = 5,
@@ -79,6 +81,7 @@ public class EligibleLeaderReplicasIntegrationTest {
     }
 
     @ClusterTest(types = {Type.KRAFT}, metadataVersion = MetadataVersion.IBP_4_0_IV1)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testHighWatermarkShouldNotAdvanceIfUnderMinIsr() throws ExecutionException, InterruptedException {
         try (var admin = clusterInstance.admin();
             var producer = clusterInstance.producer(Map.of(
@@ -141,6 +144,7 @@ public class EligibleLeaderReplicasIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void waitUntilOneMessageIsConsumed(Consumer<?, ?> consumer) throws InterruptedException {
         TestUtils.waitForCondition(
             () -> {
@@ -156,6 +160,7 @@ public class EligibleLeaderReplicasIntegrationTest {
     }
 
     @ClusterTest(types = {Type.KRAFT}, metadataVersion = MetadataVersion.IBP_4_0_IV1)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testElrMemberCanBeElected() throws ExecutionException, InterruptedException {
         try (var admin = clusterInstance.admin()) {
             String testTopicName = String.format("%s-%s", "testElrMemberCanBeElected", "ELR-test");
@@ -225,6 +230,7 @@ public class EligibleLeaderReplicasIntegrationTest {
     }
 
     @ClusterTest(types = {Type.KRAFT}, metadataVersion = MetadataVersion.IBP_4_0_IV1)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testElrMemberShouldBeKickOutWhenUncleanShutdown() throws ExecutionException, InterruptedException {
         try (var admin = clusterInstance.admin()) {
             String testTopicName = String.format("%s-%s", "testElrMemberShouldBeKickOutWhenUncleanShutdown", "ELR-test");
@@ -282,6 +288,7 @@ public class EligibleLeaderReplicasIntegrationTest {
         This test is only valid for KIP-966 part 1. When the unclean recovery is implemented, it should be removed.
      */
     @ClusterTest(types = {Type.KRAFT}, metadataVersion = MetadataVersion.IBP_4_0_IV1)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testLastKnownLeaderShouldBeElectedIfEmptyElr() throws ExecutionException, InterruptedException {
         try (var admin = clusterInstance.admin()) {
             String testTopicName = String.format("%s-%s", "testLastKnownLeaderShouldBeElectedIfEmptyElr", "ELR-test");
@@ -358,6 +365,7 @@ public class EligibleLeaderReplicasIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void waitForIsrAndElr(BiFunction<Integer, Integer, Boolean> isIsrAndElrSizeSatisfied, Admin admin, String testTopicName) throws InterruptedException {
         TestUtils.waitForCondition(
             () -> {

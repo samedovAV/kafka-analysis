@@ -24,6 +24,8 @@ import org.apache.kafka.server.telemetry.ClientTelemetryReceiver;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Plugin to register client telemetry receivers/exporters and export metrics. This class is used by the Kafka
@@ -41,22 +43,27 @@ public class ClientTelemetryExporterPlugin {
         this.exporters = Collections.synchronizedList(new ArrayList<>());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public boolean isEmpty() {
         return receivers.isEmpty() && exporters.isEmpty();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void add(ClientTelemetryReceiver receiver) {
         receivers.add(receiver);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void add(ClientTelemetryExporter exporter) {
         exporters.add(exporter);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public DefaultClientTelemetryPayload getPayLoad(PushTelemetryRequest request, int maxDecompressedBytes) {
         return new DefaultClientTelemetryPayload(request, maxDecompressedBytes);
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void exportMetrics(RequestContext context, PushTelemetryRequest request, int pushIntervalMs, int maxDecompressedBytes) {
         DefaultClientTelemetryPayload payload = getPayLoad(request, maxDecompressedBytes);
 

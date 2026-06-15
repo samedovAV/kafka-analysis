@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The ControllerMutationQuotaManager is a specialized ClientQuotaManager used in the context
@@ -58,12 +60,14 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     protected MetricName clientQuotaMetricName(Map<String, String> quotaMetricTags) {
         return metrics.metricName("tokens", QuotaType.CONTROLLER_MUTATION.toString(),
                 "Tracking remaining tokens in the token bucket per user/client-id",
                 quotaMetricTags);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private MetricName clientRateMetricName(Map<String, String> quotaMetricTags) {
         return metrics.metricName("mutation-rate", QuotaType.CONTROLLER_MUTATION.toString(),
                 "Tracking mutation-rate per user/client-id",
@@ -71,6 +75,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     protected void registerQuotaMetrics(Map<String, String> metricTags, Sensor sensor) {
         sensor.add(
                 clientRateMetricName(metricTags),
@@ -96,6 +101,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
      *         rate gets back to the defined quota
      */
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int recordAndGetThrottleTimeMs(Session session, String clientId, double value, long timeMs) {
         ClientSensors clientSensors = getOrCreateQuotaSensors(session, clientId);
         Sensor quotaSensor = clientSensors.quotaSensor();
@@ -124,6 +130,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
      * @param clientId The client id
      * @return ControllerMutationQuota
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ControllerMutationQuota newStrictQuotaFor(Session session, String clientId) {
         if (quotasEnabled()) {
             ClientSensors clientSensors = getOrCreateQuotaSensors(session, clientId);
@@ -133,6 +140,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public ControllerMutationQuota newStrictQuotaFor(Session session, RequestHeader header) {
         return newStrictQuotaFor(session, header.clientId());
     }
@@ -145,6 +153,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
      * @param clientId The client id
      * @return ControllerMutationQuota
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ControllerMutationQuota newPermissiveQuotaFor(Session session, String clientId) {
         if (quotasEnabled()) {
             ClientSensors clientSensors = getOrCreateQuotaSensors(session, clientId);
@@ -166,6 +175,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
      * @param strictSinceVersion The version since quota is strict
      * @return ControllerMutationQuota instance
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ControllerMutationQuota newQuotaFor(Session session, RequestHeader header, short strictSinceVersion) {
         if (header.apiVersion() >= strictSinceVersion) return newStrictQuotaFor(session, header);
         return newPermissiveQuotaFor(session, header.clientId());
@@ -177,6 +187,7 @@ public class ControllerMutationQuotaManager extends ClientQuotaManager {
      * Basically, if a value < 0 is observed, the time required to bring it to zero is
      * -value/ refill rate (quota bound) * 1000.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static long throttleTimeMs(QuotaViolationException e) {
         if (e.metric().measurable() instanceof TokenBucket) {
             return Math.round(-e.value() / e.bound() * 1000);

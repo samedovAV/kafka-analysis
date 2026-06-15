@@ -28,9 +28,12 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class SocketServerConfigsTest {
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDefaultNameToSecurityProto() {
         assertEquals(Map.of(
             new ListenerName("PLAINTEXT"), SecurityProtocol.PLAINTEXT,
@@ -41,6 +44,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithEmptyString() {
         assertEquals(List.of(),
             SocketServerConfigs.listenerListToEndPoints(List.of(),
@@ -48,6 +52,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithBlankString() {
         KafkaException exception = assertThrows(KafkaException.class, () ->
                 SocketServerConfigs.listenerListToEndPoints(List.of(" "), SocketServerConfigs.DEFAULT_NAME_TO_SECURITY_PROTO));
@@ -55,6 +60,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithOneEndpoint() {
         assertEquals(List.of(new Endpoint("PLAINTEXT", SecurityProtocol.PLAINTEXT, "example.com", 8080)),
                 SocketServerConfigs.listenerListToEndPoints(List.of("PLAINTEXT://example.com:8080"),
@@ -63,6 +69,7 @@ public class SocketServerConfigsTest {
 
     // Regression test for KAFKA-3719
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithUnderscores() {
         assertEquals(List.of(
             new Endpoint("PLAINTEXT", SecurityProtocol.PLAINTEXT, "example.com", 8080),
@@ -72,6 +79,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithWildcard() {
         assertEquals(List.of(new Endpoint("PLAINTEXT", SecurityProtocol.PLAINTEXT, null, 8080)),
                 SocketServerConfigs.listenerListToEndPoints(List.of("PLAINTEXT://:8080"),
@@ -79,6 +87,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testListenerListToEndPointsWithIpV6() {
         assertEquals(List.of(new Endpoint("PLAINTEXT", SecurityProtocol.PLAINTEXT, "::1", 9092)),
                 SocketServerConfigs.listenerListToEndPoints(List.of("PLAINTEXT://[::1]:9092"),
@@ -86,6 +95,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAnotherListenerListToEndPointsWithIpV6() {
         assertEquals(List.of(new Endpoint("SASL_SSL", SecurityProtocol.SASL_SSL, "fe80::b1da:69ca:57f7:63d8%3", 9092)),
                 SocketServerConfigs.listenerListToEndPoints(List.of("SASL_SSL://[fe80::b1da:69ca:57f7:63d8%3]:9092"),
@@ -93,6 +103,7 @@ public class SocketServerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAnotherListenerListToEndPointsWithNonDefaultProtoMap() {
         assertEquals(List.of(new Endpoint("CONTROLLER", SecurityProtocol.PLAINTEXT, "example.com", 9093)),
                 SocketServerConfigs.listenerListToEndPoints(List.of("CONTROLLER://example.com:9093"),

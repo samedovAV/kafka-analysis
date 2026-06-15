@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Helper class to return the erroneous partitions and valid partition data
@@ -57,10 +59,12 @@ public class ErroneousAndValidPartitionData {
         this.validTopicIdPartitions = List.of();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Map<TopicIdPartition, ShareFetchResponseData.PartitionData> erroneous() {
         return erroneous;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public List<TopicIdPartition> validTopicIdPartitions() {
         return validTopicIdPartitions;
     }

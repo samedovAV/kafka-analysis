@@ -39,6 +39,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ForwardingManagerImpl implements ForwardingManager, AutoCloseable {
 
@@ -52,11 +54,13 @@ public class ForwardingManagerImpl implements ForwardingManager, AutoCloseable {
         this.forwardingManagerMetrics = new ForwardingManagerMetrics(metrics, channelManager.getTimeoutMs());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     ForwardingManagerMetrics forwardingManagerMetrics() {
         return forwardingManagerMetrics;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void forwardRequest(
             RequestContext requestContext,
             ByteBuffer requestBufferCopy,
@@ -70,6 +74,7 @@ public class ForwardingManagerImpl implements ForwardingManager, AutoCloseable {
         class ForwardingResponseHandler implements ControllerRequestCompletionHandler {
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onComplete(ClientResponse clientResponse) {
                 forwardingManagerMetrics.decrementQueueLength();
                 forwardingManagerMetrics.remoteTimeMsHist().record(clientResponse.requestLatencyMs());
@@ -113,6 +118,7 @@ public class ForwardingManagerImpl implements ForwardingManager, AutoCloseable {
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public void onTimeout() {
                 LOG.debug("Forwarding of the request {} failed due to timeout exception", requestToString.get());
                 forwardingManagerMetrics.decrementQueueLength();
@@ -127,15 +133,18 @@ public class ForwardingManagerImpl implements ForwardingManager, AutoCloseable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void close() {
         forwardingManagerMetrics.close();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public Optional<NodeApiVersions> controllerApiVersions() {
         return channelManager.controllerApiVersions();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private AbstractResponse parseResponse(ByteBuffer buffer, AbstractRequest request, RequestHeader header) {
         try {
             return AbstractResponse.parseResponse(buffer, header);

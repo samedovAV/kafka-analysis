@@ -26,10 +26,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DelayedShareFetchKeyTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDelayedShareFetchEqualsAndHashcode() {
         Uuid topicUuid = Uuid.randomUuid();
         TopicIdPartition tp0 = new TopicIdPartition(topicUuid, new TopicPartition("topic", 0));

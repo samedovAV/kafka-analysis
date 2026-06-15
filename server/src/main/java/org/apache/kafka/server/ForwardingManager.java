@@ -26,12 +26,15 @@ import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface ForwardingManager {
 
     /**
      * Close the forwarding manager
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void close();
 
     /**
@@ -43,6 +46,7 @@ public interface ForwardingManager {
      *                            Or, if the controller doesn't support the request version, we will complete
      *                            the callback with Optional.empty().
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     default void forwardRequest(
             Request originalRequest,
             Consumer<Optional<AbstractResponse>> responseCallback
@@ -67,6 +71,7 @@ public interface ForwardingManager {
      *                            Or, if the controller doesn't support the request version, we will complete
      *                            the callback with Optional.empty().
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     default void forwardRequest(
             Request originalRequest,
             AbstractRequest newRequestBody,
@@ -96,6 +101,7 @@ public interface ForwardingManager {
      *                            Or, if the controller doesn't support the request version, we will complete
      *                            the callback with Optional.empty().
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void forwardRequest(
             RequestContext requestContext,
             ByteBuffer requestBufferCopy,
@@ -107,5 +113,6 @@ public interface ForwardingManager {
     /**
      * Return the NodeApiVersions for the controller node if available
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Optional<NodeApiVersions> controllerApiVersions();
 }

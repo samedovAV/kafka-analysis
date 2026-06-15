@@ -17,6 +17,9 @@
 
 
 package org.apache.kafka.server;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 /**
  * Represents the state of a replica.
@@ -24,6 +27,7 @@ package org.apache.kafka.server;
 public enum ReplicaState {
     TRUNCATING {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public String toString() {
             return "Truncating";
         }
@@ -31,6 +35,7 @@ public enum ReplicaState {
 
     FETCHING {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public String toString() {
             return "Fetching";
         }

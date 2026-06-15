@@ -25,6 +25,8 @@ import org.apache.kafka.server.quota.ControllerMutationQuota;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface AutoTopicCreationManager {
 
@@ -38,6 +40,7 @@ public interface AutoTopicCreationManager {
      *                               inside Envelope to send to the controller when forwarding is enabled.
      * @return auto created topic metadata responses
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     List<MetadataResponseTopic> createTopics(Set<String> topics, ControllerMutationQuota controllerMutationQuota, RequestContext metadataRequestContext);
 
     /**
@@ -48,6 +51,7 @@ public interface AutoTopicCreationManager {
      * @param controllerMutationQuota the controller mutation quota for topic creation
      * @return auto created topic metadata responses
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     default List<MetadataResponseTopic> createTopics(Set<String> topics, ControllerMutationQuota controllerMutationQuota) {
         return createTopics(topics, controllerMutationQuota, null);
     }
@@ -65,6 +69,7 @@ public interface AutoTopicCreationManager {
      *                  for this duration to avoid repeated failed attempts and provide consistent error responses
      *                  during streams group heartbeat requests.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void createStreamsInternalTopics(Map<String, CreatableTopic> topics, RequestContext metadataRequestContext, long timeoutMs);
 
     /**
@@ -77,10 +82,12 @@ public interface AutoTopicCreationManager {
      * @return a map of topic names to their corresponding error messages for topics that have
      *         cached errors and are not yet expired. Empty map if no cached errors exist for the topics.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Map<String, String> getStreamsInternalTopicCreationErrors(Set<String> topicNames, long currentTimeMs);
 
     /**
      * Close the AutoTopicCreationManager and clean up any resources.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void close();
 }

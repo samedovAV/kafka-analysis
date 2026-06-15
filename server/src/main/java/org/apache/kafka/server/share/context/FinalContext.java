@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The share fetch context for a final share fetch request.
@@ -40,16 +42,19 @@ public class FinalContext extends ShareFetchContext {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     boolean isTraceEnabled() {
         return log.isTraceEnabled();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int responseSize(LinkedHashMap<TopicIdPartition, ShareFetchResponseData.PartitionData> updates, short version) {
         return ShareFetchResponse.sizeOf(version, updates.entrySet().iterator());
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareFetchResponse updateAndGenerateResponseData(String groupId, String memberId,
                                                      LinkedHashMap<TopicIdPartition, ShareFetchResponseData.PartitionData> updates) {
         log.debug("Final context returning {}", partitionsToLogString(updates.keySet()));
@@ -57,6 +62,7 @@ public class FinalContext extends ShareFetchContext {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ErroneousAndValidPartitionData getErroneousAndValidTopicIdPartitions() {
         return new ErroneousAndValidPartitionData();
     }

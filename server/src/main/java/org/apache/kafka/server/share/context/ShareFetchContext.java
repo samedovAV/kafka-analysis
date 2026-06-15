@@ -26,6 +26,8 @@ import org.apache.kafka.server.share.session.ShareSession;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The context for every share fetch request. The context is responsible for tracking the topic partitions present in
@@ -38,6 +40,7 @@ public abstract class ShareFetchContext {
      * @param partitions - The partitions requested in the fetch request.
      * @return - A string representation of the partitions requested.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     String partitionsToLogString(Collection<TopicIdPartition> partitions) {
         return ShareSession.partitionsToLogString(partitions, isTraceEnabled());
     }
@@ -47,6 +50,7 @@ public abstract class ShareFetchContext {
      * @param throttleTimeMs - The time to throttle the response.
      * @return - An empty throttled response.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareFetchResponse throttleResponse(int throttleTimeMs) {
         return ShareFetchResponse.of(Errors.NONE, throttleTimeMs,
                 new LinkedHashMap<>(), List.of(), 0);
@@ -55,6 +59,7 @@ public abstract class ShareFetchContext {
     /**
      * @return - Whether trace logging is enabled.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     abstract boolean isTraceEnabled();
 
     /**
@@ -64,6 +69,7 @@ public abstract class ShareFetchContext {
      * @param version - The version of the share fetch request.
      * @return - The size of the response.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public abstract int responseSize(LinkedHashMap<TopicIdPartition, ShareFetchResponseData.PartitionData> updates,
                               short version);
 
@@ -75,11 +81,13 @@ public abstract class ShareFetchContext {
      * @param updates - The updates to be sent in the response.
      * @return - The share fetch response.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public abstract ShareFetchResponse updateAndGenerateResponseData(String groupId, String memberId, LinkedHashMap<TopicIdPartition, ShareFetchResponseData.PartitionData> updates);
 
     /**
      * @return - The error-prone and valid topic id partitions in the share fetch request.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public abstract ErroneousAndValidPartitionData getErroneousAndValidTopicIdPartitions();
 
 }

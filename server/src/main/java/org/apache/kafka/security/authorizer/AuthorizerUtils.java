@@ -23,14 +23,18 @@ import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.server.authorizer.Authorizer;
 
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AuthorizerUtils {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Plugin<Authorizer> createAuthorizer(String className, Map<String, Object> configs, Metrics metrics, String key, String role) throws ClassNotFoundException {
         Authorizer authorizer = Utils.newInstance(className, Authorizer.class);
         authorizer.configure(configs);
         return Plugin.wrapInstance(authorizer, metrics, key, "role", role);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static boolean isClusterResource(String name) {
         return name.equals(Resource.CLUSTER_NAME);
     }

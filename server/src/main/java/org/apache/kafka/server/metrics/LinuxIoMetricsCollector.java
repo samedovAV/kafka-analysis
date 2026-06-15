@@ -26,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Retrieves Linux /proc/self/io metrics.
@@ -48,6 +50,7 @@ public class LinuxIoMetricsCollector {
         path = Paths.get(procRoot, "self", "io");
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long readBytes() {
         synchronized (this) {
             long curMs = time.milliseconds();
@@ -58,6 +61,7 @@ public class LinuxIoMetricsCollector {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long writeBytes() {
         synchronized (this) {
             long curMs = time.milliseconds();
@@ -80,6 +84,7 @@ public class LinuxIoMetricsCollector {
      * write_bytes: 0
      * cancelled_write_bytes: 0
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private boolean updateValues(long now) {
         synchronized (this) {
             try {
@@ -102,6 +107,7 @@ public class LinuxIoMetricsCollector {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean usable() {
         if (path.toFile().exists()) {
             return updateValues(time.milliseconds());

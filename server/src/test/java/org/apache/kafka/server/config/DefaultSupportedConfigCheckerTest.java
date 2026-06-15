@@ -29,11 +29,14 @@ import static org.apache.kafka.common.config.ConfigResource.Type.GROUP;
 import static org.apache.kafka.common.config.ConfigResource.Type.TOPIC;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class DefaultSupportedConfigCheckerTest {
     private final DefaultSupportedConfigChecker checker = new DefaultSupportedConfigChecker();
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testIsSupported() {
         // Test valid topic configs
         assertTrue(checker.isSupported(TOPIC, TopicConfig.SEGMENT_BYTES_CONFIG));

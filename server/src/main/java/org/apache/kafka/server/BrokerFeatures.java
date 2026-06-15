@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.kafka.server.common.Feature.PRODUCTION_FEATURES;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A class that encapsulates the latest features supported by the Broker and also provides APIs to
@@ -46,17 +48,20 @@ public class BrokerFeatures {
         this.supportedFeatures = supportedFeatures;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static BrokerFeatures createDefault(boolean unstableFeatureVersionsEnabled) {
         return new BrokerFeatures(defaultSupportedFeatures(unstableFeatureVersionsEnabled));
     }
     
     // only for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static BrokerFeatures createDefault(boolean unstableFeatureVersionsEnabled, Features<SupportedVersionRange> newFeatures) {
         Map<String, SupportedVersionRange> combined = new HashMap<>(defaultSupportedFeatures(unstableFeatureVersionsEnabled).features());
         combined.putAll(newFeatures.features());
         return new BrokerFeatures(Features.supportedFeatures(combined));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Map<String, VersionRange> createDefaultFeatureMap(BrokerFeatures features) {
         return features.supportedFeatures.features()
                 .entrySet()
@@ -64,6 +69,7 @@ public class BrokerFeatures {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> VersionRange.of(e.getValue().min(), e.getValue().max())));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Features<SupportedVersionRange> defaultSupportedFeatures(boolean unstableFeatureVersionsEnabled) {
         Map<String, SupportedVersionRange> features = new HashMap<>();
         features.put(MetadataVersion.FEATURE_NAME,
@@ -80,6 +86,7 @@ public class BrokerFeatures {
         return Features.supportedFeatures(features);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static BrokerFeatures createEmpty() {
         return new BrokerFeatures(Features.emptySupportedFeatures());
     }
@@ -93,6 +100,7 @@ public class BrokerFeatures {
      * @return - True if there are any feature incompatibilities found.
      * - False otherwise.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static boolean hasIncompatibleFeatures(Features<SupportedVersionRange> supportedFeatures,
                                                   Map<String, Short> finalizedFeatures) {
         return !incompatibleFeatures(supportedFeatures, finalizedFeatures, false).isEmpty();
@@ -102,6 +110,7 @@ public class BrokerFeatures {
      * Returns the default finalized features that a new Kafka cluster with IBP config >= IBP_2_7_IV0
      * needs to be bootstrapped with.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Map<String, Short> defaultFinalizedFeatures() {
         return supportedFeatures.features().entrySet()
                 .stream()
@@ -123,14 +132,17 @@ public class BrokerFeatures {
      * @return The subset of input features which are incompatible. If the returned object
      * is empty, it means there were no feature incompatibilities found.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public Map<String, Short> incompatibleFeatures(Map<String, Short> finalized) {
         return BrokerFeatures.incompatibleFeatures(supportedFeatures, finalized, true);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Features<SupportedVersionRange> supportedFeatures() {
         return supportedFeatures;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Map<String, Short> incompatibleFeatures(Features<SupportedVersionRange> supportedFeatures,
                                                            Map<String, Short> finalizedFeatures,
                                                            boolean logIncompatibilities) {

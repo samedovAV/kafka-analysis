@@ -25,12 +25,15 @@ import java.net.UnknownHostException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientMetricsInstanceTest {
 
     private ClientMetricsInstance clientInstance;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() throws UnknownHostException {
         Uuid uuid = Uuid.randomUuid();
         ClientMetricsInstanceMetadata instanceMetadata = new ClientMetricsInstanceMetadata(uuid,
@@ -39,6 +42,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdateRequestTimestampValid() {
         // First request should be accepted.
         assertTrue(clientInstance.maybeUpdateGetRequestTimestamp(System.currentTimeMillis()));
@@ -46,6 +50,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdateGetRequestAfterElapsedTimeValid() {
         assertTrue(clientInstance.maybeUpdateGetRequestTimestamp(System.currentTimeMillis() - ClientMetricsConfigs.INTERVAL_MS_DEFAULT));
         // Second request should be accepted as time since last request is greater than the push interval.
@@ -53,6 +58,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdateGetRequestWithImmediateRetryFail() {
         assertTrue(clientInstance.maybeUpdateGetRequestTimestamp(System.currentTimeMillis()));
         // Second request should be rejected as time since last request is less than the push interval.
@@ -60,6 +66,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdatePushRequestAfterElapsedTimeValid() {
         assertTrue(clientInstance.maybeUpdatePushRequestTimestamp(System.currentTimeMillis() - ClientMetricsConfigs.INTERVAL_MS_DEFAULT));
         // Second request should be accepted as time since last request is greater than the push interval.
@@ -67,6 +74,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdateGetRequestWithImmediateRetryAfterPushFail() {
         assertTrue(clientInstance.maybeUpdatePushRequestTimestamp(System.currentTimeMillis()));
         // Next request after push should be rejected as time since last request is less than the push interval.
@@ -74,6 +82,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdatePushRequestWithImmediateRetryFail() {
         assertTrue(clientInstance.maybeUpdatePushRequestTimestamp(System.currentTimeMillis()));
         // Second request should be rejected as time since last request is less than the push interval.
@@ -81,6 +90,7 @@ public class ClientMetricsInstanceTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeUpdatePushRequestWithImmediateRetryAfterGetValid() {
         assertTrue(clientInstance.maybeUpdatePushRequestTimestamp(System.currentTimeMillis() - ClientMetricsConfigs.INTERVAL_MS_DEFAULT));
         assertTrue(clientInstance.maybeUpdateGetRequestTimestamp(System.currentTimeMillis()));

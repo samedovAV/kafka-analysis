@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 package org.apache.kafka.server;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 /**
  * The action queue is used to collect actions which need to be executed later.
@@ -24,10 +27,12 @@ public interface ActionQueue {
      * Add action to this queue.
      * @param action action
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void add(Runnable action);
 
     /**
      * Try to complete all delayed actions.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void tryCompleteActions();
 }

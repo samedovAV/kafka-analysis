@@ -31,6 +31,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Client metric configuration related parameters and the supporting methods like validation, etc. are
@@ -120,14 +122,17 @@ public class ClientMetricsConfigs extends AbstractConfig {
         super(CONFIG, props, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ConfigDef configDef() {
         return CONFIG;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Optional<Type> configType(String configName) {
         return Optional.ofNullable(CONFIG.configKeys().get(configName)).map(c -> c.type);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Map<String, Object> defaultConfigsMap() {
         Map<String, Object> clientMetricsProps = new HashMap<>();
         clientMetricsProps.put(METRICS_CONFIG, METRICS_DEFAULT);
@@ -136,10 +141,12 @@ public class ClientMetricsConfigs extends AbstractConfig {
         return clientMetricsProps;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Set<String> configNames() {
         return CONFIG.names();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void validate(String subscriptionName, Map<?, ?> props) {
         if (subscriptionName == null || subscriptionName.isEmpty()) {
             throw new InvalidRequestException("Subscription name can't be empty");
@@ -149,6 +156,7 @@ public class ClientMetricsConfigs extends AbstractConfig {
     }
 
     @SuppressWarnings("unchecked")
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void validateConfigs(Map<?, ?> configs) {
         // Make sure that all the configs are valid
         configs.forEach((key, value) -> {
@@ -188,6 +196,7 @@ public class ClientMetricsConfigs extends AbstractConfig {
      * @param patterns List of client matching pattern strings
      * @return map of client matching pattern entries
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static Map<String, Pattern> parseMatchingPatterns(List<String> patterns) {
         if (patterns == null || patterns.isEmpty()) {
             return Map.of();
@@ -216,6 +225,7 @@ public class ClientMetricsConfigs extends AbstractConfig {
         return patternsMap;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static boolean isValidParam(String paramName) {
         return ALLOWED_MATCH_PARAMS.contains(paramName);
     }
@@ -223,6 +233,7 @@ public class ClientMetricsConfigs extends AbstractConfig {
     /**
      * Create a client metrics config instance using the given properties and defaults.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static ClientMetricsConfigs fromProps(Map<?, ?> defaults, Properties overrides) {
         Properties props = new Properties();
         props.putAll(defaults);

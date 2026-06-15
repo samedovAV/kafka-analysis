@@ -24,6 +24,8 @@ import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import static org.apache.kafka.server.share.fetch.InFlightState.EMPTY_MEMBER_ID;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The InFlightBatch maintains the in-memory state of the fetched records i.e. in-flight records.
@@ -81,6 +83,7 @@ public class InFlightBatch {
     /**
      * @return the first offset of the batch.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long firstOffset() {
         return firstOffset;
     }
@@ -88,6 +91,7 @@ public class InFlightBatch {
     /**
      * @return the last offset of the batch.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long lastOffset() {
         return lastOffset;
     }
@@ -96,6 +100,7 @@ public class InFlightBatch {
      * @return the state of the batch.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public RecordState batchState() {
         return inFlightState().state();
     }
@@ -104,6 +109,7 @@ public class InFlightBatch {
      * @return the member id of the batch.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String batchMemberId() {
         return inFlightState().memberId();
     }
@@ -112,6 +118,7 @@ public class InFlightBatch {
      * @return the delivery count of the batch.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int batchDeliveryCount() {
         return inFlightState().deliveryCount();
     }
@@ -120,6 +127,7 @@ public class InFlightBatch {
      * @return the acquisition lock timeout task for the batch.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public AcquisitionLockTimerTask batchAcquisitionLockTimeoutTask() {
         return inFlightState().acquisitionLockTimeoutTask();
     }
@@ -127,6 +135,7 @@ public class InFlightBatch {
     /**
      * @return the offset state map which maintains the state of the records per offset.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public NavigableMap<Long, InFlightState> offsetState() {
         return offsetState;
     }
@@ -137,6 +146,7 @@ public class InFlightBatch {
      * and clear the reference to it.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void cancelAndClearAcquisitionLockTimeoutTask() {
         inFlightState().cancelAndClearAcquisitionLockTimeoutTask();
     }
@@ -145,6 +155,7 @@ public class InFlightBatch {
      * @return true if the batch has an ongoing state transition, false otherwise.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean batchHasOngoingStateTransition() {
         return inFlightState().hasOngoingStateTransition();
     }
@@ -154,6 +165,7 @@ public class InFlightBatch {
      * are allowed to the batch state.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void archiveBatch() {
         inFlightState().archive();
     }
@@ -170,6 +182,7 @@ public class InFlightBatch {
      * @return {@code InFlightState} if update succeeds, null otherwise. Returning state helps update chaining.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public InFlightState tryUpdateBatchState(RecordState newState, DeliveryCountOps ops, int maxDeliveryCount, String newMemberId, boolean dlqSupportEnabled) {
         return inFlightState().tryUpdateState(newState, ops, maxDeliveryCount, newMemberId, dlqSupportEnabled);
     }
@@ -186,6 +199,7 @@ public class InFlightBatch {
      * @return {@code InFlightState} if update succeeds, null otherwise. Returning state helps update chaining.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public InFlightState startBatchStateTransition(RecordState newState, DeliveryCountOps ops, int maxDeliveryCount,
         String newMemberId, boolean dlqSupportEnabled
     ) {
@@ -202,6 +216,7 @@ public class InFlightBatch {
      * @param targetOffset The target offset up to which the offset states are initialized using the current batch state.
      * @param delayMs The delay in milliseconds for the acquisition lock timeout task.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void maybeInitializeOffsetStateUpdate(long targetOffset, int delayMs) {
         if (offsetState == null) {
             offsetState = new ConcurrentSkipListMap<>();
@@ -222,6 +237,7 @@ public class InFlightBatch {
      * Initialize the offset state map if it is not already initialized. This is used to maintain the state of the
      * records per offset when the state of the offsets within same batch are different.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void maybeInitializeOffsetStateUpdate() {
         if (offsetState == null) {
             offsetState = new ConcurrentSkipListMap<>();
@@ -255,10 +271,12 @@ public class InFlightBatch {
      * @param acquisitionLockTimeoutTask The new acquisition lock timeout task for the batch.
      * @throws IllegalStateException if the offset state is maintained and the batch state is not available.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void updateAcquisitionLockTimeout(AcquisitionLockTimerTask acquisitionLockTimeoutTask) {
         inFlightState().updateAcquisitionLockTimeoutTask(acquisitionLockTimeoutTask);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private InFlightState inFlightState() {
         if (batchState == null) {
             throw new IllegalStateException("The batch state is not available as the offset state is maintained");
@@ -266,6 +284,7 @@ public class InFlightBatch {
         return batchState;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private AcquisitionLockTimerTask acquisitionLockTimerTask(
         String memberId,
         long firstOffset,
@@ -276,6 +295,7 @@ public class InFlightBatch {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         return "InFlightBatch(" +
             "firstOffset=" + firstOffset +

@@ -21,6 +21,8 @@ import org.apache.kafka.metadata.LeaderAndIsr;
 import org.apache.kafka.server.common.TopicIdPartition;
 
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Handles updating the ISR by sending AlterPartition requests to the controller. Updating the ISR is an asynchronous
@@ -30,9 +32,12 @@ import java.util.concurrent.CompletableFuture;
  * requests.
  */
 public interface AlterPartitionManager {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void start();
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void shutdown() throws InterruptedException;
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     CompletableFuture<LeaderAndIsr> submit(TopicIdPartition topicIdPartition, LeaderAndIsr leaderAndIsr);
 }

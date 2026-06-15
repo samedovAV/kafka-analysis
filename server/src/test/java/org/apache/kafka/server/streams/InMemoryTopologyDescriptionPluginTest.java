@@ -35,10 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class InMemoryTopologyDescriptionPluginTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSetThenGetRoundTrip() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             StreamsGroupTopologyDescription desc = topology("src", "in");
@@ -49,6 +52,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetReturnsNullForMissingGroup() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             assertNull(plugin.getTopology("missing", 0).get());
@@ -56,6 +60,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetReturnsNullWhenEpochDoesNotMatch() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             plugin.setTopology("g1", 3, topology("src", "in")).get();
@@ -66,6 +71,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSetIsIdempotentAtSameEpoch() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             StreamsGroupTopologyDescription desc = topology("src", "in");
@@ -79,6 +85,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEpochAdvanceOverwritesPreviousDescription() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             StreamsGroupTopologyDescription v1 = topology("v1-src", "in1");
@@ -93,6 +100,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteTopologyRemovesEntry() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             plugin.setTopology("g1", 1, topology("src", "in")).get();
@@ -102,6 +110,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteIsIdempotentForUnknownGroup() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             plugin.deleteTopology("never-stored").get();
@@ -110,6 +119,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteIsScopedToGroup() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             plugin.setTopology("g1", 1, topology("src", "in")).get();
@@ -123,6 +133,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCloseClearsAllState() throws Exception {
         InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin();
         plugin.setTopology("g1", 1, topology("src", "in")).get();
@@ -131,6 +142,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testConfigureIsNoOp() {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             plugin.configure(Map.of("anything", "ignored"));
@@ -138,6 +150,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testConcurrentWritesAreSafe() throws Exception {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             StreamsGroupTopologyDescription desc = topology("src", "in");
@@ -168,6 +181,7 @@ public class InMemoryTopologyDescriptionPluginTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFuturesCompleteSynchronously() throws ExecutionException, InterruptedException {
         try (InMemoryTopologyDescriptionPlugin plugin = new InMemoryTopologyDescriptionPlugin()) {
             CompletableFuture<Void> setFuture = plugin.setTopology("g1", 1, topology("src", "in"));
@@ -180,6 +194,7 @@ public class InMemoryTopologyDescriptionPluginTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static StreamsGroupTopologyDescription topology(String sourceName, String topic) {
         StreamsGroupTopologyDescription.Source src = new StreamsGroupTopologyDescription.Source(
             sourceName, Set.of(topic), Set.of("proc"));

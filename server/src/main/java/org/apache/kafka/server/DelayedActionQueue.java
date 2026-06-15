@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * This queue is used to collect actions which need to be executed later. One use case is that ReplicaManager#appendRecords
@@ -31,11 +33,13 @@ public class DelayedActionQueue implements ActionQueue {
     private final ConcurrentLinkedQueue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void add(Runnable action) {
         queue.add(action);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void tryCompleteActions() {
         int maxToComplete = queue.size();
         for (int count = 0; count < maxToComplete; count++) {

@@ -24,10 +24,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class SimpleApiVersionManagerTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUnknownFeaturesHasNoMetadataVersion() {
         SimpleApiVersionManager apiVersionManager = new SimpleApiVersionManager(
             ApiMessageType.ListenerType.CONTROLLER,

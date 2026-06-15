@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class Replica {
     private static final Logger LOGGER = LoggerFactory.getLogger(Replica.class);
@@ -42,10 +44,12 @@ public class Replica {
         this.replicaState = new AtomicReference<>(ReplicaState.EMPTY);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ReplicaState stateSnapshot() {
         return replicaState.get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int brokerId() {
         return brokerId;
     }
@@ -66,6 +70,7 @@ public class Replica {
      * fetch request is always smaller than the leader's LEO, which can happen if small produce requests are received at
      * high frequency.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void updateFetchStateOrThrow(
         LogOffsetMetadata followerFetchOffsetMetadata,
         long followerStartOffset,
@@ -105,6 +110,7 @@ public class Replica {
      * When the leader is elected or re-elected, the state of the follower is reinitialized
      * accordingly.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void resetReplicaState(
         long currentTimeMs,
         long leaderEndOffset,
@@ -146,6 +152,7 @@ public class Replica {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         ReplicaState replicaState = this.replicaState.get();
         return "Replica(replicaId=" + brokerId +
@@ -162,6 +169,7 @@ public class Replica {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -170,6 +178,7 @@ public class Replica {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public int hashCode() {
         return 31 + topicPartition.hashCode() + 17 * brokerId;
     }

@@ -36,6 +36,8 @@ import java.util.function.Supplier;
 
 import static org.apache.kafka.common.requests.FetchMetadata.INITIAL_EPOCH;
 import static org.apache.kafka.common.requests.FetchMetadata.INVALID_SESSION_ID;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Caches fetch sessions.
@@ -105,11 +107,13 @@ public class FetchSessionCacheShard {
         this.logger = new LogContext("[Shard " + shardNum + "] ").logger(FetchSessionCacheShard.class);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int sessionIdRange() {
         return sessionIdRange;
     }
 
     // Only for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Meter evictionsMeter() {
         return evictionsMeter;
     }
@@ -120,6 +124,7 @@ public class FetchSessionCacheShard {
      * @param sessionId  The session ID.
      * @return           The session, or an empty Optional if no such session was found.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     synchronized Optional<FetchSession> get(int sessionId) {
         return Optional.ofNullable(sessions.get(sessionId));
     }
@@ -127,6 +132,7 @@ public class FetchSessionCacheShard {
     /**
      * Get the number of entries currently in the fetch session cache.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     synchronized int size() {
         return sessions.size();
     }
@@ -134,6 +140,7 @@ public class FetchSessionCacheShard {
     /**
      * Get the total number of cached partitions.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     synchronized long totalPartitions() {
         return numPartitions;
     }
@@ -143,6 +150,7 @@ public class FetchSessionCacheShard {
      *
      * @return   The new session ID.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     synchronized int newSessionId() {
         int id;
         do {
@@ -163,6 +171,7 @@ public class FetchSessionCacheShard {
      *                           topic name to topic ID for the topics.
      * @return                   If we created a session, the ID; INVALID_SESSION_ID otherwise.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     synchronized int maybeCreateSession(long now,
                                         boolean privileged,
                                         int size,
@@ -201,6 +210,7 @@ public class FetchSessionCacheShard {
      * @param now        The current time in milliseconds
      * @return           True if an entry was evicted; false otherwise.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private synchronized boolean tryEvict(boolean privileged, EvictableKey key, long now) {
         // Try to evict an entry which is stale.
         Map.Entry<LastUsedKey, FetchSession> lastUsedEntry = lastUsed.firstEntry();
@@ -233,6 +243,7 @@ public class FetchSessionCacheShard {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     synchronized Optional<FetchSession> remove(int sessionId) {
         Optional<FetchSession> session = get(sessionId);
         return session.isPresent() ? remove(session.get()) : Optional.empty();
@@ -245,6 +256,7 @@ public class FetchSessionCacheShard {
      *
      * @return         The removed session, or an empty Optional if there was no such session.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     synchronized Optional<FetchSession> remove(FetchSession session) {
         EvictableKey evictableKey;
         synchronized (session) {
@@ -268,6 +280,7 @@ public class FetchSessionCacheShard {
      * @param session  The session
      * @param now      The current time in milliseconds
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     synchronized void touch(FetchSession session, long now) {
         synchronized (session) {
             // Update the lastUsed map.

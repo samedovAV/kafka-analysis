@@ -28,9 +28,12 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class ForwardingManagerMetricsTest {
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testMetricsNames() {
         String expectedGroup = "ForwardingManager";
         Set<MetricName> expectedMetrics = Set.of(
@@ -66,6 +69,7 @@ class ForwardingManagerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void testQueueTimeMs() {
         try (Metrics metrics = new Metrics();
              ForwardingManagerMetrics forwardingManagerMetrics = new ForwardingManagerMetrics(metrics, 1000)) {
@@ -82,6 +86,7 @@ class ForwardingManagerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testQueueLength() {
         try (Metrics metrics = new Metrics();
              ForwardingManagerMetrics forwardingManagerMetrics = new ForwardingManagerMetrics(metrics, 1000)) {
@@ -93,6 +98,7 @@ class ForwardingManagerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void testRemoteTimeMs() {
         try (Metrics metrics = new Metrics();
              ForwardingManagerMetrics forwardingManagerMetrics = new ForwardingManagerMetrics(metrics, 1000)) {
@@ -109,6 +115,7 @@ class ForwardingManagerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void testTimeoutMs() {
         long timeoutMs = 500;
         try (Metrics metrics = new Metrics();

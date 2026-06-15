@@ -21,6 +21,8 @@ import org.apache.kafka.common.metrics.Sensor;
 import org.apache.kafka.common.utils.Time;
 
 import java.util.Objects;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The PermissiveControllerMutationQuota defines a permissive quota for a given user/clientId pair.
@@ -43,11 +45,13 @@ public class PermissiveControllerMutationQuota extends AbstractControllerMutatio
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isExceeded() {
         return false;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void record(double permits) {
         var timeMs = time.milliseconds();
         try {

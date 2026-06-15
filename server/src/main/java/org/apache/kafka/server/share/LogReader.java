@@ -22,6 +22,8 @@ import org.apache.kafka.storage.internals.log.LogReadResult;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Abstraction for reading records from log.
@@ -37,6 +39,7 @@ public interface LogReader {
      * @param partitionMaxBytes       The max bytes per partition
      * @return A map of partition to log read result
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     LinkedHashMap<TopicIdPartition, LogReadResult> read(
         FetchParams fetchParams,
         Set<TopicIdPartition> partitionsToFetch,

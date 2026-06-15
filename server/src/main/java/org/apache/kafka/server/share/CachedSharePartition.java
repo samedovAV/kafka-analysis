@@ -26,6 +26,8 @@ import org.apache.kafka.common.utils.internals.ImplicitLinkedHashCollection;
 
 import java.util.Objects;
 import java.util.Optional;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A cached share partition. The broker maintains a set of these objects for each share session.
@@ -68,14 +70,17 @@ public class CachedSharePartition implements ImplicitLinkedHashCollection.Elemen
                 Optional.empty(), requiresUpdateInResponse);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Uuid topicId() {
         return topicId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String topic() {
         return topic;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int partition() {
         return partition;
     }
@@ -89,6 +94,7 @@ public class CachedSharePartition implements ImplicitLinkedHashCollection.Elemen
      * @param updateResponseData if set to true, update this CachedSharePartition with new request and response data.
      * @return True if this partition should be included in the response; false if it can be omitted.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean maybeUpdateResponseData(ShareFetchResponseData.PartitionData respData, boolean updateResponseData) {
         boolean mustRespond = false;
         // Check the response data
@@ -111,6 +117,7 @@ public class CachedSharePartition implements ImplicitLinkedHashCollection.Elemen
         return mustRespond;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String toString() {
         return  "CachedSharePartition(topic=" + topic +
                 ", topicId=" + topicId +
@@ -120,11 +127,13 @@ public class CachedSharePartition implements ImplicitLinkedHashCollection.Elemen
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int hashCode() {
         return Objects.hash(partition, topicId);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public boolean equals(final Object obj) {
         if (this == obj)
             return true;
@@ -137,21 +146,25 @@ public class CachedSharePartition implements ImplicitLinkedHashCollection.Elemen
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int prev() {
         return cachedPrev;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setPrev(int prev) {
         cachedPrev = prev;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int next() {
         return cachedNext;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setNext(int next) {
         cachedNext = next;
     }

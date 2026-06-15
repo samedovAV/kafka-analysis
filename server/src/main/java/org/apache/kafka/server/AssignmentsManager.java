@@ -58,6 +58,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.apache.kafka.common.requests.AssignReplicasToDirsRequest.MAX_ASSIGNMENTS_PER_REQUEST;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class AssignmentsManager {
     static final ExponentialBackoff STANDARD_BACKOFF = new ExponentialBackoff(
@@ -184,12 +186,14 @@ public final class AssignmentsManager {
         this.metricsRegistry = metricsRegistry;
         this.metricsRegistry.newGauge(DEPRECATED_QUEUED_REPLICA_TO_DIR_ASSIGNMENTS_METRIC, new Gauge<Integer>() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public Integer value() {
                 return numPending();
             }
         });
         this.metricsRegistry.newGauge(QUEUED_REPLICA_TO_DIR_ASSIGNMENTS_METRIC, new Gauge<Integer>() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public Integer value() {
                 return numPending();
             }
@@ -202,14 +206,17 @@ public final class AssignmentsManager {
         channelManager.start();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int numPending() {
         return ready.size() + inflight.size();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void close() throws InterruptedException {
         eventQueue.close();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void onAssignment(
         TopicIdPartition topicIdPartition,
         Uuid directoryId,
@@ -234,6 +241,7 @@ public final class AssignmentsManager {
         rescheduleMaybeSendAssignmentsEvent(nowNs);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void rescheduleMaybeSendAssignmentsEvent(long nowNs) {
         eventQueue.scheduleDeferred(MAYBE_SEND_ASSIGNMENTS_EVENT,
             new AssignmentsManagerDeadlineFunction(backoff,
@@ -246,6 +254,7 @@ public final class AssignmentsManager {
      */
     private class ShutdownEvent implements EventQueue.Event {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void run() {
             log.info("shutting down.");
             try {
@@ -267,6 +276,7 @@ public final class AssignmentsManager {
      */
     private class MaybeSendAssignmentsEvent implements EventQueue.Event {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void run() {
             try {
                 maybeSendAssignments();
@@ -292,6 +302,7 @@ public final class AssignmentsManager {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void run() {
             try {
                 handleResponse(sent, response);
@@ -316,16 +327,19 @@ public final class AssignmentsManager {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onTimeout() {
             eventQueue.append(new HandleResponseEvent(sent, Optional.empty()));
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onComplete(ClientResponse response) {
             eventQueue.append(new HandleResponseEvent(sent, Optional.of(response)));
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void maybeSendAssignments() {
         int inflightSize = inflight.size();
         if (log.isTraceEnabled()) {
@@ -357,6 +371,7 @@ public final class AssignmentsManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void sendAssignments(long brokerEpoch, Map<TopicIdPartition, Assignment> newInflight) {
         CompletionHandler completionHandler = new CompletionHandler(newInflight);
         channelManager.sendRequest(new AssignReplicasToDirsRequest.Builder(
@@ -365,6 +380,7 @@ public final class AssignmentsManager {
         inflight = newInflight;
     }
 
+    @Prove(complexity = Complexity.O_N3, n = "", count = {})
     void handleResponse(
         Map<TopicIdPartition, Assignment> sent,
         Optional<ClientResponse> assignmentResponse
@@ -400,6 +416,7 @@ public final class AssignmentsManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void handleAssignmentResponse(
         TopicIdPartition topicIdPartition,
         Map<TopicIdPartition, Assignment> sent,
@@ -424,16 +441,19 @@ public final class AssignmentsManager {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int previousGlobalFailures() throws ExecutionException, InterruptedException {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         eventQueue.append(() -> future.complete(previousGlobalFailures));
         return future.get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int numInFlight() {
         return inflight.size();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     static Optional<String> globalResponseError(Optional<ClientResponse> response) {
         if (response.isEmpty()) {
             return Optional.of("Timeout");
@@ -465,6 +485,7 @@ public final class AssignmentsManager {
         return Optional.empty();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     static AssignReplicasToDirsRequestData buildRequestData(
         int nodeId,
         long brokerEpoch,

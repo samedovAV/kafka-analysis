@@ -21,6 +21,8 @@ import org.apache.kafka.common.protocol.ApiKeys;
 import org.apache.kafka.common.requests.ApiVersionsResponse;
 import org.apache.kafka.network.metrics.RequestChannelMetrics;
 import org.apache.kafka.server.common.FinalizedFeatures;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * ApiVersionManagers are used to define the APIs supported by servers
@@ -31,12 +33,14 @@ public interface ApiVersionManager {
      * Whether to mark unstable API versions as enabled
      * @return true if unstable API versions are enabled, otherwise false
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean enableUnstableLastVersion();
 
     /**
      * The listener type
      * @return Broker or Controller depending on the server's role
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     ApiMessageType.ListenerType listenerType();
 
     /**
@@ -45,12 +49,14 @@ public interface ApiVersionManager {
      * @param alterFeatureLevel0 Whether to filter feature v0 in the response
      * @return the ApiVersionsResponse to send back to the client
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     ApiVersionsResponse apiVersionResponse(int throttleTimeMs, boolean alterFeatureLevel0);
 
     /**
      * The features supported by the server
      * @return the FinalizedFeatures
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     FinalizedFeatures features();
 
     /**
@@ -59,6 +65,7 @@ public interface ApiVersionManager {
      * @param apiVersion the API version
      * @return true if the API key and version is supported, otherwise false
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default boolean isApiEnabled(ApiKeys apiKey, short apiVersion) {
         return apiKey != null && apiKey.inScope(listenerType()) && apiKey.isVersionEnabled(apiVersion, enableUnstableLastVersion());
     }
@@ -67,6 +74,7 @@ public interface ApiVersionManager {
      * Create a new RequestChannelMetrics for the enabled APIs
      * @return the RequestChannelMetrics
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default RequestChannelMetrics newRequestMetrics() {
         return new RequestChannelMetrics(ApiKeys.apisForListener(listenerType()));
     }

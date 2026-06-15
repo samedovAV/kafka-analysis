@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ThrottledChannel implements Delayed {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThrottledChannel.class);
@@ -50,22 +52,26 @@ public class ThrottledChannel implements Delayed {
     /**
      * Notify the socket server that throttling has been done for this channel.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void notifyThrottlingDone() {
         LOGGER.trace("Channel throttled for: {} ms", throttleTimeMs);
         callback.endThrottling();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long getDelay(TimeUnit unit) {
         return unit.convert(endTimeNanos - time.nanoseconds(), TimeUnit.NANOSECONDS);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int compareTo(Delayed other) {
         ThrottledChannel otherChannel = (ThrottledChannel) other;
         return Long.compare(this.endTimeNanos, otherChannel.endTimeNanos);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int throttleTimeMs() {
         return throttleTimeMs;
     }

@@ -22,8 +22,11 @@ import org.apache.kafka.common.requests.RequestContext;
 import org.apache.kafka.common.security.auth.KafkaPrincipalSerde;
 
 import java.nio.ByteBuffer;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class ForwardingManagerUtil {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static EnvelopeRequest.Builder buildEnvelopeRequest(RequestContext context, ByteBuffer forwardRequestBuffer) {
         KafkaPrincipalSerde principalSerde = context.principalSerde.orElseThrow(() ->
             new IllegalArgumentException(

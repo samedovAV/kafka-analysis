@@ -76,6 +76,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AddPartitionsToTxnManagerTest {
     private final NetworkClient networkClient = mock(NetworkClient.class);
@@ -120,12 +122,14 @@ public class AddPartitionsToTxnManagerTest {
             clientResponse(null, null, null, true);
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void teardown() throws InterruptedException {
         addPartitionsToTxnManager.shutdown();
     }
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAddTxnData(boolean isAddPartition) {
         var operation = isAddPartition ?
                 TransactionSupportedOperation.ADD_PARTITION :
@@ -195,6 +199,7 @@ public class AddPartitionsToTxnManagerTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGenerateRequests(boolean isAddPartition) {
         when(partitionFor.apply(transactionalId1)).thenReturn(0);
         when(partitionFor.apply(transactionalId2)).thenReturn(1);
@@ -252,6 +257,7 @@ public class AddPartitionsToTxnManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTransactionCoordinatorResolution() {
         when(partitionFor.apply(transactionalId1)).thenReturn(0);
 
@@ -286,6 +292,7 @@ public class AddPartitionsToTxnManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAddPartitionsToTxnHandlerErrorHandling() {
         when(partitionFor.apply(transactionalId1)).thenReturn(0);
         when(partitionFor.apply(transactionalId2)).thenReturn(0);
@@ -407,6 +414,7 @@ public class AddPartitionsToTxnManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAddPartitionsToTxnManagerMetrics() throws InterruptedException {
         var startTime = time.milliseconds();
         Map<TopicPartition, Errors> transactionErrors = new HashMap<>();
@@ -480,10 +488,12 @@ public class AddPartitionsToTxnManagerTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private AppendCallback setErrors(Map<TopicPartition, Errors> errors) {
         return errors::putAll;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void mockTransactionStateMetadata(int partitionIndex, int leaderId, Optional<Node> leaderNode) {
         when(metadataCache.getLeaderAndIsr(Topic.TRANSACTION_STATE_TOPIC_NAME, partitionIndex))
                 .thenReturn(Optional.of(new LeaderAndIsr(leaderId, List.of(leaderId))));
@@ -493,6 +503,7 @@ public class AddPartitionsToTxnManagerTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ClientResponse clientResponse(
             AbstractResponse response,
             AuthenticationException authException,
@@ -502,6 +513,7 @@ public class AddPartitionsToTxnManagerTest {
                 disconnected, mismatchException, authException, response);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private AddPartitionsToTxnTransaction transactionData(
             String transactionalId,
             long producerId,
@@ -518,10 +530,12 @@ public class AddPartitionsToTxnManagerTest {
                                 .setPartitions(List.of(1, 2, 3)))));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void receiveResponse(ClientResponse response) {
         addPartitionsToTxnManager.generateRequests().stream().findFirst().orElseThrow().handler.onComplete(response);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifyRequest(
             Node expectedDestination,
             String transactionalId,

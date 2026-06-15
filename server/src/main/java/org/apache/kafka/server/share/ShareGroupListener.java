@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 package org.apache.kafka.server.share;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 /**
  * The ShareGroupListener is used to notify when there is a change in the share group members.
@@ -27,6 +30,7 @@ public interface ShareGroupListener {
      * @param groupId  The id of the group.
      * @param memberId The id of the member.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void onMemberLeave(String groupId, String memberId);
 
     /**
@@ -34,5 +38,6 @@ public interface ShareGroupListener {
      *
      * @param groupId The id of the group.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void onGroupEmpty(String groupId);
 }

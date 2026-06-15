@@ -51,6 +51,8 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class LogManagerIntegrationTest {
     private final ClusterInstance cluster;
@@ -60,6 +62,7 @@ public class LogManagerIntegrationTest {
     }
 
     @ClusterTest(types = {Type.KRAFT})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIOExceptionOnLogSegmentCloseResultsInRecovery() throws IOException, InterruptedException, ExecutionException {
         try (Admin admin = cluster.admin()) {
             admin.createTopics(List.of(new NewTopic("foo", 1, (short) 1))).all().get();
@@ -124,6 +127,7 @@ public class LogManagerIntegrationTest {
     }
 
     @ClusterTest(types = {Type.KRAFT, Type.CO_KRAFT}, brokers = 3)
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testRestartBrokerNoErrorIfMissingPartitionMetadata() throws IOException, ExecutionException, InterruptedException {
 
         try (Admin admin = cluster.admin()) {

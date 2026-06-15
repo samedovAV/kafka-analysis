@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The ShareFetch class is used to store the fetch parameters for a share fetch request.
@@ -104,30 +106,37 @@ public class ShareFetch {
         this.brokerTopicStats = brokerTopicStats;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String groupId() {
         return groupId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String memberId() {
         return memberId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public List<TopicIdPartition> topicIdPartitions() {
         return topicIdPartitions;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public FetchParams fetchParams() {
         return fetchParams;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int batchSize() {
         return batchSize;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int maxFetchRecords() {
         return maxFetchRecords;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ShareAcquireMode shareAcquireMode() {
         return shareAcquireMode;
     }
@@ -143,6 +152,7 @@ public class ShareFetch {
      * @param topicIdPartition The partition that had an error.
      * @param throwable The error that occurred.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void addErroneous(TopicIdPartition topicIdPartition, Throwable throwable) {
         if (erroneous == null) {
             erroneous = new HashMap<>();
@@ -154,6 +164,7 @@ public class ShareFetch {
      * Check if the share fetch request is completed.
      * @return true if the request is completed, false otherwise.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isCompleted() {
         return future.isDone();
     }
@@ -162,6 +173,7 @@ public class ShareFetch {
      * Check if all the partitions in the request have errored.
      * @return true if all the partitions in the request have errored, false otherwise.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized boolean errorInAllPartitions() {
         return erroneous != null && erroneous.size() == topicIdPartitions().size();
     }
@@ -172,6 +184,7 @@ public class ShareFetch {
      *
      * @param partitionData The partition data to complete the fetch with.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void maybeComplete(Map<TopicIdPartition, PartitionData> partitionData) {
         if (isCompleted()) {
             return;
@@ -191,6 +204,7 @@ public class ShareFetch {
      * @param topicIdPartitions The topic id partitions which errored out.
      * @param throwable The exception to complete the fetch with.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void maybeCompleteWithException(Collection<TopicIdPartition> topicIdPartitions, Throwable throwable) {
         if (isCompleted()) {
             return;
@@ -211,6 +225,7 @@ public class ShareFetch {
      * @param topicIdPartitions The topic id partitions to filter.
      * @return The topic id partitions without the erroneous partitions.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized Set<TopicIdPartition> filterErroneousTopicPartitions(Set<TopicIdPartition> topicIdPartitions) {
         if (erroneous != null) {
             Set<TopicIdPartition> retain = new LinkedHashSet<>(topicIdPartitions);
@@ -220,6 +235,7 @@ public class ShareFetch {
         return topicIdPartitions;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private synchronized void addErroneousToResponse(Map<TopicIdPartition, PartitionData> response) {
         if (erroneous != null) {
             // Track the failed topics for metrics.

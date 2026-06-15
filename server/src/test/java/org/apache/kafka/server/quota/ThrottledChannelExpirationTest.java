@@ -29,6 +29,8 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ThrottledChannelExpirationTest {
     private final MockTime time = new MockTime();
@@ -37,17 +39,20 @@ public class ThrottledChannelExpirationTest {
     private int numCallbacksForEndThrottling = 0;
     private final ThrottleCallback callback = new ThrottleCallback() {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void startThrottling() {
             numCallbacksForStartThrottling++;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void endThrottling() {
             numCallbacksForEndThrottling++;
         }
     };
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testCallbackInvocationAfterExpiration() {
         ClientQuotaManager clientMetrics = new ClientQuotaManager(new ClientQuotaManagerConfig(), metrics, QuotaType.PRODUCE, time, "");
 
@@ -81,6 +86,7 @@ public class ThrottledChannelExpirationTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testThrottledChannelDelay() {
         ThrottledChannel channel1 = new ThrottledChannel(time, 10, callback);
         ThrottledChannel channel2 = new ThrottledChannel(time, 20, callback);

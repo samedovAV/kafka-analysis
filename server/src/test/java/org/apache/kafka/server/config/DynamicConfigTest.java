@@ -31,9 +31,12 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DynamicConfigTest {
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGroupIsRemovedWhenDynamicConfigsAreRemoved(ClusterInstance clusterInstance) throws ExecutionException, InterruptedException {
         try (Admin admin = clusterInstance.admin()) {
             var cr = new ConfigResource(ConfigResource.Type.GROUP, "gp");

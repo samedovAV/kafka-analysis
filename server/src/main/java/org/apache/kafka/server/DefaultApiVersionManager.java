@@ -25,6 +25,8 @@ import org.apache.kafka.server.common.FinalizedFeatures;
 
 import java.util.Optional;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * The default ApiVersionManager that supports forwarding and has metadata cache, used in brokers.
@@ -65,16 +67,19 @@ public class DefaultApiVersionManager implements ApiVersionManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean enableUnstableLastVersion() {
         return enableUnstableLastVersion;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ApiMessageType.ListenerType listenerType() {
         return listenerType;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ApiVersionsResponse apiVersionResponse(int throttleTimeMs, boolean alterFeatureLevel0) {
         FinalizedFeatures finalizedFeatures = metadataCache.features();
         Optional<NodeApiVersions> controllerApiVersions = nodeApiVersionsSupplier.get();
@@ -101,6 +106,7 @@ public class DefaultApiVersionManager implements ApiVersionManager {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public FinalizedFeatures features() {
         return metadataCache.features();
     }

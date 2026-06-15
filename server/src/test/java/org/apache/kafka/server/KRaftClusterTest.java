@@ -135,6 +135,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @Timeout(120)
 @Tag("integration")
@@ -143,6 +145,7 @@ public class KRaftClusterTest {
     private static final Logger LOG_2 = LoggerFactory.getLogger(KRaftClusterTest.class.getCanonicalName() + "2");
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndClose() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -156,6 +159,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndRestartBrokerNode() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -172,6 +176,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClusterWithLowerCaseListeners() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -199,6 +204,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndWaitForBrokerInRunningState() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -220,6 +226,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRemoteLogManagerInstantiation() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -241,6 +248,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizerFailureFoundInControllerStartup() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -258,6 +266,7 @@ public class KRaftClusterTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testReconfigureControllerClientQuotas(boolean combinedController) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -284,6 +293,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertConfigValue(KafkaClusterTestKit cluster, int expected) throws InterruptedException {
         TestUtils.retryOnExceptionWithTimeout(60000, () -> {
             Object controllerCallback = cluster.controllers().values().iterator().next()
@@ -298,6 +308,7 @@ public class KRaftClusterTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testReconfigureControllerAuthorizer(boolean combinedMode) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -325,6 +336,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertFoobarValue(KafkaClusterTestKit cluster, int expected) throws InterruptedException {
         TestUtils.retryOnExceptionWithTimeout(60000, () -> {
             Object controllerAuthorizer = cluster.controllers().values().iterator().next()
@@ -338,6 +350,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndCreateListDeleteTopic() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -371,6 +384,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndCreateAndManyTopics() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -401,6 +415,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<ClientQuotaEntity, Map<String, Double>> alterThenDescribe(
         Admin admin,
         ClientQuotaEntity entity,
@@ -420,6 +435,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClientQuotas() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -489,6 +505,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void setConsumerByteRate(Admin admin, ClientQuotaEntity entity, Long value) throws Exception {
         admin.alterClientQuotas(List.of(
             new ClientQuotaAlteration(entity, List.of(
@@ -496,6 +513,7 @@ public class KRaftClusterTest {
         )).all().get();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<ClientQuotaEntity, Long> getConsumerByteRates(Admin admin) throws Exception {
         return admin.describeClientQuotas(ClientQuotaFilter.contains(List.of()))
             .entities().get()
@@ -508,6 +526,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDefaultClientQuotas() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -546,6 +565,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testCreateClusterWithAdvertisedPortZero() throws Exception {
         Map<Integer, Map<String, String>> brokerPropertyOverrides = new HashMap<>();
         for (int brokerId = 0; brokerId < 3; brokerId++) {
@@ -573,6 +593,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterWithAdvertisedHostAndPortDifferentFromSocketServer() throws Exception {
         var brokerPropertyOverrides = IntStream.range(0, 3).boxed().collect(Collectors.toMap(brokerId -> brokerId, brokerId -> Map.of(
             SocketServerConfigs.LISTENERS_CONFIG, "EXTERNAL://localhost:0",
@@ -595,6 +616,7 @@ public class KRaftClusterTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void doOnStartedKafkaCluster(TestKitNodes nodes, Consumer<KafkaClusterTestKit> action) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(nodes).build()) {
             cluster.format();
@@ -603,6 +625,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private DescribeClusterResponse sendDescribeClusterRequestToBoundPortUntilAllBrokersPropagated(
         ListenerName listenerName,
         Duration waitTime,
@@ -636,6 +659,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void waitForTopicListing(Admin admin, List<String> expectedPresent, List<String> expectedAbsent)
         throws InterruptedException {
         Set<String> topicsNotFound = new HashSet<>(expectedPresent);
@@ -651,6 +675,7 @@ public class KRaftClusterTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUnregisterBroker(boolean usingBootstrapControllers) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -675,10 +700,12 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ClusterImage clusterImage(KafkaClusterTestKit cluster, int brokerId) {
         return cluster.brokers().get(brokerId).metadataCache().currentImage().cluster();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private boolean brokerIsUnfenced(ClusterImage image, int brokerId) {
         BrokerRegistration registration = image.brokers().get(brokerId);
         if (registration == null) {
@@ -687,15 +714,18 @@ public class KRaftClusterTest {
         return !registration.fenced();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private boolean brokerIsAbsent(ClusterImage image, int brokerId) {
         return !image.brokers().containsKey(brokerId);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Admin createAdminClient(KafkaClusterTestKit cluster, boolean usingBootstrapControllers) {
         return cluster.admin(Map.of(AdminClientConfig.CLIENT_ID_CONFIG, this.getClass().getName()), usingBootstrapControllers);
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndPerformReassignment() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -764,6 +794,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     private void checkReplicaManager(KafkaClusterTestKit cluster, Map<Integer, List<Boolean>> expectedHosting) {
         for (Map.Entry<Integer, List<Boolean>> entry : expectedHosting.entrySet()) {
             int brokerId = entry.getKey();
@@ -783,6 +814,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private List<List<Integer>> translatePartitionInfoToSeq(List<TopicPartitionInfo> partitions) {
         return partitions.stream()
             .map(partition -> partition.replicas().stream()
@@ -792,6 +824,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalAlterConfigs() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -856,6 +889,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void waitForAllPartitions(KafkaClusterTestKit cluster, String topic, int expectedNumPartitions)
         throws InterruptedException {
         TestUtils.waitForCondition(() -> cluster.brokers().values().stream().allMatch(broker -> {
@@ -868,6 +902,7 @@ public class KRaftClusterTest {
         }), 60000L, "Topic [" + topic + "] metadata not propagated after 60000 ms");
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private List<ApiError> incrementalAlter(Admin admin, Map<ConfigResource, Collection<AlterConfigOp>> changes) {
         Map<ConfigResource, KafkaFuture<Void>> values = admin.incrementalAlterConfigs(changes).values();
         return changes.keySet().stream().map(resource -> {
@@ -880,6 +915,7 @@ public class KRaftClusterTest {
         }).collect(Collectors.toList());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private Map<ConfigResource, Map<String, String>> validateConfigs(
         Admin admin,
         Map<ConfigResource, Map<String, String>> expected,
@@ -911,6 +947,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSetLog4jConfigurations() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -970,6 +1007,7 @@ public class KRaftClusterTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void assertListEquals(List<ApiError> expected, List<ApiError> actual) {
         for (ApiError expectedError : expected) {
             if (!actual.contains(expectedError)) {
@@ -985,6 +1023,7 @@ public class KRaftClusterTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"3.7-IV0", "3.7-IV2"})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreatePartitions(String metadataVersionString) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1016,6 +1055,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeQuorumRequestToBrokers() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1082,6 +1122,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeQuorumRequestToControllers() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1126,6 +1167,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateMetadataVersion() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1152,6 +1194,7 @@ public class KRaftClusterTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeKRaftVersion(boolean usingBootstrapControllers) throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1175,6 +1218,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndCreateTopicWithRemoteLogManagerInstantiation() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1214,6 +1258,7 @@ public class KRaftClusterTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCreateClusterAndRestartControllerNode() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1246,6 +1291,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSnapshotCount() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1288,6 +1334,7 @@ public class KRaftClusterTest {
      * that we can function without having periodic NoOpRecords written.
      */
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSingleControllerSingleBrokerCluster() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1302,6 +1349,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testOverlyLargeCreateTopics() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1326,6 +1374,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTimedOutHeartbeats() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1351,6 +1400,7 @@ public class KRaftClusterTest {
     }
 
     // Duplicate method to decouple the dependency on the metadata module.
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private CountDownLatch pause(QuorumController controller) {
         final CountDownLatch latch = new CountDownLatch(1);
         controller.appendControlEvent("pause", () -> {
@@ -1364,6 +1414,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRegisteredControllerEndpoints() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1386,6 +1437,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDirectToControllerCommunicationFailsOnOlderMetadataVersion() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1406,6 +1458,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testStartupWithNonDefaultKControllerDynamicConfiguration() throws Exception {
         var bootstrapRecords = List.of(
             new ApiMessageAndVersion(new FeatureLevelRecord()
@@ -1433,6 +1486,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTopicDeletedAndRecreatedWhileBrokerIsDown() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1482,6 +1536,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAbandonedFutureReplicaRecovered_mainReplicaInOfflineLogDir() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1532,6 +1587,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAbandonedFutureReplicaRecovered_mainReplicaInOnlineLogDir() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1607,6 +1663,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testControllerFailover() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1643,6 +1700,7 @@ public class KRaftClusterTest {
      * MetadataVersion is not a problem. This is a regression test for KAFKA-19192.
      */
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testOldBootstrapMetadataFile() throws Exception {
         var baseDirectory = TestUtils.tempDirectory().toPath();
         try (var cluster = new KafkaClusterTestKit.Builder(
@@ -1682,6 +1740,7 @@ public class KRaftClusterTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncreaseNumIoThreads() throws Exception {
         try (KafkaClusterTestKit cluster = new KafkaClusterTestKit.Builder(
             new TestKitNodes.Builder()
@@ -1711,37 +1770,44 @@ public class KRaftClusterTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Map<Endpoint, ? extends CompletionStage<Void>> start(AuthorizerServerInfo serverInfo) {
             throw new IllegalStateException("test authorizer exception");
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<AuthorizationResult> authorize(AuthorizableRequestContext requestContext, List<Action> actions) {
             return null;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclCreateResult>> createAcls(AuthorizableRequestContext requestContext,
             List<AclBinding> aclBindings) {
             return null;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclDeleteResult>> deleteAcls(AuthorizableRequestContext requestContext,
             List<AclBindingFilter> aclBindingFilters) {
             return null;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Iterable<AclBinding> acls(AclBindingFilter filter) {
             return null;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void close() throws IOException {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void configure(Map<String, ?> configs) {
         }
     }
@@ -1756,33 +1822,40 @@ public class KRaftClusterTest {
         private int value = 0;
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Map<String, String> quotaMetricTags(ClientQuotaType quotaType, KafkaPrincipal principal, String clientId) {
             return Map.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Double quotaLimit(ClientQuotaType quotaType, Map<String, String> metricTags) {
             return 1.0;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void updateQuota(ClientQuotaType quotaType, org.apache.kafka.server.quota.ClientQuotaEntity quotaEntity, double newValue) {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void removeQuota(ClientQuotaType quotaType, org.apache.kafka.server.quota.ClientQuotaEntity quotaEntity) {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public boolean quotaResetRequired(ClientQuotaType quotaType) {
             return true;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void close() {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void configure(Map<String, ?> configs) {
             Object newValue = configs.get(DUMMY_CLIENT_QUOTA_CALLBACK_VALUE_CONFIG_KEY);
             if (newValue != null) {
@@ -1791,15 +1864,18 @@ public class KRaftClusterTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Set<String> reconfigurableConfigs() {
             return Set.of(DUMMY_CLIENT_QUOTA_CALLBACK_VALUE_CONFIG_KEY);
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void validateReconfiguration(Map<String, ?> configs) {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void reconfigure(Map<String, ?> configs) {
             configure(configs);
         }
@@ -1815,6 +1891,7 @@ public class KRaftClusterTest {
         private final AtomicInteger foobar = new AtomicInteger(0);
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Map<Endpoint, ? extends CompletionStage<Void>> start(AuthorizerServerInfo serverInfo) {
             return serverInfo.endpoints().stream()
                 .collect(Collectors.toMap(
@@ -1828,21 +1905,25 @@ public class KRaftClusterTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Set<String> reconfigurableConfigs() {
             return Set.of(FOOBAR_CONFIG_KEY);
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void validateReconfiguration(Map<String, ?> configs) {
             fakeConfigurableAuthorizerConfigToInt(configs);
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void reconfigure(Map<String, ?> configs) {
             foobar.set(fakeConfigurableAuthorizerConfigToInt(configs));
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<AuthorizationResult> authorize(AuthorizableRequestContext requestContext,
             List<Action> actions
         ) {
@@ -1852,20 +1933,24 @@ public class KRaftClusterTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public Iterable<AclBinding> acls(AclBindingFilter filter) {
             return List.of();
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void close() {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void configure(Map<String, ?> configs) {
             foobar.set(fakeConfigurableAuthorizerConfigToInt(configs));
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclCreateResult>> createAcls(
             AuthorizableRequestContext requestContext,
             List<AclBinding> aclBindings
@@ -1874,6 +1959,7 @@ public class KRaftClusterTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public List<? extends CompletionStage<AclDeleteResult>> deleteAcls(
             AuthorizableRequestContext requestContext,
             List<AclBindingFilter> aclBindingFilters
@@ -1881,6 +1967,7 @@ public class KRaftClusterTest {
             return List.of();
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         private int fakeConfigurableAuthorizerConfigToInt(Map<String, ?> configs) {
             Object value = configs.get(FOOBAR_CONFIG_KEY);
             if (value == null) {

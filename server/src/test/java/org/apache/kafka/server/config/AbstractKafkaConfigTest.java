@@ -34,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AbstractKafkaConfigTest {
 
@@ -41,11 +43,13 @@ public class AbstractKafkaConfigTest {
     private static final String TEST_INTERNAL_GROUP_CONFIG_BROKER_SYNONYM = "group.test.internal.config.broker.synonym";
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPopulateSynonymsOnEmptyMap() {
         assertEquals(Collections.emptyMap(), AbstractKafkaConfig.populateSynonyms(Collections.emptyMap()));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPopulateSynonymsOnMapWithoutNodeId() {
         Map<String, String> input = new HashMap<>();
         input.put(ServerConfigs.BROKER_ID_CONFIG, "4");
@@ -56,6 +60,7 @@ public class AbstractKafkaConfigTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPopulateSynonymsOnMapWithoutBrokerId() {
         Map<String, String> input = new HashMap<>();
         input.put(KRaftConfigs.NODE_ID_CONFIG, "4");
@@ -66,6 +71,7 @@ public class AbstractKafkaConfigTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExtractGroupConfigMapExcludesInternalConfigWithUnconfiguredBrokerSynonym() {
         Map<String, Object> config = extractGroupConfigMap(Map.of(), true);
 
@@ -73,6 +79,7 @@ public class AbstractKafkaConfigTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExtractGroupConfigMapIncludesInternalConfigWithConfiguredBrokerSynonym() {
         Map<String, Object> config = extractGroupConfigMap(Map.of(TEST_INTERNAL_GROUP_CONFIG_BROKER_SYNONYM, "override-value"), true);
 
@@ -81,6 +88,7 @@ public class AbstractKafkaConfigTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testExtractGroupConfigMapIncludesNonInternalConfig() {
         Map<String, Object> config = extractGroupConfigMap(Map.of(), false);
 
@@ -88,6 +96,7 @@ public class AbstractKafkaConfigTest {
         assertEquals("default-value", config.get(TEST_INTERNAL_GROUP_CONFIG));
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private static Map<String, Object> extractGroupConfigMap(Map<String, Object> brokerProps, boolean isInternal) {
         try (MockedStatic<GroupConfig> mocked = mockStatic(GroupConfig.class, Mockito.CALLS_REAL_METHODS)) {
 

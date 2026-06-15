@@ -17,6 +17,8 @@
 package org.apache.kafka.server.share.fetch;
 
 import org.apache.kafka.server.util.timer.TimerTask;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * AcquisitionLockTimeoutHandler is an interface that defines a handler for acquisition lock timeouts.
@@ -31,6 +33,7 @@ public interface AcquisitionLockTimeoutHandler {
      * @param firstOffset the first offset
      * @param lastOffset the last offset
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void handle(String memberId, long firstOffset, long lastOffset, TimerTask timerTask);
 
 }

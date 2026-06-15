@@ -34,6 +34,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AssignmentTest {
     private static final Uuid TOPIC_ID = Uuid.fromString("rTudty6ITOCcO_ldVyzZYg");
@@ -69,16 +71,19 @@ public class AssignmentTest {
         static final NoOpRunnable INSTANCE = new NoOpRunnable();
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void run() {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public String toString() {
             return "NoOpRunnable";
         }
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testValidAssignment() {
         assertTrue(new Assignment(
             new TopicIdPartition(TOPIC_ID, 0),
@@ -88,6 +93,7 @@ public class AssignmentTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAssignmentForNonExistentTopicIsNotValid() {
         assertFalse(new Assignment(
             new TopicIdPartition(Uuid.fromString("uuOi4qGPSsuM0QwnYINvOw"), 0),
@@ -97,6 +103,7 @@ public class AssignmentTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAssignmentForNonExistentPartitionIsNotValid() {
         assertFalse(new Assignment(
             new TopicIdPartition(TOPIC_ID, 2),
@@ -106,6 +113,7 @@ public class AssignmentTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAssignmentReplicaNotOnBrokerIsNotValid() {
         assertFalse(new Assignment(
             new TopicIdPartition(TOPIC_ID, 0),
@@ -115,6 +123,7 @@ public class AssignmentTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAssignmentToString() {
         assertEquals("Assignment[topicIdPartition=rTudty6ITOCcO_ldVyzZYg:1, " +
             "directoryId=rzRT8XZaSbKsP6j238zogg, " +

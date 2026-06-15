@@ -62,6 +62,8 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @ClusterTestDefaults(
         disksPerBroker = 2
@@ -79,11 +81,13 @@ public class CordonedLogDirsIntegrationTest {
     }
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() {
         logDirsBroker0 = clusterInstance.brokers().get(0).config().logDirs();
     }
 
     @ClusterTest(metadataVersion = MetadataVersion.IBP_4_2_IV1)
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFeatureNotEnabled() throws Exception {
         testFeatureNotEnabled(List.of());
     }
@@ -94,10 +98,12 @@ public class CordonedLogDirsIntegrationTest {
             @ClusterConfigProperty(key = CORDONED_LOG_DIRS_CONFIG, value = "*")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFeatureNotEnabledStaticConfig() throws Exception {
         testFeatureNotEnabled(logDirsBroker0);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testFeatureNotEnabled(List<String> initialCordonedLogDirs) throws Exception {
         try (Admin admin = clusterInstance.admin()) {
             // When the metadata version does not support cordoning log dirs:
@@ -150,6 +156,7 @@ public class CordonedLogDirsIntegrationTest {
     }
 
     @ClusterTest()
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCordonUncordonLogDirs() throws Exception {
         try (Admin admin = clusterInstance.admin()) {
             // No initial cordoned log dirs
@@ -189,6 +196,7 @@ public class CordonedLogDirsIntegrationTest {
             @ClusterConfigProperty(key = CORDONED_LOG_DIRS_CONFIG, value = "*")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testStaticCordonUncordonLogDirs() throws Exception {
         Set<NewTopic> newTopics = newTopic(TOPIC1);
         try (Admin admin = clusterInstance.admin()) {
@@ -207,6 +215,7 @@ public class CordonedLogDirsIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testReassignWithCordonedLogDirs() throws Exception {
         TopicPartitionReplica replica = new TopicPartitionReplica(TOPIC1, 0, 0);
         try (Admin admin = clusterInstance.admin()) {
@@ -236,6 +245,7 @@ public class CordonedLogDirsIntegrationTest {
     }
 
     @ClusterTest()
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCordonUnknownLogDirs() {
         try (Admin admin = clusterInstance.admin()) {
             Throwable t = assertThrows(ExecutionException.class,
@@ -250,6 +260,7 @@ public class CordonedLogDirsIntegrationTest {
             brokers = 2,
             controllers = 1
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateCordonedDirsViaController() throws Exception {
         // Make sure we don't try to shut down the controller
         int brokerId = clusterInstance.brokerIds().stream().filter(id -> !clusterInstance.controllerIds().contains(id)).findFirst().get();
@@ -288,6 +299,7 @@ public class CordonedLogDirsIntegrationTest {
             brokers = 2,
             controllers = 1
     )
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void testDecommissionBroker() throws ExecutionException, InterruptedException {
         // Make sure we don't try to decommission the controller
         int brokerId = clusterInstance.brokerIds().stream().filter(id -> !clusterInstance.controllerIds().contains(id)).findFirst().get();
@@ -347,6 +359,7 @@ public class CordonedLogDirsIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void movePartitions(Admin admin, Set<TopicPartition> partitions, int source, Optional<String> logDir, int target) throws ExecutionException, InterruptedException {
         Map<TopicPartition, Optional<NewPartitionReassignment>> reassignments = new HashMap<>();
         for (TopicPartition partition : partitions) {
@@ -368,6 +381,7 @@ public class CordonedLogDirsIntegrationTest {
         }, 10_000, "Some replicas were not moved from " + source + " to " + target);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<ConfigResource, Collection<AlterConfigOp>> cordonedDirsConfig(String value, ConfigResource cr) {
         return Map.of(
                 cr,
@@ -375,6 +389,7 @@ public class CordonedLogDirsIntegrationTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void setCordonedLogDirs(Admin admin, List<String> logDirs, ConfigResource cr) throws ExecutionException, InterruptedException {
         String logDirsStr = String.join(",", logDirs);
         admin.incrementalAlterConfigs(cordonedDirsConfig(logDirsStr, cr)).all().get();
@@ -385,14 +400,17 @@ public class CordonedLogDirsIntegrationTest {
         }, 10_000, "Unable to set the " + CORDONED_LOG_DIRS_CONFIG + " configuration on " + cr + ".");
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private Set<NewTopic> newTopic(String name) {
         return newTopic(name, (short) clusterInstance.brokers().size());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Set<NewTopic> newTopic(String name, short replicationFactor) {
         return Set.of(new NewTopic(name, 1, replicationFactor));
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     private void assertCordonedLogDirs(Admin admin, List<String> expectedCordoned) throws ExecutionException, InterruptedException {
         Map<Integer, Map<String, LogDirDescription>> logDescriptionsPerBroker = admin.describeLogDirs(clusterInstance.brokerIds()).allDescriptions().get();
         for (Map.Entry<Integer, Map<String, LogDirDescription>> logDescriptions : logDescriptionsPerBroker.entrySet()) {

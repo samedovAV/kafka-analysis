@@ -87,10 +87,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @Timeout(120)
 @ClusterTestDefaults(types = {Type.KRAFT})
 public class BootstrapControllersIntegrationTest {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<String, Object> adminConfig(ClusterInstance clusterInstance, boolean usingBootstrapControllers) {
         return usingBootstrapControllers ?
                 Map.of(BOOTSTRAP_CONTROLLERS_CONFIG, clusterInstance.bootstrapControllers()) :
@@ -98,6 +101,7 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPutBrokersInBootstrapControllersConfig(ClusterInstance clusterInstance) {
         Map<String, Object> config = Map.of(BOOTSTRAP_CONTROLLERS_CONFIG, clusterInstance.bootstrapServers());
         try (Admin admin = Admin.create(config)) {
@@ -111,6 +115,7 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPutControllersInBootstrapBrokersConfig(ClusterInstance clusterInstance) {
         Map<String, Object> config = Map.of(BOOTSTRAP_SERVERS_CONFIG, clusterInstance.bootstrapControllers());
         try (Admin admin = Admin.create(config)) {
@@ -123,15 +128,18 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeClusterByControllers(ClusterInstance clusterInstance) throws Exception {
         testDescribeCluster(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testDescribeCluster(ClusterInstance clusterInstance) throws Exception {
         testDescribeCluster(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testDescribeCluster(ClusterInstance clusterInstance, boolean usingBootstrapControllers) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, usingBootstrapControllers))) {
             DescribeClusterResult result = admin.describeCluster();
@@ -143,15 +151,18 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeFeaturesByControllers(ClusterInstance clusterInstance) throws Exception {
         testDescribeFeatures(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testDescribeFeatures(ClusterInstance clusterInstance) throws Exception {
         testDescribeFeatures(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testDescribeFeatures(ClusterInstance clusterInstance, boolean usingBootstrapControllers) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, usingBootstrapControllers))) {
             DescribeFeaturesResult result = admin.describeFeatures();
@@ -163,15 +174,18 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateFeaturesByControllers(ClusterInstance clusterInstance) {
         testUpdateFeatures(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testUpdateFeatures(ClusterInstance clusterInstance) {
         testUpdateFeatures(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testUpdateFeatures(ClusterInstance clusterInstance, boolean usingBootstrapControllers) {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, usingBootstrapControllers))) {
             UpdateFeaturesResult result = admin.updateFeatures(Map.of("foo.bar.feature",
@@ -188,15 +202,18 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeMetadataQuorumByControllers(ClusterInstance clusterInstance) throws Exception {
         testDescribeMetadataQuorum(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testDescribeMetadataQuorum(ClusterInstance clusterInstance) throws Exception {
         testDescribeMetadataQuorum(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testDescribeMetadataQuorum(ClusterInstance clusterInstance, boolean usingBootstrapControllers) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, usingBootstrapControllers))) {
             DescribeMetadataQuorumResult result = admin.describeMetadataQuorum();
@@ -206,6 +223,7 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUsingBootstrapControllersOnUnsupportedAdminApi(ClusterInstance clusterInstance) {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, true))) {
             ListOffsetsResult result = admin.listOffsets(Map.of(new TopicPartition("foo", 0), OffsetSpec.earliest()));
@@ -220,15 +238,18 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalAlterConfigsByControllers(ClusterInstance clusterInstance) throws Exception {
         testIncrementalAlterConfigs(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testIncrementalAlterConfigs(ClusterInstance clusterInstance) throws Exception {
         testIncrementalAlterConfigs(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void testIncrementalAlterConfigs(ClusterInstance clusterInstance, boolean usingBootstrapControllers) throws Exception {
         Collection<Integer> nodeIds = usingBootstrapControllers ?
                 clusterInstance.controllerIds() : clusterInstance.brokers().keySet();
@@ -275,6 +296,7 @@ public class BootstrapControllersIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifySocketServerMaxConnectionsUpdated(Object node, int expectedMaxConnections) throws Exception {
         Object socketServer = node.getClass().getMethod("socketServer").invoke(node);
         Object connectionQuotas = socketServer.getClass().getMethod("connectionQuotas").invoke(socketServer);
@@ -286,6 +308,7 @@ public class BootstrapControllersIntegrationTest {
                 " but was " + actualMaxConnections);
     }
     
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifySocketServerMaxConnectionCreationRateUpdated(Object node, int expectedMaxConnectionCreationRate) throws Exception {
         Metrics metrics = (Metrics) node.getClass().getMethod("metrics").invoke(node);
         KafkaMetric metric = metrics.metrics().entrySet().stream()
@@ -298,6 +321,7 @@ public class BootstrapControllersIntegrationTest {
                 "Connection creation rate quota should be " + expectedMaxConnectionCreationRate + " but was " + actualBound);
     }
     
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifyConfigValue(Admin admin, ConfigResource resource, String configName,
                                    org.apache.kafka.clients.admin.ConfigEntry.ConfigSource expectedSource,
                                    String expectedValue) throws Exception {
@@ -316,6 +340,7 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest(brokers = 3)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterReassignmentsWithBootstrapControllers(ClusterInstance clusterInstance) throws ExecutionException, InterruptedException {
         String topicName = "foo";
         try (Admin admin = Admin.create(adminConfig(clusterInstance, false))) {
@@ -357,11 +382,13 @@ public class BootstrapControllersIntegrationTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static void waitForTopics(Admin admin, Set<String> expectedTopics) throws InterruptedException {
         TestUtils.waitForCondition(() -> admin.listTopics().names().get().containsAll(expectedTopics),
                 "timed out waiting for topics");
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static List<List<Integer>> translatePartitionInfoToNodeIdList(List<TopicPartitionInfo> partitions) {
         return partitions.stream()
                 .map(partition -> partition.replicas().stream().map(Node::id).toList())
@@ -372,6 +399,7 @@ public class BootstrapControllersIntegrationTest {
         @ClusterConfigProperty(key = StandardAuthorizer.SUPER_USERS_CONFIG, value = "User:ANONYMOUS"),
         @ClusterConfigProperty(key = AUTHORIZER_CLASS_NAME_CONFIG, value = "org.apache.kafka.metadata.authorizer.StandardAuthorizer")
     })
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAclsByControllers(ClusterInstance clusterInstance) throws Exception {
         testAcls(clusterInstance, true);
     }
@@ -380,10 +408,12 @@ public class BootstrapControllersIntegrationTest {
         @ClusterConfigProperty(key = StandardAuthorizer.SUPER_USERS_CONFIG, value = "User:ANONYMOUS"),
         @ClusterConfigProperty(key = AUTHORIZER_CLASS_NAME_CONFIG, value = "org.apache.kafka.metadata.authorizer.StandardAuthorizer")
     })
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAcls(ClusterInstance clusterInstance) throws Exception {
         testAcls(clusterInstance, false);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testAcls(ClusterInstance clusterInstance, boolean usingBootstrapControllers) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, usingBootstrapControllers))) {
             ResourcePattern resourcePattern = new ResourcePattern(ResourceType.TOPIC, "mytopic3", PatternType.LITERAL);
@@ -410,6 +440,7 @@ public class BootstrapControllersIntegrationTest {
             @ClusterConfigProperty(key = TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG, value = "2")
         }
     )
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeConfigs(ClusterInstance clusterInstance) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, true))) {
             ConfigResource resource = new ConfigResource(BROKER, "");
@@ -424,16 +455,19 @@ public class BootstrapControllersIntegrationTest {
     }
 
     @ClusterTest(controllers = 1, standalone = true)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalAlterConfigsBySingleControllerWithDynamicQuorum(ClusterInstance clusterInstance) throws Exception {
         testIncrementalAlterConfigs(clusterInstance, true);
     }
 
     @ClusterTest(controllers = 3, standalone = true)
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalAlterConfigsByAllControllersWithDynamicQuorum(ClusterInstance clusterInstance) throws Exception {
         testIncrementalAlterConfigs(clusterInstance, true);
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testQuotaConfigsIsReadOnlyShouldBeFalse(ClusterInstance clusterInstance) throws Exception {
         try (Admin admin = Admin.create(adminConfig(clusterInstance, true))) {
             int nodeId = clusterInstance.controllers().values().iterator().next().config().nodeId();

@@ -31,9 +31,12 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class BrokerServerMetricsTest {
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMetricsExported() throws Exception {
         Metrics metrics = new Metrics();
         String expectedGroup = "broker-metadata-metrics";
@@ -63,6 +66,7 @@ public final class BrokerServerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testLastAppliedRecordOffset() throws Exception {
         Metrics metrics = new Metrics();
         try (BrokerServerMetrics brokerMetrics = new BrokerServerMetrics(metrics)) {
@@ -81,6 +85,7 @@ public final class BrokerServerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testLastAppliedRecordTimestamp() throws Exception {
         MockTime time = new MockTime();
         Metrics metrics = new Metrics(time);
@@ -106,6 +111,7 @@ public final class BrokerServerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMetadataLoadErrorCount() throws Exception {
         MockTime time = new MockTime();
         Metrics metrics = new Metrics(time);
@@ -122,6 +128,7 @@ public final class BrokerServerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMetadataApplyErrorCount() throws Exception {
         MockTime time = new MockTime();
         Metrics metrics = new Metrics(time);
@@ -138,6 +145,7 @@ public final class BrokerServerMetricsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIgnoredStaticVoters() throws Exception {
         MockTime time = new MockTime();
         Metrics metrics = new Metrics(time);

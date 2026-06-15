@@ -35,10 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DelayedFutureTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testDelayedFuture() throws Exception {
         String purgatoryName = "testDelayedFuture";
         DelayedFuturePurgatory purgatory = new DelayedFuturePurgatory(purgatoryName, 0);

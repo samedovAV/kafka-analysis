@@ -35,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ExpiringErrorCacheTest {
 
@@ -42,6 +44,7 @@ public class ExpiringErrorCacheTest {
     private ExpiringErrorCache cache;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void setUp() {
         mockTime = new MockTime();
     }
@@ -49,6 +52,7 @@ public class ExpiringErrorCacheTest {
     // Basic Functionality Tests
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testPutAndGet() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -62,6 +66,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testGetNonExistentTopic() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -74,6 +79,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testUpdateExistingEntry() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -86,6 +92,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testGetMultipleTopics() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -104,6 +111,7 @@ public class ExpiringErrorCacheTest {
     // Expiration Tests
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testExpiredEntryNotReturned() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -120,6 +128,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testExpiredEntriesCleanedOnPut() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -142,6 +151,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testMixedExpiredAndValidEntries() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -162,6 +172,7 @@ public class ExpiringErrorCacheTest {
     // Capacity Enforcement Tests
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testCapacityEnforcement() {
         cache = new ExpiringErrorCache(3, mockTime);
 
@@ -187,6 +198,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testEvictionOrder() {
         cache = new ExpiringErrorCache(3, mockTime);
 
@@ -209,6 +221,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testCapacityWithDifferentTTLs() {
         cache = new ExpiringErrorCache(2, mockTime);
 
@@ -227,6 +240,7 @@ public class ExpiringErrorCacheTest {
     // Update and Stale Entry Tests
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testUpdateDoesNotLeaveStaleEntries() {
         cache = new ExpiringErrorCache(3, mockTime);
 
@@ -249,6 +263,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testStaleEntriesInQueueHandledCorrectly() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -277,6 +292,7 @@ public class ExpiringErrorCacheTest {
     // Edge Cases
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testEmptyCache() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -285,6 +301,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testSingleEntryCache() {
         cache = new ExpiringErrorCache(1, mockTime);
 
@@ -299,6 +316,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testZeroTTL() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -309,6 +327,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testClearOperation() {
         cache = new ExpiringErrorCache(10, mockTime);
 
@@ -325,6 +344,7 @@ public class ExpiringErrorCacheTest {
     // Concurrent Access Tests
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConcurrentPutOperations() {
         cache = new ExpiringErrorCache(100, mockTime);
         var numThreads = 10;
@@ -354,6 +374,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testConcurrentPutAndGet() {
         cache = new ExpiringErrorCache(100, mockTime);
         var numOperations = 1000;
@@ -381,6 +402,7 @@ public class ExpiringErrorCacheTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     void testConcurrentUpdates() {
         cache = new ExpiringErrorCache(50, mockTime);
         var numThreads = 10;

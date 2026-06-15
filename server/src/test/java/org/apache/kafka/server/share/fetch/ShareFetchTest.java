@@ -46,6 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ShareFetchTest {
 
@@ -57,16 +59,19 @@ public class ShareFetchTest {
     private BrokerTopicStats brokerTopicStats;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() {
         brokerTopicStats = new BrokerTopicStats();
     }
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void tearDown() throws Exception {
         brokerTopicStats.close();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testErrorInAllPartitions() {
         TopicIdPartition topicIdPartition = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         ShareFetch shareFetch = new ShareFetch(mock(FetchParams.class), GROUP_ID, MEMBER_ID, new CompletableFuture<>(),
@@ -78,6 +83,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDontCacheAnyData() {
         final TopicIdPartition tidp = new TopicIdPartition(Uuid.randomUuid(), 0, "topic");
         MemoryRecords records = buildRecords(1L, 3, 1);
@@ -93,6 +99,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testErrorInAllPartitionsWithMultipleTopicIdPartitions() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -108,6 +115,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFilterErroneousTopicPartitions() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -132,6 +140,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeCompleteWithErroneousTopicPartitions() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -153,6 +162,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeCompleteWithPartialErroneousTopicPartitions() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -173,6 +183,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeCompleteWithException() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -191,6 +202,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeCompleteWithExceptionPartialFailure() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -210,6 +222,7 @@ public class ShareFetchTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeCompleteWithExceptionWithExistingErroneousTopicPartition() {
         TopicIdPartition topicIdPartition0 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 0));
         TopicIdPartition topicIdPartition1 = new TopicIdPartition(Uuid.randomUuid(), new TopicPartition("foo", 1));
@@ -228,6 +241,7 @@ public class ShareFetchTest {
         assertEquals(1, brokerTopicStats.topicStats("foo").failedShareFetchRequestRate().count());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private MemoryRecords buildRecords(long baseOffset, int count, long firstMessageId) {
         MemoryRecordsBuilder builder = MemoryRecords.builder(
                 ByteBuffer.allocate(1024), Compression.NONE, TimestampType.CREATE_TIME, baseOffset);
@@ -236,6 +250,7 @@ public class ShareFetchTest {
         return builder.build();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ShareFetchResponse shareFetchResponse(TopicIdPartition tp, MemoryRecords records, Errors error,
                                                   String errorMessage, short acknowledgeErrorCode, String acknowledgeErrorMessage,
                                                   List<ShareFetchResponseData.AcquiredRecords> acquiredRecords, int throttleTime) {

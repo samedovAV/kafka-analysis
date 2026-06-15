@@ -98,6 +98,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class AuthorizerTest {
 
@@ -128,17 +130,20 @@ public class AuthorizerTest {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public boolean equals(Object o) {
             return false;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_N, n = "", count = {})
         public int hashCode() {
             return super.hashCode();
         }
     }
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setup() throws Exception {
         requestContext = newRequestContext(principal, InetAddress.getByName("192.168.0.1"));
         authorizer = createAuthorizer(configs());
@@ -146,6 +151,7 @@ public class AuthorizerTest {
     }
 
     @AfterEach
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void tearDown() throws Exception {
         authorizer.close();
         for (PluginMetricsImpl pluginMetric : pluginMetricsInstances) {
@@ -156,6 +162,7 @@ public class AuthorizerTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<String, Object> configs() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(StandardAuthorizer.SUPER_USERS_CONFIG, "User:superuser1; User:superuser2");
@@ -164,6 +171,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void testAuthorizeByResourceTypeMultipleAddAndRemove() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -198,6 +206,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeIsolationUnrelatedDenyWontDominateAllow() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         KafkaPrincipal user2 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user2");
@@ -235,6 +244,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeDenyTakesPrecedence() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -254,6 +264,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypePrefixedResourceDenyDominate() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -289,6 +300,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeWildcardResourceDenyDominate() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -318,6 +330,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeWithAllOperationAce() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -340,6 +353,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeWithAllHostAce() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         InetAddress host1 = InetAddress.getByName("192.168.1.1");
@@ -381,6 +395,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeWithAllPrincipalAce() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user1");
         KafkaPrincipal user2 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "user2");
@@ -422,6 +437,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeSuperUserHasAccess() throws Exception {
         AccessControlEntry denyAllAce = new AccessControlEntry(WILDCARD_PRINCIPAL_STRING, WILDCARD_HOST, AclOperation.ALL, DENY);
         String superUserName = "superuser1";
@@ -450,12 +466,14 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeThrowsOnNonLiteralResource() {
         assertThrows(IllegalArgumentException.class, () -> authorize(authorizer, requestContext, READ,
                 new ResourcePattern(TOPIC, "something", PREFIXED)));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeWithEmptyResourceName() throws Exception {
         assertFalse(authorize(authorizer, requestContext, READ, new ResourcePattern(GROUP, "", LITERAL)));
         addAcls(authorizer, Set.of(allowReadAcl), new ResourcePattern(GROUP, WILDCARD_RESOURCE, LITERAL));
@@ -464,12 +482,14 @@ public class AuthorizerTest {
 
     // Authorizing the empty resource is not supported because empty resource name is invalid.
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testEmptyAclThrowsException() {
         assertThrows(ApiException.class,
                 () -> addAcls(authorizer, Set.of(allowReadAcl), new ResourcePattern(GROUP, "", LITERAL)));
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testTopicAcl() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         KafkaPrincipal user2 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "rob");
@@ -525,6 +545,7 @@ public class AuthorizerTest {
      * CustomPrincipals should be compared with their principal type and name
      */
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAllowAccessWithCustomPrincipal() throws Exception {
         KafkaPrincipal user = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         CustomPrincipal customUserPrincipal = new CustomPrincipal(KafkaPrincipal.USER_TYPE, username);
@@ -545,6 +566,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDenyTakesPrecedence() throws Exception {
         KafkaPrincipal user = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         InetAddress host = InetAddress.getByName("192.168.2.1");
@@ -560,6 +582,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAllowAllAccess() throws Exception {
         AccessControlEntry allowAllAcl = new AccessControlEntry(WILDCARD_PRINCIPAL_STRING, WILDCARD_HOST, AclOperation.ALL, ALLOW);
 
@@ -570,6 +593,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSuperUserHasAccess() throws Exception {
         AccessControlEntry denyAllAcl = new AccessControlEntry(WILDCARD_PRINCIPAL_STRING, WILDCARD_HOST, AclOperation.ALL, DENY);
 
@@ -586,6 +610,7 @@ public class AuthorizerTest {
      * CustomPrincipals should be compared with their principal type and name
      */
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSuperUserWithCustomPrincipalHasAccess() throws Exception {
         AccessControlEntry denyAllAcl = new AccessControlEntry(WILDCARD_PRINCIPAL_STRING, WILDCARD_HOST, AclOperation.ALL, DENY);
         changeAclAndVerify(Set.of(), Set.of(denyAllAcl), Set.of());
@@ -596,6 +621,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testWildCardAcls() throws Exception {
         assertFalse(authorize(authorizer, requestContext, READ, resource), "when acls = [], authorizer should fail close.");
 
@@ -620,11 +646,13 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testNoAclFound() {
         assertFalse(authorize(authorizer, requestContext, READ, resource), "when acls = [], authorizer should deny op.");
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testNoAclFoundOverride() throws IOException {
         Map<String, Object> cfg = configs();
         cfg.put(StandardAuthorizer.ALLOW_EVERYONE_IF_NO_ACL_IS_FOUND_CONFIG, "true");
@@ -636,6 +664,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAclConfigWithWhitespace() throws IOException {
         Map<String, Object> cfg = configs();
         cfg.put(StandardAuthorizer.ALLOW_EVERYONE_IF_NO_ACL_IS_FOUND_CONFIG, " true");
@@ -649,6 +678,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAclManagementAPIs() throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         KafkaPrincipal user2 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "bob");
@@ -704,6 +734,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testLocalConcurrentModificationOfResourceAcls() throws Exception {
         ResourcePattern commonResource = new ResourcePattern(TOPIC, "test", LITERAL);
 
@@ -723,6 +754,7 @@ public class AuthorizerTest {
      * Test ACL inheritance, as described in {@link org.apache.kafka.common.acl.AclOperation}
      */
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAclInheritance() throws Exception {
         testImplicationsOfAllow(AclOperation.ALL, Set.of(READ, WRITE, CREATE, DELETE, ALTER, DESCRIBE,
                 CLUSTER_ACTION, DESCRIBE_CONFIGS, ALTER_CONFIGS, IDEMPOTENT_WRITE, CREATE_TOKENS, DESCRIBE_TOKENS, TWO_PHASE_COMMIT));
@@ -737,6 +769,7 @@ public class AuthorizerTest {
         testImplicationsOfDeny(DESCRIBE_CONFIGS, Set.of());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void testImplicationsOfAllow(AclOperation parentOp, Set<AclOperation> allowedOps) throws Exception {
         KafkaPrincipal user = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         InetAddress host = InetAddress.getByName("192.168.3.1");
@@ -755,6 +788,7 @@ public class AuthorizerTest {
         removeAcls(authorizer, Set.of(acl), clusterResource);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void testImplicationsOfDeny(AclOperation parentOp, Set<AclOperation> deniedOps) throws Exception {
         KafkaPrincipal user1 = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, username);
         InetAddress host1 = InetAddress.getByName("192.168.3.1");
@@ -775,6 +809,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAccessAllowedIfAllowAclExistsOnWildcardResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl), wildCardResource);
 
@@ -782,6 +817,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteAclOnWildcardResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), wildCardResource);
 
@@ -791,6 +827,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteAllAclOnWildcardResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl), wildCardResource);
 
@@ -800,6 +837,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAccessAllowedIfAllowAclExistsOnPrefixedResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl), prefixedResource);
 
@@ -807,6 +845,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteAclOnPrefixedResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), prefixedResource);
 
@@ -816,6 +855,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeleteAllAclOnPrefixedResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), prefixedResource);
 
@@ -825,6 +865,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAddAclsOnLiteralResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), resource);
         addAcls(authorizer, Set.of(allowWriteAcl, denyReadAcl), resource);
@@ -835,6 +876,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAddAclsOnWildcardResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), wildCardResource);
         addAcls(authorizer, Set.of(allowWriteAcl, denyReadAcl), wildCardResource);
@@ -845,6 +887,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAddAclsOnPrefixedResource() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl, allowWriteAcl), prefixedResource);
         addAcls(authorizer, Set.of(allowWriteAcl, denyReadAcl), prefixedResource);
@@ -855,6 +898,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeWithPrefixedResource() throws Exception {
         addAcls(authorizer, Set.of(denyReadAcl), new ResourcePattern(TOPIC, "a_other", LITERAL));
         addAcls(authorizer, Set.of(denyReadAcl), new ResourcePattern(TOPIC, "a_other", PREFIXED));
@@ -875,6 +919,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSingleCharacterResourceAcls() throws Exception {
         addAcls(authorizer, Set.of(allowReadAcl), new ResourcePattern(TOPIC, "f", LITERAL));
         assertTrue(authorize(authorizer, requestContext, READ, new ResourcePattern(TOPIC, "f", LITERAL)));
@@ -887,6 +932,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetAclsPrincipal() throws Exception {
         AccessControlEntry aclOnSpecificPrincipal = new AccessControlEntry(principal.toString(), WILDCARD_HOST, WRITE, ALLOW);
         addAcls(authorizer, Set.of(aclOnSpecificPrincipal), resource);
@@ -907,6 +953,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAclsFilter() throws Exception {
         ResourcePattern resource1 = new ResourcePattern(TOPIC, "foo-" + UUID.randomUUID(), LITERAL);
         ResourcePattern resource2 = new ResourcePattern(TOPIC, "bar-" + UUID.randomUUID(), LITERAL);
@@ -945,6 +992,7 @@ public class AuthorizerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAuthorizeByResourceTypeNoAclFoundOverride() throws IOException {
         Map<String, Object> cfg = configs();
         cfg.put(StandardAuthorizer.ALLOW_EVERYONE_IF_NO_ACL_IS_FOUND_CONFIG, "true");
@@ -957,16 +1005,19 @@ public class AuthorizerTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private <T> Set<T> toSet(Iterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toSet());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private Set<AccessControlEntry> changeAclAndVerify(Set<AccessControlEntry> originalAcls,
                                                        Set<AccessControlEntry> addedAcls,
                                                        Set<AccessControlEntry> removedAcls) throws Exception {
         return changeAclAndVerify(originalAcls, addedAcls, removedAcls, resource);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Set<AccessControlEntry> changeAclAndVerify(Set<AccessControlEntry> originalAcls,
                                                        Set<AccessControlEntry> addedAcls,
                                                        Set<AccessControlEntry> removedAcls,
@@ -988,30 +1039,36 @@ public class AuthorizerTest {
         return acls;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private boolean authorize(Authorizer authorizer, RequestContext requestContext, AclOperation operation, ResourcePattern resource) {
         Action action = new Action(operation, resource, 1, true, true);
         return authorizer.authorize(requestContext, List.of(action)).get(0) == AuthorizationResult.ALLOWED;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Set<AccessControlEntry> getAcls(Authorizer authorizer, ResourcePattern resourcePattern) {
         return toSet(authorizer.acls(new AclBindingFilter(resourcePattern.toFilter(), AccessControlEntryFilter.ANY))).stream()
             .map(AclBinding::entry).collect(Collectors.toSet());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Set<AclBinding> getAcls(Authorizer authorizer, KafkaPrincipal principal) {
         AclBindingFilter filter = new AclBindingFilter(ResourcePatternFilter.ANY,
                 new AccessControlEntryFilter(principal.toString(), null, AclOperation.ANY, AclPermissionType.ANY));
         return toSet(authorizer.acls(filter));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Set<AclBinding> getAcls(Authorizer authorizer) {
         return toSet(authorizer.acls(AclBindingFilter.ANY));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private boolean invalidOp(AclOperation op) {
         return op == AclOperation.ANY || op == AclOperation.UNKNOWN;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Authorizer createAuthorizer(Map<String, ?> configs) {
         Metrics metrics = new Metrics();
         metricsInstances.add(metrics);
@@ -1026,6 +1083,7 @@ public class AuthorizerTest {
         return authorizer;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private RequestContext newRequestContext(KafkaPrincipal principal, InetAddress clientAddress) {
         SecurityProtocol securityProtocol = SecurityProtocol.SASL_PLAINTEXT;
         RequestHeader header = new RequestHeader(ApiKeys.PRODUCE, (short) 2, "", 1);
@@ -1033,10 +1091,12 @@ public class AuthorizerTest {
                 securityProtocol, ClientInformation.EMPTY, false);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private boolean authorizeByResourceType(Authorizer authorizer, RequestContext requestContext, AclOperation operation, ResourceType resourceType) {
         return authorizer.authorizeByResourceType(requestContext, operation, resourceType) == AuthorizationResult.ALLOWED;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void addAcls(Authorizer authorizer, Set<AccessControlEntry> aces, ResourcePattern resourcePattern) throws Exception {
         List<AclBinding> bindings = aces.stream().map(ace -> new AclBinding(resourcePattern, ace)).toList();
         List<? extends CompletionStage<AclCreateResult>> results = authorizer.createAcls(requestContext, bindings);
@@ -1048,6 +1108,7 @@ public class AuthorizerTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     private void removeAcls(Authorizer authorizer, Set<AccessControlEntry> aces, ResourcePattern resourcePattern) throws Exception {
         List<AclBindingFilter> filters = aces.isEmpty()
             ? List.of(new AclBindingFilter(resourcePattern.toFilter(), AccessControlEntryFilter.ANY))

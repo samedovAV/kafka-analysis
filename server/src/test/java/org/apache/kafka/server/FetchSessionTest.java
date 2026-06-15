@@ -69,10 +69,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @Timeout(120)
 public class FetchSessionTest {
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void afterEach() {
         FetchSessionCache.METRICS_GROUP.removeMetric(FetchSession.NUM_INCREMENTAL_FETCH_SESSIONS);
         FetchSessionCache.METRICS_GROUP.removeMetric(FetchSession.NUM_INCREMENTAL_FETCH_PARTITIONS_CACHED);
@@ -81,6 +84,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testNewSessionId() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(3, 100, Integer.MAX_VALUE, 0);
         for (int i = 0; i < 10_000; i++) {
@@ -90,6 +94,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSessionCache() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(3, 100, Integer.MAX_VALUE, 0);
         assertEquals(0, cacheShard.size());
@@ -117,6 +122,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResizeCachedSessions() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(2, 100, Integer.MAX_VALUE, 0);
         assertEquals(0, cacheShard.totalPartitions());
@@ -167,6 +173,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCachedLeaderEpoch() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -225,6 +232,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testLastFetchedEpoch() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -285,6 +293,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFetchRequests() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -421,6 +430,7 @@ public class FetchSessionTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalFetchSession(boolean usesTopicIds) {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -495,6 +505,7 @@ public class FetchSessionTest {
 
     // This test simulates a request without IDs sent to a broker with IDs.
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchSessionWithUnknownIdOldRequestVersion() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -535,6 +546,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchSessionWithUnknownId() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -627,6 +639,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalFetchSessionWithIdsWhenSessionDoesNotUseIds() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -662,6 +675,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testIncrementalFetchSessionWithoutIdsWhenSessionUsesIds() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -702,6 +716,7 @@ public class FetchSessionTest {
     // This test simulates a session where the topic ID changes broker side (the one handling the request) in both the metadata cache and the log
     // -- as though the topic is deleted and recreated.
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchSessionUpdateTopicIdsBrokerSide() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -761,6 +776,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testResolveUnknownPartitions() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -831,6 +847,7 @@ public class FetchSessionTest {
     // This test simulates trying to forget a topic partition with all possible topic ID usages for both requests.
     @ParameterizedTest
     @MethodSource({("idUsageCombinations")})
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testToForgetPartitions(boolean fooStartsResolved, boolean fooEndsResolved) {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -891,6 +908,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateAndGenerateResponseData() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -973,6 +991,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchSessionExpiration() {
         MockTime time = new MockTime();
         // set maximum entries to 2 to allow for eviction later
@@ -1084,6 +1103,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPrivilegedSessionHandling() {
         MockTime time = new MockTime();
         // set maximum entries to 2 to allow for eviction later
@@ -1218,6 +1238,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testZeroSizeFetchSession() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -1264,6 +1285,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDivergingEpoch() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -1336,6 +1358,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDeprioritizesPartitionsWithRecordsOnly() {
         FetchSessionCacheShard cacheShard = new FetchSessionCacheShard(10, 1000, Integer.MAX_VALUE, 0);
         FetchManager fetchManager = new FetchManager(new MockTime(), cacheShard);
@@ -1423,6 +1446,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCachedPartitionEqualsAndHashCode() {
         Uuid topicId = Uuid.randomUuid();
         String topicName = "topic";
@@ -1463,6 +1487,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMaybeResolveUnknownName() {
         CachedPartition namedPartition = new CachedPartition("topic", Uuid.randomUuid(), 0);
         CachedPartition nullNamePartition1 = new CachedPartition(null, Uuid.randomUuid(), 0);
@@ -1484,6 +1509,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testFetchSessionCache_getShardedCache_retrievesCacheFromCorrectSegment() {
         // Given
         int numShards = 8;
@@ -1506,6 +1532,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFetchSessionCache_RoundRobinsIntoShards() {
         // Given
         int numShards = 8;
@@ -1521,6 +1548,7 @@ public class FetchSessionTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testFetchSessionCache_RoundRobinsIntoShards_WhenIntegerOverflows() {
         // Given
         int maxInteger = Integer.MAX_VALUE;
@@ -1537,6 +1565,7 @@ public class FetchSessionTest {
             assertEquals(cacheShards.get(shardNum % numShards), cache.getNextCacheShard());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void assertCacheContains(FetchSessionCacheShard cacheShard, int... sessionIds) {
         int i = 0;
         for (int sessionId : sessionIds) {
@@ -1547,6 +1576,7 @@ public class FetchSessionTest {
         assertEquals(sessionIds.length, cacheShard.size());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private ImplicitLinkedHashCollection<CachedPartition> createPartitions(int size) {
         ImplicitLinkedHashCollection<CachedPartition> cacheMap = new ImplicitLinkedHashCollection<>(size);
         for (int i = 0; i < size; i++)
@@ -1554,6 +1584,7 @@ public class FetchSessionTest {
         return cacheMap;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private FetchRequest createRequest(FetchMetadata metadata,
                                        Map<TopicPartition, PartitionData> fetchData,
                                        List<TopicIdPartition> toForget,
@@ -1572,6 +1603,7 @@ public class FetchSessionTest {
         .build();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private FetchRequest createRequestWithoutTopicIds(FetchMetadata metadata,
                                                       Map<TopicPartition, PartitionData> fetchData) {
         return new FetchRequest.Builder(
@@ -1587,6 +1619,7 @@ public class FetchSessionTest {
         .build();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private FetchContext newContext(FetchManager fetchManager, FetchRequest request, Map<Uuid, String> topicNames) {
         return fetchManager.newContext(
             request.version(),
@@ -1598,6 +1631,7 @@ public class FetchSessionTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private FetchContext newContext(FetchMetadata metadata,
                                     List<TopicIdPartition> partitions,
                                     FetchManager fetchManager,
@@ -1623,6 +1657,7 @@ public class FetchSessionTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private FetchContext newContext(FetchMetadata metadata,
                                     List<TopicIdPartition> partitions,
                                     List<TopicIdPartition> toForget,
@@ -1649,18 +1684,21 @@ public class FetchSessionTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<TopicIdPartition, Optional<Integer>> cachedLeaderEpochs(FetchContext context) {
         Map<TopicIdPartition, Optional<Integer>> map = new HashMap<>();
         context.foreachPartition((tp, data) -> map.put(tp, data.currentLeaderEpoch));
         return map;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<TopicIdPartition, Optional<Integer>> cachedLastFetchedEpochs(FetchContext context) {
         Map<TopicIdPartition, Optional<Integer>> map = new HashMap<>();
         context.foreachPartition((tp, data) -> map.put(tp, data.lastFetchedEpoch));
         return map;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private FetchResponseData.PartitionData errorResponse(short errorCode) {
         return new FetchResponseData.PartitionData()
             .setPartitionIndex(0)
@@ -1670,6 +1708,7 @@ public class FetchSessionTest {
             .setErrorCode(errorCode);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private int updateAndGenerateResponseDataSessionId(FetchContext context) {
         LinkedHashMap<TopicIdPartition, FetchResponseData.PartitionData> data = new LinkedHashMap<>();
 
@@ -1689,6 +1728,7 @@ public class FetchSessionTest {
         return context.updateAndGenerateResponseData(data, List.of()).sessionId();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private FetchResponse updateAndGenerateResponseData(FetchContext context) {
         LinkedHashMap<TopicIdPartition, FetchResponseData.PartitionData> data = new LinkedHashMap<>();
 
@@ -1704,6 +1744,7 @@ public class FetchSessionTest {
         return context.updateAndGenerateResponseData(data, List.of());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void checkResponseData(Map<TopicPartition, Short> expected, FetchResponse response, Map<Uuid, String> topicNames) {
         assertEquals(
             expected,
@@ -1713,6 +1754,7 @@ public class FetchSessionTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void assertPartitionsOrder(FetchContext context, List<TopicIdPartition> partitions) {
         List<TopicIdPartition> partitionsInContext = new ArrayList<>();
         context.foreachPartition((tp, data) -> partitionsInContext.add(tp));
@@ -1720,6 +1762,7 @@ public class FetchSessionTest {
     }
 
     @SuppressWarnings("unused")
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     private static Stream<Arguments> idUsageCombinations() {
         List<Arguments> data = new ArrayList<>();
         List<Boolean> params = List.of(Boolean.TRUE, Boolean.FALSE);

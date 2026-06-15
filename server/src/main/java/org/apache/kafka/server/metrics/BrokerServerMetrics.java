@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public final class BrokerServerMetrics implements AutoCloseable {
     private static final String METRIC_GROUP_NAME = "broker-metadata-metrics";
@@ -108,6 +110,7 @@ public final class BrokerServerMetrics implements AutoCloseable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void close() throws Exception {
         KafkaYammerMetrics.defaultRegistry().removeMetric(batchProcessingTimeHistName);
         KafkaYammerMetrics.defaultRegistry().removeMetric(batchSizeHistName);
@@ -121,66 +124,82 @@ public final class BrokerServerMetrics implements AutoCloseable {
         ).forEach(metrics::removeMetric);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName lastAppliedRecordOffsetName() {
         return lastAppliedRecordOffsetName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName lastAppliedRecordTimestampName() {
         return lastAppliedRecordTimestampName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName lastAppliedRecordLagMsName() {
         return lastAppliedRecordLagMsName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName metadataLoadErrorCountName() {
         return metadataLoadErrorCountName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName metadataApplyErrorCountName() {
         return metadataApplyErrorCountName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public MetricName ignoredStaticVotersName() {
         return ignoredStaticVotersName;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public AtomicReference<MetadataProvenance> lastAppliedImageProvenance() {
         return lastAppliedImageProvenance;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public AtomicLong metadataLoadErrorCount() {
         return metadataLoadErrorCount;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public AtomicLong metadataApplyErrorCount() {
         return metadataApplyErrorCount;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void updateBatchProcessingTime(long elapsedNs) {
         batchProcessingTimeHist.update(NANOSECONDS.toMicros(elapsedNs));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void updateBatchSize(int size) {
         batchSizeHist.update(size);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void updateLastAppliedImageProvenance(MetadataProvenance provenance) {
         lastAppliedImageProvenance.set(provenance);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     long lastAppliedOffset() {
         return lastAppliedImageProvenance.get().lastContainedOffset();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     long lastAppliedTimestamp() {
         return lastAppliedImageProvenance.get().lastContainedLogTimeMs();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setIgnoredStaticVoters(boolean ignored) {
         ignoredStaticVoters.set(ignored);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean ignoredStaticVoters() {
         return ignoredStaticVoters.get();
     }

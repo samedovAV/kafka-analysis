@@ -17,11 +17,17 @@
 package org.apache.kafka.server.logger;
 
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public interface LoggingControllerDelegate {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Map<String, String> loggers();
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean logLevel(String loggerName, String logLevel);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean unsetLogLevel(String loggerName);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     default boolean loggerExists(String loggerName) {
         return loggers().containsKey(loggerName);
     }

@@ -17,6 +17,8 @@
 package org.apache.kafka.server.partition;
 
 import java.util.List;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Represents the current assignment of replicas for a partition. This can be a simple assignment
@@ -28,12 +30,14 @@ public interface AssignmentState {
      * An ordered sequence of all the broker ids that were assigned to this topic partition.
      * @return the list of broker ids
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     List<Integer> replicas();
 
     /**
      * The number of replicas in the assignment.
      * @return the replication factor
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int replicationFactor();
 
     /**
@@ -43,5 +47,6 @@ public interface AssignmentState {
      * @param brokerId the broker id to check
      * @return true if the broker is being added
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isAddingReplica(int brokerId);
 }

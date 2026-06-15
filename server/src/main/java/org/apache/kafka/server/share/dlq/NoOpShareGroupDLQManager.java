@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * A no op implementation of {@link ShareGroupDLQManager}. This will be useful
@@ -31,12 +33,14 @@ public class NoOpShareGroupDLQManager implements ShareGroupDLQManager {
     private static final Logger log = LoggerFactory.getLogger(NoOpShareGroupDLQManager.class);
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public CompletableFuture<Void> enqueue(ShareGroupDLQRecordParameter param) {
         log.warn("Enqueuing share group dlq record parameter: {}", param);
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void stop() {
         // noop
     }

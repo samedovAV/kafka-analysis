@@ -29,17 +29,21 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientTelemetryTest {
 
     private ClientTelemetryExporterPlugin clientTelemetryExporterPlugin;
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() {
         clientTelemetryExporterPlugin = new ClientTelemetryExporterPlugin();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMultipleDeprecatedReceivers() throws UnknownHostException {
         // Test that multiple deprecated receivers can be registered
         TestClientMetricsReceiver receiver1 = new TestClientMetricsReceiver();
@@ -61,6 +65,7 @@ public class ClientTelemetryTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMultipleNewExporters() throws UnknownHostException {
         // Test that multiple new exporters can be registered
         TestClientTelemetryExporter exporter1 = new TestClientTelemetryExporter();

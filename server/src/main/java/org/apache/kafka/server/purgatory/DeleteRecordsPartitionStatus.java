@@ -18,6 +18,8 @@ package org.apache.kafka.server.purgatory;
 
 import org.apache.kafka.common.message.DeleteRecordsResponseData.DeleteRecordsPartitionResult;
 import org.apache.kafka.common.protocol.Errors;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DeleteRecordsPartitionStatus {
     private final long requiredOffset;
@@ -30,24 +32,29 @@ public class DeleteRecordsPartitionStatus {
         this.acksPending = false;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean acksPending() {
         return acksPending;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setAcksPending(boolean acksPending) {
         this.acksPending = acksPending;
     }
 
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public DeleteRecordsPartitionResult responseStatus() {
         return responseStatus;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public long requiredOffset() {
         return requiredOffset;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public String toString() {
         return String.format("[acksPending: %b, error: %s, lowWatermark: %d, requiredOffset: %d]",
                 acksPending, Errors.forCode(responseStatus.errorCode()).toString(), responseStatus.lowWatermark(),

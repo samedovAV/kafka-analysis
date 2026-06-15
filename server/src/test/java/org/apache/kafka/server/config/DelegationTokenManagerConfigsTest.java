@@ -34,9 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DelegationTokenManagerConfigsTest {
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testDefaults() {
         DelegationTokenManagerConfigs config = new DelegationTokenManagerConfigs(new AbstractConfig(DelegationTokenManagerConfigs.CONFIG_DEF, Map.of()));
         assertNull(config.delegationTokenSecretKey());
@@ -47,6 +50,7 @@ public class DelegationTokenManagerConfigsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testOverride() {
         DelegationTokenManagerConfigs config = new DelegationTokenManagerConfigs(
             new AbstractConfig(DelegationTokenManagerConfigs.CONFIG_DEF,
@@ -71,6 +75,7 @@ public class DelegationTokenManagerConfigsTest {
         DELEGATION_TOKEN_EXPIRY_TIME_MS_CONFIG,
         DELEGATION_TOKEN_EXPIRY_CHECK_INTERVAL_MS_CONFIG
     })
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void testInvalidProperty(String field) {
         assertThrows(Exception.class, () -> new DelegationTokenManagerConfigs(
             new AbstractConfig(DelegationTokenManagerConfigs.CONFIG_DEF, Map.of(field, "not_a_number"))));

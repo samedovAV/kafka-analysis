@@ -53,6 +53,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientQuotasRequestTest {
     private final ClusterInstance cluster;
@@ -62,6 +64,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterClientQuotasRequest() throws InterruptedException {
         ClientQuotaEntity entity = new ClientQuotaEntity(
             Map.of(ClientQuotaEntity.USER, "user", ClientQuotaEntity.CLIENT_ID, "client-id"));
@@ -132,6 +135,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterClientQuotasRequestValidateOnly() throws InterruptedException {
         ClientQuotaEntity entity = new ClientQuotaEntity(Map.of(ClientQuotaEntity.USER, "user"));
 
@@ -190,6 +194,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClientQuotasForScramUsers() throws InterruptedException, ExecutionException {
         final String userName = "user";
 
@@ -215,6 +220,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterIpQuotasRequest() throws InterruptedException {
         final String knownHost = "1.2.3.4";
         final String unknownHost = "2.3.4.5";
@@ -251,6 +257,7 @@ public class ClientQuotasRequestTest {
         verifyIpQuotas(allIpEntityFilter, Map.of(), unknownHost);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void verifyIpQuotas(ClientQuotaFilterComponent entityFilter, Map<ClientQuotaEntity, Double> expectedMatches,
         String unknownHost) throws InterruptedException {
 
@@ -283,6 +290,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterClientQuotasInvalidRequests() {
         final ClientQuotaEntity entity1 = new ClientQuotaEntity(Map.of(ClientQuotaEntity.USER, ""));
         TestUtils.assertFutureThrows(InvalidRequestException.class,
@@ -309,6 +317,7 @@ public class ClientQuotasRequestTest {
             alterEntityQuotas(entity6, Map.of(QuotaConfig.PRODUCER_BYTE_RATE_OVERRIDE_CONFIG, Optional.of(10000.5)), true));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void expectInvalidRequestWithMessage(Future<?> future, String expectedMessage) {
         InvalidRequestException exception = TestUtils.assertFutureThrows(InvalidRequestException.class, future);
         assertNotNull(exception);
@@ -319,6 +328,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterClientQuotasInvalidEntityCombination() {
         ClientQuotaEntity userAndIpEntity = new ClientQuotaEntity(
             Map.of(ClientQuotaEntity.USER, "user", ClientQuotaEntity.IP, "1.2.3.4")
@@ -340,6 +350,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testAlterClientQuotasBadIp() {
         ClientQuotaEntity invalidHostPatternEntity = new ClientQuotaEntity(
             Map.of(ClientQuotaEntity.IP, "not a valid host because it has spaces")
@@ -361,6 +372,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeClientQuotasInvalidFilterCombination() {
         ClientQuotaFilterComponent ipFilterComponent = ClientQuotaFilterComponent.ofEntityType(ClientQuotaEntity.IP);
         ClientQuotaFilterComponent userFilterComponent = ClientQuotaFilterComponent.ofEntityType(ClientQuotaEntity.USER);
@@ -397,6 +409,7 @@ public class ClientQuotasRequestTest {
         toIpEntity(Optional.of("2.3.4.5")), 20.0
     );
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void setupDescribeClientQuotasMatchTest() {
         Map<ClientQuotaEntity, Map<String, Optional<Double>>> userClientQuotas = matchUserClientEntities.entrySet()
             .stream()
@@ -429,6 +442,7 @@ public class ClientQuotasRequestTest {
         });
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<ClientQuotaEntity, Map<String, Double>> matchEntity(ClientQuotaEntity entity)
         throws ExecutionException, InterruptedException {
         List<ClientQuotaFilterComponent> components = entity.entries().entrySet().stream().map(entry -> {
@@ -443,6 +457,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testDescribeClientQuotasMatchExact() throws ExecutionException, InterruptedException {
         setupDescribeClientQuotasMatchTest();
 
@@ -480,6 +495,7 @@ public class ClientQuotasRequestTest {
     }
 
     @SuppressWarnings("unchecked")
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void testMatchEntities(ClientQuotaFilter filter, int expectedMatchSize, Predicate<ClientQuotaEntity> partition)
         throws InterruptedException {
         TestUtils.retryOnExceptionWithTimeout(5000L, () -> {
@@ -524,6 +540,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testDescribeClientQuotasMatchPartial() throws InterruptedException {
         setupDescribeClientQuotasMatchTest();
 
@@ -612,6 +629,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClientQuotasUnsupportedEntityTypes() {
         ClientQuotaEntity entity = new ClientQuotaEntity(Map.of("other", "name"));
         KafkaFuture<Map<ClientQuotaEntity, Map<String, Double>>> future = describeClientQuotas(
@@ -621,6 +639,7 @@ public class ClientQuotasRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClientQuotasSanitized() throws InterruptedException {
         // An entity with name that must be sanitized when writing to Zookeeper.
         ClientQuotaEntity entity = new ClientQuotaEntity(Map.of(ClientQuotaEntity.USER, "user with spaces"));
@@ -634,17 +653,20 @@ public class ClientQuotasRequestTest {
         ));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<String, String> toUserMap(String user) {
         // Uses Collections.singletonMap instead of Map.of to support null user parameter.
         return Collections.singletonMap(ClientQuotaEntity.USER, user);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Map<String, String> toClientIdMap(String clientId) {
         // Uses Collections.singletonMap instead of Map.of to support null client-id parameter.
         return Collections.singletonMap(ClientQuotaEntity.CLIENT_ID, clientId);
     }
 
     @SafeVarargs
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private ClientQuotaEntity toClientEntity(Map<String, String>... entries) {
         Map<String, String> entityMap = new HashMap<>();
         for (Map<String, String> entry : entries) {
@@ -653,10 +675,12 @@ public class ClientQuotasRequestTest {
         return new ClientQuotaEntity(entityMap);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ClientQuotaEntity toIpEntity(Optional<String> ip) {
         return new ClientQuotaEntity(Collections.singletonMap(ClientQuotaEntity.IP, ip.orElse(null)));
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void verifyDescribeEntityQuotas(ClientQuotaEntity entity, Map<String, Double> quotas)
         throws InterruptedException {
         TestUtils.retryOnExceptionWithTimeout(5000L, () -> {
@@ -680,6 +704,7 @@ public class ClientQuotasRequestTest {
         });
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private List<ClientQuotaFilterComponent> getComponents(ClientQuotaEntity entity) {
         return entity.entries().entrySet().stream().map(entry -> {
             String entityType = entry.getKey();
@@ -690,17 +715,20 @@ public class ClientQuotasRequestTest {
         }).toList();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private KafkaFuture<Map<ClientQuotaEntity, Map<String, Double>>> describeClientQuotas(ClientQuotaFilter filter) {
         try (Admin admin = cluster.admin()) {
             return admin.describeClientQuotas(filter).entities();
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private KafkaFuture<Void> alterEntityQuotas(ClientQuotaEntity entity, Map<String, Optional<Double>> alter, boolean validateOnly) {
 
         return alterClientQuotas(Map.of(entity, alter), validateOnly).get(entity);
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private Map<ClientQuotaEntity, KafkaFuture<Void>> alterClientQuotas(Map<ClientQuotaEntity, Map<String,
         Optional<Double>>> request, boolean validateOnly) {
 

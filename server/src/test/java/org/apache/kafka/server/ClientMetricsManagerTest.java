@@ -69,6 +69,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class ClientMetricsManagerTest {
 
@@ -80,6 +82,7 @@ public class ClientMetricsManagerTest {
     private ClientMetricsManager clientMetricsManager;
 
     @AfterAll
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public static void ensureNoThreadLeak() throws InterruptedException {
         TestUtils.waitForCondition(
                 () -> Thread.getAllStackTraces().keySet().stream()
@@ -91,6 +94,7 @@ public class ClientMetricsManagerTest {
     }
 
     @BeforeEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setUp() {
         time = new MockTime();
         kafkaMetrics = new Metrics();
@@ -99,12 +103,14 @@ public class ClientMetricsManagerTest {
     }
 
     @AfterEach
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void tearDown() throws Exception {
         clientMetricsManager.close();
         kafkaMetrics.close();
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateSubscription() throws Exception {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
 
@@ -142,6 +148,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateSubscriptionWithEmptyProperties() {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
         assertEquals(0, clientMetricsManager.subscriptionUpdateVersion());
@@ -152,6 +159,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateSubscriptionWithNullProperties() {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
         assertEquals(0, clientMetricsManager.subscriptionUpdateVersion());
@@ -163,6 +171,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateSubscriptionWithInvalidMetricsProperties() {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
 
@@ -172,6 +181,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUpdateSubscriptionWithPropertiesDeletion() {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
         assertEquals(0, clientMetricsManager.subscriptionUpdateVersion());
@@ -190,6 +200,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetry() throws Exception {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -239,6 +250,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetryWithoutSubscription() throws UnknownHostException {
         assertTrue(clientMetricsManager.subscriptions().isEmpty());
 
@@ -263,6 +275,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetryAfterPushIntervalTime() throws UnknownHostException {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -285,6 +298,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetryAllMetricSubscribedSubscription() throws UnknownHostException {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         Properties properties = new Properties();
@@ -317,6 +331,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetrySameClientImmediateRetryFail() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -341,6 +356,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetrySameClientImmediateRetryAfterPushFail() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -386,6 +402,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetryUpdateSubscription() throws UnknownHostException {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -421,6 +438,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testGetTelemetryConcurrentRequestNewClientInstance() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData().setClientInstanceId(Uuid.randomUuid()), true).build();
@@ -477,6 +495,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testGetTelemetryConcurrentRequestAfterSubscriptionUpdate() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData().setClientInstanceId(Uuid.randomUuid()), true).build();
@@ -542,6 +561,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetry() throws Exception {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -585,6 +605,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryOnNewServer() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -626,6 +647,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryAfterPushIntervalTime() throws UnknownHostException {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -657,6 +679,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryClientInstanceIdInvalid() throws UnknownHostException {
         // Null client instance id
         PushTelemetryRequest request = new PushTelemetryRequest.Builder(
@@ -678,6 +701,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryThrottleError() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -716,6 +740,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryTerminatingFlag() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -760,6 +785,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryNextRequestPostTerminatingFlag() throws UnknownHostException {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -798,6 +824,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetrySubscriptionIdInvalid() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -829,6 +856,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryCompressionTypeInvalid() throws UnknownHostException {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -854,6 +882,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryNullMetricsData() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -886,6 +915,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryMetricsTooLarge() throws Exception {
         try (
                 Metrics kafkaMetrics = new Metrics();
@@ -922,6 +952,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testPushTelemetryConcurrentRequestNewClientInstance() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -998,6 +1029,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testPushTelemetryConcurrentRequestAfterSubscriptionUpdate() throws Exception {
         GetTelemetrySubscriptionsRequest subscriptionsRequest = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -1077,6 +1109,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPushTelemetryPluginException() throws Exception {
         ClientTelemetryExporterPlugin receiverPlugin = Mockito.mock(ClientTelemetryExporterPlugin.class);
         Mockito.doThrow(new RuntimeException("test exception")).when(receiverPlugin).exportMetrics(Mockito.any(), Mockito.any(), Mockito.anyInt(), Mockito.anyInt());
@@ -1124,6 +1157,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetrySubscriptionAfterPushTelemetryUnknownSubscriptionSucceeds() throws Exception {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -1162,6 +1196,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetrySubscriptionAfterPushTelemetryUnknownCompressionSucceeds() throws Exception {
         clientMetricsManager.updateSubscription("sub-1", ClientMetricsTestUtils.defaultTestProperties());
         assertEquals(1, clientMetricsManager.subscriptions().size());
@@ -1195,6 +1230,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testGetTelemetrySubscriptionAfterPushTelemetryBytesExceptionFails() throws Exception {
         try (
             Metrics kafkaMetrics = new Metrics();
@@ -1233,6 +1269,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testCacheEviction() throws Exception {
         Properties properties = new Properties();
         properties.put("metrics", ClientMetricsConfigs.ALL_SUBSCRIBED_METRICS);
@@ -1273,6 +1310,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testCacheEvictionWithMultipleClients() throws Exception {
         Properties properties = new Properties();
         properties.put("metrics", ClientMetricsConfigs.ALL_SUBSCRIBED_METRICS);
@@ -1319,6 +1357,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCacheExpirationTaskCancelledOnInstanceUpdate() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -1362,6 +1401,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRemoveConnection() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -1388,6 +1428,7 @@ public class ClientMetricsManagerTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testRemoveConnectionUnknownConnectionId() throws Exception {
         GetTelemetrySubscriptionsRequest request = new GetTelemetrySubscriptionsRequest.Builder(
             new GetTelemetrySubscriptionsRequestData(), true).build();
@@ -1413,10 +1454,12 @@ public class ClientMetricsManagerTest {
         assertEquals((double) 1, getMetric(ClientMetricsManager.ClientMetricsStats.INSTANCE_COUNT).metricValue());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private KafkaMetric getMetric(String name) throws Exception {
         return getMetric(kafkaMetrics, name);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private KafkaMetric getMetric(Metrics kafkaMetrics, String name) throws Exception {
         Optional<Entry<MetricName, KafkaMetric>> metric = kafkaMetrics.metrics().entrySet().stream()
             .filter(entry -> entry.getKey().name().equals(name))

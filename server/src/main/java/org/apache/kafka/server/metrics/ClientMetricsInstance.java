@@ -22,6 +22,8 @@ import org.apache.kafka.server.util.timer.TimerTask;
 
 import java.util.Objects;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Contains the metrics instance metadata and the state of the client instance.
@@ -53,51 +55,63 @@ public class ClientMetricsInstance {
         this.lastKnownError = Errors.NONE;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Uuid clientInstanceId() {
         return clientInstanceId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ClientMetricsInstanceMetadata instanceMetadata() {
         return instanceMetadata;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int pushIntervalMs() {
         return pushIntervalMs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int subscriptionId() {
         return subscriptionId;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int subscriptionVersion() {
         return subscriptionVersion;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Set<String> metrics() {
         return metrics;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean terminating() {
         return terminating;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void terminating(boolean terminating) {
         this.terminating = terminating;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Errors lastKnownError() {
         return lastKnownError;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void lastKnownError(Errors lastKnownError) {
         this.lastKnownError = lastKnownError;
     }
 
     // Visible for testing
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized TimerTask expirationTimerTask() {
         return expirationTimerTask;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized boolean maybeUpdateGetRequestTimestamp(long currentTime) {
         long lastRequestTimestamp = Math.max(lastGetRequestTimestamp, lastPushRequestTimestamp);
         long timeElapsedSinceLastMsg = currentTime - lastRequestTimestamp;
@@ -108,6 +122,7 @@ public class ClientMetricsInstance {
         return false;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized boolean maybeUpdatePushRequestTimestamp(long currentTime) {
         /*
          Immediate push request after get subscriptions fetch can be accepted outside push interval
@@ -127,6 +142,7 @@ public class ClientMetricsInstance {
         return canAccept;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void cancelExpirationTimerTask() {
         if (expirationTimerTask != null) {
             expirationTimerTask.cancel();
@@ -134,6 +150,7 @@ public class ClientMetricsInstance {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void updateExpirationTimerTask(TimerTask timerTask) {
         cancelExpirationTimerTask();
         expirationTimerTask = timerTask;

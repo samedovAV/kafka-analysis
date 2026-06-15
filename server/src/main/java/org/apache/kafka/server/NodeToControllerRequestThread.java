@@ -36,6 +36,8 @@ import java.util.Optional;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Background thread that manages to send requests to the active controller.
@@ -58,6 +60,7 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
 
     // Used for testing
     volatile boolean started = false;
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void setStarted(boolean started) {
         this.started = started;
     }
@@ -76,14 +79,17 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
         this.retryTimeoutMs = retryTimeoutMs;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Optional<Node> activeControllerAddress() {
         return Optional.ofNullable(activeController.get());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void updateControllerAddress(Node newActiveController) {
         activeController.set(newActiveController);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void enqueue(NodeToControllerQueueItem request) {
         if (!started) {
             throw new IllegalStateException("Cannot enqueue a request if the request thread is not running");
@@ -94,11 +100,13 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public int queueSize() {
         return requestQueue.size();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public Collection<RequestAndCompletionHandler> generateRequests() {
         final long currentTimeMs = time.milliseconds();
         final Iterator<NodeToControllerQueueItem> requestIter = requestQueue.iterator();
@@ -124,6 +132,7 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
         return List.of();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void handleResponse(NodeToControllerQueueItem queueItem, ClientResponse response) {
         log.debug("Request {} received {}", queueItem.request(), response);
         if (response.authenticationException() != null) {
@@ -153,6 +162,7 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void maybeDisconnectAndUpdateController() {
         // just close the controller connection and wait for metadata cache update in doWork
         activeControllerAddress().ifPresent(controllerAddress -> {
@@ -167,6 +177,7 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void doWork() {
         if (activeControllerAddress().isPresent()) {
             super.pollOnce(Long.MAX_VALUE);
@@ -188,6 +199,7 @@ public class NodeToControllerRequestThread extends InterBrokerSendThread {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void start() {
         super.start();
         started = true;

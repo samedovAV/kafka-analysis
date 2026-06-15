@@ -19,6 +19,8 @@ package org.apache.kafka.server.partition;
 import org.apache.kafka.metadata.LeaderRecoveryState;
 
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Represents the state of a partition, including its In-Sync Replicas (ISR) and leader recovery state.
@@ -27,22 +29,26 @@ public interface PartitionState {
     /**
      * Includes only the in-sync replicas which have been committed to Controller.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Set<Integer> isr();
 
     /**
      * This set may include uncommitted ISR members following an expansion. This "effective" ISR is used for advancing
      * the high watermark as well as determining which replicas are required for acks=all produce requests.*
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Set<Integer> maximalIsr();
 
     /**
      * The leader recovery state. See the description for LeaderRecoveryState for details on the different values.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     LeaderRecoveryState leaderRecoveryState();
 
     /**
      * Indicates if we have an AlterPartition request inflight.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isInflight();
 
 }

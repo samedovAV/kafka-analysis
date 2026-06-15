@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 package org.apache.kafka.server.quota;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
+
 
 /**
  * The ControllerMutationQuota trait defines a quota for a given user/clientId pair. Such
@@ -22,21 +25,27 @@ package org.apache.kafka.server.quota;
  * a request.
  */
 public interface ControllerMutationQuota {
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     boolean isExceeded();
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     void record(double permits);
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     int throttleTime();
 
     ControllerMutationQuota UNBOUNDED_CONTROLLER_MUTATION_QUOTA = new ControllerMutationQuota() {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public boolean isExceeded() {
             return false;
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void record(double permits) {
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public int throttleTime() {
             return 0;
         }

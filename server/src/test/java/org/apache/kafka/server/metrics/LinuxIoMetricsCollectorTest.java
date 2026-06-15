@@ -31,11 +31,14 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 @Timeout(120)
 public class LinuxIoMetricsCollectorTest {
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testReadProcFile() throws IOException {
         TestDirectory testDirectory = new TestDirectory();
         Time time = new MockTime(0L, 100L, 1000L);
@@ -59,6 +62,7 @@ public class LinuxIoMetricsCollectorTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testUnableToReadNonexistentProcFile() throws IOException {
         TestDirectory testDirectory = new TestDirectory();
         Time time = new MockTime(0L, 100L, 1000L);
@@ -78,6 +82,7 @@ public class LinuxIoMetricsCollectorTest {
             selfDir = Files.createDirectories(baseDir.toPath().resolve("self"));
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         void writeProcFile(long readBytes, long writeBytes) throws IOException {
             String bld = "rchar: 0\n" +
                          "wchar: 0\n" +

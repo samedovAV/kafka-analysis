@@ -54,6 +54,8 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Integration tests for the produce request protocol. These tests require a running cluster and
@@ -74,6 +76,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testSimpleProduceRequest() throws Exception {
         cluster.createTopic(TOPIC, 3, (short) 2);
         TopicPartitionInfo partitionAndLeader = findPartitionWithLeader();
@@ -92,6 +95,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testProduceWithTimestampTooOld() throws Exception {
         doTestProduceWithInvalidTimestamp(
             TopicConfig.MESSAGE_TIMESTAMP_BEFORE_MAX_MS_CONFIG,
@@ -100,6 +104,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testProduceWithTimestampTooNew() throws Exception {
         doTestProduceWithInvalidTimestamp(
             TopicConfig.MESSAGE_TIMESTAMP_AFTER_MAX_MS_CONFIG,
@@ -108,6 +113,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testProduceToNonReplica() throws Exception {
         cluster.createTopic(TOPIC, 1, (short) 1);
         int leaderId = cluster.getLeaderBrokerId(new TopicPartition(TOPIC, 0));
@@ -142,6 +148,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testCorruptLz4ProduceRequest() throws Exception {
         cluster.createTopic(TOPIC, 3, (short) 2);
         TopicPartitionInfo partitionAndLeader = findPartitionWithLeader();
@@ -192,6 +199,7 @@ public class ProduceRequestTest {
     }
 
     @ClusterTest
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testZSTDProduceRequest() throws Exception {
         cluster.createTopic(TOPIC, 1, (short) 1,
             Map.of(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd"));
@@ -224,12 +232,14 @@ public class ProduceRequestTest {
         assertEquals(-1L, partitionResponse.logAppendTimeMs());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private ProduceResponse sendProduceRequest(int brokerId, ProduceRequest request) throws IOException {
         KafkaBroker broker = cluster.brokers().get(brokerId);
         int port = broker.socketServer().boundPort(cluster.clientListener());
         return IntegrationTestUtils.connectAndReceive(request, port);
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void sendAndCheckProduceResponse(int leaderId, int partition,
                                              MemoryRecords records, long expectedOffset) throws IOException, ExecutionException, InterruptedException {
         Uuid topicId = getTopicId();
@@ -260,6 +270,7 @@ public class ProduceRequestTest {
         assertTrue(partitionResponse.recordErrors().isEmpty());
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private void doTestProduceWithInvalidTimestamp(String timestampConfig, long recordTimestamp) throws Exception {
         cluster.createTopic(TOPIC, 1, (short) 1, Map.of(timestampConfig, "1000"));
         int leaderId = cluster.getLeaderBrokerId(new TopicPartition(TOPIC, 0));
@@ -302,6 +313,7 @@ public class ProduceRequestTest {
             partitionResponse.errorMessage());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private Uuid getTopicId() throws ExecutionException, InterruptedException {
         try (Admin admin = cluster.admin()) {
             return admin.describeTopics(List.of(TOPIC))
@@ -309,6 +321,7 @@ public class ProduceRequestTest {
         }
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private TopicPartitionInfo findPartitionWithLeader() throws ExecutionException, InterruptedException {
         try (Admin admin = cluster.admin()) {
             TopicDescription desc = admin.describeTopics(List.of(TOPIC))

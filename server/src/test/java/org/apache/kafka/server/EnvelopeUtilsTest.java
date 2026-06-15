@@ -52,6 +52,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class EnvelopeUtilsTest {
     private static final String CLIENT_ID = "client-id";
@@ -59,17 +61,20 @@ public class EnvelopeUtilsTest {
     private static final KafkaPrincipal FORWARDED_PRINCIPAL = new KafkaPrincipal(KafkaPrincipal.USER_TYPE, "forwarded");
     private static final KafkaPrincipalSerde PRINCIPAL_SERDE = new KafkaPrincipalSerde() {
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public byte[] serialize(KafkaPrincipal principal) {
             return Utils.utf8(principal.toString());
         }
 
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public KafkaPrincipal deserialize(byte[] bytes) {
             return SecurityUtils.parseKafkaPrincipal(Utils.utf8(bytes));
         }
     };
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testHandleEnvelopeRequestBuildsForwardedRequest() {
         Request envelope = buildEnvelopeRequest(createForwardableRequest());
         envelope.requestDequeueTimeNanos(123L);
@@ -90,6 +95,7 @@ public class EnvelopeUtilsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testNonForwardableApiIsRejected() {
         Request envelope = buildEnvelopeRequest(createNonForwardableRequest());
 
@@ -101,6 +107,7 @@ public class EnvelopeUtilsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testInvalidForwardedClientAddressIsRejected() {
         Request envelope = buildEnvelopeRequest(
             createForwardableRequest(),
@@ -116,6 +123,7 @@ public class EnvelopeUtilsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testMissingPrincipalSerdeIsRejected() {
         Request envelope = buildEnvelopeRequest(
             createForwardableRequest(),
@@ -134,14 +142,17 @@ public class EnvelopeUtilsTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testPrincipalDeserializationFailureIsRejected() {
         KafkaPrincipalSerde failingSerde = new KafkaPrincipalSerde() {
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public byte[] serialize(KafkaPrincipal principal) {
                 return Utils.utf8(principal.toString());
             }
 
             @Override
+            @Prove(complexity = Complexity.O_1, n = "", count = {})
             public KafkaPrincipal deserialize(byte[] bytes) {
                 throw new IllegalArgumentException("mock error");
             }
@@ -159,6 +170,7 @@ public class EnvelopeUtilsTest {
         assertEquals("Failed to deserialize client principal from envelope", exception.getMessage());
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static CreateTopicsRequest createForwardableRequest() {
         CreateTopicsRequestData requestData = new CreateTopicsRequestData();
         requestData.topics().add(new CreatableTopic()
@@ -169,10 +181,12 @@ public class EnvelopeUtilsTest {
         return new CreateTopicsRequest.Builder(requestData).build();
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static MetadataRequest createNonForwardableRequest() {
         return new MetadataRequest.Builder(List.of("topic"), true).build();
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     private static Request buildEnvelopeRequest(AbstractRequest forwardedRequest) {
         return buildEnvelopeRequest(
             forwardedRequest,
@@ -181,6 +195,7 @@ public class EnvelopeUtilsTest {
         );
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private static Request buildEnvelopeRequest(
         AbstractRequest forwardedRequest,
         Optional<KafkaPrincipalSerde> contextPrincipalSerde,

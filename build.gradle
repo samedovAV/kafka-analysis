@@ -20,6 +20,10 @@ import java.nio.charset.StandardCharsets
 buildscript {
   repositories {
     mavenCentral()
+    maven {
+        name = "MyLocalRepo"
+        url = uri("/home/samedov/coding/thesis/local-repo")
+    }
   }
   apply from: "$rootDir/gradle/dependencies.gradle"
 
@@ -169,6 +173,10 @@ allprojects {
 
   repositories {
     mavenCentral()
+      maven {
+          name = "MyLocalRepo"
+          url = uri("/home/samedov/coding/thesis/local-repo")
+      }
   }
 
   dependencyUpdates {
@@ -1006,6 +1014,10 @@ project(':server') {
 
   apply plugin: 'java-test-fixtures'
 
+  configurations {
+    staticAnalyzer
+  }
+
   dependencies {
     compileOnly libs.bndlib
     compileOnly libs.spotbugs
@@ -1046,6 +1058,9 @@ project(':server') {
     testFixturesImplementation libs.junitJupiter
 
     testRuntimeOnly runtimeTestLibs
+
+    compileOnly("com.samedov:thesis:1.2")
+    staticAnalyzer("com.samedov:thesis:1.2")
   }
 
   task createVersionFile() {

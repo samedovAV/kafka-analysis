@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Holds dynamic configs, including both dynamic-only configs which have no physical manifestation in server.properties and
@@ -46,20 +48,24 @@ public class DynamicConfig {
 
         // In order to avoid circular reference, all DynamicBrokerConfig's variables which are initialized by `DynamicConfig.Broker` should be moved to `DynamicConfig.Broker`.
         // Otherwise, those variables of DynamicBrokerConfig will see intermediate state of `DynamicConfig.Broker`, because `BROKER_CONFIGS` is created by `DynamicBrokerConfig.ALL_DYNAMIC_CONFIGS`
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public static Set<String> nonDynamicProps() {
             Set<String> nonDynamicProps = new HashSet<>(AbstractKafkaConfig.CONFIG_DEF.names());
             nonDynamicProps.removeAll(BROKER_CONFIGS.names());
             return nonDynamicProps;
         }
 
+        @Prove(complexity = Complexity.O_N, n = "", count = {})
         public static Map<String, ConfigDef.ConfigKey> configKeys() {
             return BROKER_CONFIGS.configKeys();
         }
 
+        @Prove(complexity = Complexity.O_N, n = "", count = {})
         public static Set<String> names() {
             return BROKER_CONFIGS.names();
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public static Map<String, Object> validate(Properties props) {
             // Validate Names
             Properties propResolved = DynamicBrokerConfig.resolveVariableConfigs(props);

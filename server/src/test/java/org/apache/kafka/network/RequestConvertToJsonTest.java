@@ -40,10 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class RequestConvertToJsonTest {
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAllRequestTypesHandled() {
         List<String> unhandledKeys = new ArrayList<>();
         for (ApiKeys key : ApiKeys.values()) {
@@ -73,6 +76,7 @@ public class RequestConvertToJsonTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N2, n = "", count = {})
     public void testAllApiVersionsResponseHandled() {
         for (ApiKeys key : ApiKeys.values()) {
             List<Short> unhandledVersions = new ArrayList<>();
@@ -100,6 +104,7 @@ public class RequestConvertToJsonTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public void testAllResponseTypesHandled() {
         List<String> unhandledKeys = new ArrayList<>();
         for (ApiKeys key : ApiKeys.values()) {
@@ -119,6 +124,7 @@ public class RequestConvertToJsonTest {
     }
 
     @Test
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void testClientInfoNode() {
         ClientInformation clientInfo = new ClientInformation("name", "1");
         ObjectNode expectedNode = JsonNodeFactory.instance.objectNode();

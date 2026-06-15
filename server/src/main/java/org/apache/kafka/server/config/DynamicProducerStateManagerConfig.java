@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 public class DynamicProducerStateManagerConfig implements BrokerReconfigurable {
     private final Logger log = LoggerFactory.getLogger(DynamicProducerStateManagerConfig.class);
@@ -36,11 +38,13 @@ public class DynamicProducerStateManagerConfig implements BrokerReconfigurable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Set<String> reconfigurableConfigs() {
         return Set.of(TransactionLogConfig.PRODUCER_ID_EXPIRATION_MS_CONFIG, TransactionLogConfig.TRANSACTION_PARTITION_VERIFICATION_ENABLE_CONFIG);
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void validateReconfiguration(AbstractConfig newConfig) {
         TransactionLogConfig transactionLogConfig = new TransactionLogConfig(newConfig);
         if (transactionLogConfig.producerIdExpirationMs() < 0)
@@ -49,6 +53,7 @@ public class DynamicProducerStateManagerConfig implements BrokerReconfigurable {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public void reconfigure(AbstractConfig oldConfig, AbstractConfig newConfig) {
         TransactionLogConfig transactionLogConfig = new TransactionLogConfig(newConfig);
         if (producerStateManagerConfig.producerIdExpirationMs() != transactionLogConfig.producerIdExpirationMs()) {

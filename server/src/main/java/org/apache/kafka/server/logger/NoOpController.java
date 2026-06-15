@@ -17,20 +17,25 @@
 package org.apache.kafka.server.logger;
 
 import java.util.Map;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 class NoOpController implements LoggingControllerDelegate {
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Map<String, String> loggers() {
         return Map.of();
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean logLevel(String loggerName, String logLevel) {
         return false;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean unsetLogLevel(String loggerName) {
         return false;
     }

@@ -21,6 +21,8 @@ import org.apache.kafka.common.requests.PushTelemetryRequest;
 import org.apache.kafka.server.telemetry.ClientTelemetryPayload;
 
 import java.nio.ByteBuffer;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Implements the {@code ClientTelemetryPayload} interface for the metrics payload sent by the client.
@@ -40,21 +42,25 @@ public class DefaultClientTelemetryPayload implements ClientTelemetryPayload {
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public Uuid clientInstanceId() {
         return this.clientInstanceId;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public boolean isTerminating() {
         return isClientTerminating;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public String contentType() {
         return metricsContentType;
     }
 
     @Override
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ByteBuffer data() {
         return metricsData;
     }

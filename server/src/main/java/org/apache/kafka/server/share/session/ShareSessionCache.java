@@ -29,6 +29,8 @@ import com.yammer.metrics.core.Meter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import com.samedov.annotation.Prove;
+import com.samedov.annotation.Complexity;
 
 /**
  * Caches share sessions.
@@ -95,6 +97,7 @@ public class ShareSessionCache {
      * @param key The share session key.
      * @return The session, or null if no such session was found.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized ShareSession get(ShareSessionKey key) {
         return sessions.get(key);
     }
@@ -102,6 +105,7 @@ public class ShareSessionCache {
     /**
      * Get the number of entries currently in the share session cache.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized int size() {
         return sessions.size();
     }
@@ -109,6 +113,7 @@ public class ShareSessionCache {
     /**
      * Remove all the share sessions from cache.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void removeAllSessions() {
         sessions.clear();
         numMembersPerGroup.clear();
@@ -116,10 +121,12 @@ public class ShareSessionCache {
         // Avoid cleaning up connectionIdToSessionMap as that map is cleaned when the client disconnects.
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized long totalPartitions() {
         return numPartitions;
     }
 
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized ShareSession remove(ShareSessionKey key) {
         ShareSession session = get(key);
         if (session != null)
@@ -134,6 +141,7 @@ public class ShareSessionCache {
      *
      * @param key The share session key.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void maybeRemoveAndNotifyListenersOnMemberLeave(ShareSessionKey key) {
         ShareSession session;
         synchronized (this) {
@@ -164,6 +172,7 @@ public class ShareSessionCache {
      * @param session The session.
      * @return The removed session, or None if there was no such session.
      */
+    @Prove(complexity = Complexity.O_N, n = "", count = {})
     public synchronized ShareSession remove(ShareSession session) {
         ShareSession removeResult = sessions.remove(session.key());
         if (removeResult != null) {
@@ -189,6 +198,7 @@ public class ShareSessionCache {
      *
      * @param session  The session.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void updateNumPartitions(ShareSession session) {
         numPartitions += session.updateCachedSize();
     }
@@ -201,6 +211,7 @@ public class ShareSessionCache {
      * @param clientConnectionId - The client connection id.
      * @return - The session key if the session was created, or null if the session was not created.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized ShareSessionKey maybeCreateSession(
         String groupId,
         String memberId,
@@ -219,10 +230,12 @@ public class ShareSessionCache {
         return null;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public ConnectionDisconnectListener connectionDisconnectListener() {
         return connectionDisconnectListener;
     }
 
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     public synchronized void registerShareGroupListener(ShareGroupListener shareGroupListener) {
         this.shareGroupListener = shareGroupListener;
     }
@@ -233,6 +246,7 @@ public class ShareSessionCache {
      * @param connectionId The client connection id.
      * @return The session key, or null if no such mapping was found.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private synchronized SessionKeyAndState maybeRemoveConnectionFromSession(String connectionId) {
         return connectionIdToSessionMap.remove(connectionId);
     }
@@ -242,6 +256,7 @@ public class ShareSessionCache {
      *
      * @param groupId The share group id.
      */
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     private void checkAndNotifyListenersOnGroupEmpty(String groupId) {
         boolean notify = false;
         synchronized (this) {
@@ -261,16 +276,19 @@ public class ShareSessionCache {
     }
 
     // Visible for testing.
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Meter evictionsMeter() {
         return evictionsMeter;
     }
 
     // Visible for testing.
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     Integer numMembers(String groupId) {
         return numMembersPerGroup.get(groupId);
     }
 
     // Visible for testing.
+    @Prove(complexity = Complexity.O_1, n = "", count = {})
     synchronized SessionKeyAndState connectionSessionKeyAndState(String connectionId) {
         return connectionIdToSessionMap.get(connectionId);
     }
@@ -279,6 +297,7 @@ public class ShareSessionCache {
 
         // When the client disconnects, the corresponding session should be removed from the cache.
         @Override
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         public void onDisconnect(String connectionId) {
             SessionKeyAndState sessionKeyAndState = maybeRemoveConnectionFromSession(connectionId);
             if (sessionKeyAndState != null) {
@@ -310,14 +329,17 @@ public class ShareSessionCache {
             this.stale = false;
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         ShareSessionKey shareSessionKey() {
             return shareSessionKey;
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         boolean stale() {
             return stale;
         }
 
+        @Prove(complexity = Complexity.O_1, n = "", count = {})
         void markStale() {
             this.stale = true;
         }
